@@ -56,6 +56,6 @@ jobs:
       - run: npm install
       - run: npm run build --workspace=apps/backend
       - name: Build Docker image
-        run: docker build -t openai-saas-backend:latest apps/backend
+        run: docker build -f apps/backend/Dockerfile -t openai-saas-backend:latest .
       # Add ECR login/push steps for AWS or Fly.io deploy here
       # - run: ...
