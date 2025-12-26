@@ -16,7 +16,7 @@ COPY ../../pnpm-lock.yaml ./
 COPY ../../packages/prisma prisma
 COPY . .
 RUN npm install -g pnpm@8.15.5
-RUN pnpm install --force --omit=dev
+RUN pnpm install --prod --force
 RUN npx prisma generate
 RUN pnpm --filter ./apps/backend... run build
 
