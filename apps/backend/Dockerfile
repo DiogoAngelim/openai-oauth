@@ -8,6 +8,7 @@
 
 
 
+
 # --- Build Stage ---
 FROM node:20-alpine AS builder
 WORKDIR /app
@@ -17,7 +18,8 @@ COPY . .
 RUN npm install -g pnpm@8.15.5
 RUN pnpm install --frozen-lockfile
 RUN npx prisma generate
-RUN pnpm run build
+RUN pnpm --filter ./apps/backend... run build
+
 
 
 
@@ -27,7 +29,7 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/apps/backend/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 RUN npm install -g pnpm@8.15.5
 RUN pnpm prune --prod
