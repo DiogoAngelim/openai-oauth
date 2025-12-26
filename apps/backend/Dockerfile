@@ -16,7 +16,7 @@ COPY ../../pnpm-lock.yaml ./
 COPY ../../packages/prisma prisma
 COPY . .
 RUN npm install -g pnpm@8.15.5
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --force
 RUN npx prisma generate
 RUN pnpm --filter ./apps/backend... run build
 
