@@ -16,7 +16,7 @@ COPY ../../pnpm-lock.yaml ./
 COPY ../../packages/prisma prisma
 COPY . .
 RUN npm install -g pnpm@8.15.5
-RUN pnpm install --force
+RUN pnpm install --force --omit=dev
 RUN npx prisma generate
 RUN pnpm --filter ./apps/backend... run build
 
@@ -31,7 +31,9 @@ COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/backend/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY ../../packages/prisma/schema.prisma ./prisma/schema.prisma
 RUN npm install -g pnpm@8.15.5
+ENV npm_config_ignore_scripts=true
 RUN pnpm prune --prod
 EXPOSE 4000
 CMD ["node", "dist/main.js"]

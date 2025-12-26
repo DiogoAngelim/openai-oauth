@@ -30,7 +30,7 @@ describe('CI/CD Docker Backend', () => {
           success = true;
           break;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
     expect(success).toBe(true);
     execSync(`docker stop ${containerId}`);
