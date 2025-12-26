@@ -1,9 +1,10 @@
 
 <!-- Badges -->
-![Build Status](https://img.shields.io/github/actions/workflow/status/diogoangelim/openai-oauth/ci.yml?branch=main)
+![Build Status](https://img.shields.io/github/actions/workflow/status/diogoangelim/openai-oauth/ci-cd.yml?branch=main)
 ![Coverage](https://img.shields.io/codecov/c/github/diogoangelim/openai-oauth?token=ghp_xxx)
+[![codecov](https://codecov.io/gh/diogoangelim/openai-oauth/branch/main/graph/badge.svg?token=ghp_xxx)](https://codecov.io/gh/diogoangelim/openai-oauth)
 ![License](https://img.shields.io/github/license/diogoangelim/openai-oauth)
-![Code Quality](https://img.shields.io/lgtm/grade/javascript/github/diogoangelim/openai-oauth)
+![Code Scanning](https://github.com/diogoangelim/openai-oauth/actions/workflows/codeql-analysis.yml/badge.svg)
 
 # OpenAI OAuth Backend — Beginner Guide
 
