@@ -1,5 +1,5 @@
 <!-- Badges -->
-[![Coverage Status](https://coveralls.io/repos/github/OWNER/REPO/badge.svg?branch=main)](https://coveralls.io/github/OWNER/REPO?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/DiogoAngelim/openai-oauth/badge.svg?branch=main)](https://coveralls.io/github/DiogoAngelim/openai-oauth?branch=main)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/diogoangelim/openai-oauth/ci-cd.yml?branch=main)
 ![License](https://img.shields.io/github/license/diogoangelim/openai-oauth)
 <!-- Coverage and code scanning badges temporarily removed due to repository or service configuration issues. -->
