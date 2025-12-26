@@ -7,16 +7,21 @@ export interface ChatMessage {
   createdAt: Date;
 }
 import { Injectable } from '@nestjs/common';
-import { prisma } from '../prisma';
+
+
 
 
 
 @Injectable()
 export class OpenAIService {
+  prisma: any;
 
+  constructor(prismaInstance?: any) {
+    this.prisma = prismaInstance || require('../prisma').prisma;
+  }
 
   async getUserChatHistory(orgId: string, userId: string): Promise<ChatMessage[]> {
-    return prisma.chatMessage.findMany({
+    return this.prisma.chatMessage.findMany({
       where: { organizationId: orgId, userId },
       orderBy: { createdAt: 'desc' },
       select: {
@@ -28,6 +33,7 @@ export class OpenAIService {
       },
     });
   }
+
   async createChatCompletion(
     orgId: string,
     userId: string,
@@ -48,7 +54,7 @@ export class OpenAIService {
       throw err;
     }
     // Check org existence
-    const org = await prisma.organization.findUnique({
+    const org = await this.prisma.organization.findUnique({
       where: { id: orgId },
       include: { subscription: true }
     });
@@ -59,7 +65,7 @@ export class OpenAIService {
     }
     // Quota check (simulate)
     if (org.subscription && org.subscription.monthlyQuota) {
-      const usage = await prisma.openAIUsageLog.aggregate({
+      const usage = await this.prisma.openAIUsageLog.aggregate({
         where: { organizationId: orgId },
         _sum: { totalTokens: true },
       });

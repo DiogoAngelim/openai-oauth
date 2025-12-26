@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AbstractHttpAdapter } from '@nestjs/core/adapters/http-adapter';
 import { AppModule } from './app.module';
+import { getLogger } from './logger';
 
 async function bootstrap() {
   // Sentry Express error handler is not applicable for Fastify
@@ -17,13 +18,12 @@ async function bootstrap() {
   });
   // Use logger middleware for all routes (Fastify)
   const fastify = app.getHttpAdapter().getInstance();
-  let loggerModule = await import('./logger');
-  const logger = loggerModule.default || loggerModule;
+  const logger = getLogger();
   fastify.addHook('onResponse', (request, reply, done) => {
     const { method, url } = request.raw;
     const { statusCode } = reply.raw;
     const duration = reply.getResponseTime ? reply.getResponseTime() : undefined;
-    logger.info('%s %s %d %s', method, url, statusCode, duration ? `${duration}ms` : '');
+    (logger as any).info('%s %s %d %s', method, url, statusCode, duration ? `${duration}ms` : '');
     done();
   });
   // Sentry error handler
