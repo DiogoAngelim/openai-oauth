@@ -6,6 +6,9 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
+    "types": [
+      "jest"
+    ],
     "paths": {
       "@nestjs/*": [
         "node_modules/@nestjs/*"

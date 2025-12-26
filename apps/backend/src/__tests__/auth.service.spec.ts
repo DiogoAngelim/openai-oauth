@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'jest';
 import { AuthService } from '../auth/auth.service';
 
 const prisma = {

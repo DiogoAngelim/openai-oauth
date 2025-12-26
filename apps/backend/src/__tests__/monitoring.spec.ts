@@ -1,3 +1,4 @@
+import 'jest';
 import { registry } from '../monitoring';
 
 describe('monitoring registry', () => {

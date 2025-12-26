@@ -1,3 +1,4 @@
+import 'jest';
 import 'reflect-metadata';
 import { MonitoringController } from '../monitoring.controller';
 

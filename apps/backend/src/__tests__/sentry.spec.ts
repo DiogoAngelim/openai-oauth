@@ -1,3 +1,4 @@
+import 'jest';
 import Sentry from '../sentry';
 
 describe('Sentry', () => {

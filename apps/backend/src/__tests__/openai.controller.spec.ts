@@ -1,3 +1,4 @@
+import 'jest';
 import 'reflect-metadata';
 import { OpenAIController } from '../openai/openai.controller';
 jest.mock('@prisma/client', () => {

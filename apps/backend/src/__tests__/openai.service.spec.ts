@@ -1,3 +1,4 @@
+import 'jest';
 import 'reflect-metadata';
 // No top-level exception imports needed
 describe('OpenAIService', () => {

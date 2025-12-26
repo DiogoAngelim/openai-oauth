@@ -2,7 +2,7 @@ const { execSync } = require('child_process');
 
 describe('CI/CD Docker Backend', () => {
   it('should build backend Docker image successfully', () => {
-    // Build Docker image from workspace root
+    // Build Docker image from monorepo root with correct Dockerfile path
     expect(() => {
       execSync('docker build -f apps/backend/Dockerfile -t openai-saas-backend:latest .', { stdio: 'inherit' });
     }).not.toThrow();

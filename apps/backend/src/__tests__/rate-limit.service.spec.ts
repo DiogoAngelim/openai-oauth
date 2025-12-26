@@ -1,3 +1,4 @@
+import 'jest';
 import 'reflect-metadata';
 import { RateLimitService } from '../rate-limit/rate-limit.service';
 
