@@ -1,7 +1,10 @@
+
+
+'use client';
 import { useState } from 'react';
 
-export default function OrgManagement() {
-  const [members, setMembers] = useState([
+export default function OrgManagement(): React.ReactElement {
+  const [members] = useState<{ email: string; role: string }[]>([
     { email: 'owner@example.com', role: 'OWNER' },
     { email: 'admin@example.com', role: 'ADMIN' },
     { email: 'user@example.com', role: 'USER' },

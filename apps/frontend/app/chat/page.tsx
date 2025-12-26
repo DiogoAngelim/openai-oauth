@@ -1,24 +1,26 @@
-'use client';
-import { useState, useRef } from 'react';
 
-export default function Chat() {
-  const [prompt, setPrompt] = useState('');
-  const [response, setResponse] = useState('');
-  const [loading, setLoading] = useState(false);
+
+'use client';
+import React, { useState, useRef } from 'react';
+
+export default function Chat(): React.ReactElement {
+  const [prompt, setPrompt] = useState<string>('');
+  const [response, setResponse] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const eventSourceRef = useRef<EventSource | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setResponse('');
     setLoading(true);
-    if (eventSourceRef.current) {
+    if (eventSourceRef.current !== null) {
       eventSourceRef.current.close();
     }
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/openai/chat?stream=true`;
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:4000'}/openai/chat?stream=true`;
     const es = new EventSource(url, { withCredentials: true });
     eventSourceRef.current = es;
-    es.onmessage = (event) => {
-      setResponse((prev) => prev + event.data);
+    es.onmessage = (event: MessageEvent) => {
+      setResponse((prev) => prev + (event.data ?? ''));
     };
     es.onerror = () => {
       setLoading(false);
@@ -40,10 +42,10 @@ export default function Chat() {
           className="w-full p-2 border rounded mb-2"
           rows={4}
           value={prompt}
-          onChange={e => setPrompt(e.target.value)}
+          onChange={e => setPrompt(e.target.value ?? '')}
           placeholder="Ask something..."
         />
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded" disabled={loading}>
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded" disabled={!!loading}>
           {loading ? 'Loading...' : 'Send'}
         </button>
       </form>

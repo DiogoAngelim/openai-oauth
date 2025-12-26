@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-export default function Home() {
+
+export default function Home(): React.ReactElement {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
       <h1 className="text-3xl font-bold mb-4">OpenAI SaaS Demo</h1>

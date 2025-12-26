@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function Onboarding() {
+export default function Onboarding(): React.ReactElement {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
       <h1 className="text-2xl font-bold mb-4">Welcome to OpenAI SaaS!</h1>

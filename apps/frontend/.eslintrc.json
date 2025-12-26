@@ -2,6 +2,9 @@
   "extends": [
     "../../.eslintrc.json"
   ],
+  "rules": {
+    "@typescript-eslint/strict-boolean-expressions": "off"
+  },
   "parserOptions": {
     "project": [
       "./tsconfig.json"
