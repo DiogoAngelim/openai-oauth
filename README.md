@@ -7,6 +7,12 @@
 
 # OpenAI OAuth Backend — Beginner Guide
 
+> **Important:** Always run Docker builds from the monorepo root directory to avoid missing files in the build context. Example:
+> ```sh
+> cd /Users/diogoangelim/openai-oauth
+> docker build -f apps/backend/Dockerfile -t openai-saas-backend:latest .
+> ```
+
 ## Quick Start
 
 1. **Clone the repository:**
