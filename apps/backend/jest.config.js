@@ -8,7 +8,7 @@ module.exports = {
     '**/?(*.)+(spec|test).ts',
   ],
   transform: {
-    '^.+\\.ts$': 'babel-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
   globals: {
     'ts-jest': {
