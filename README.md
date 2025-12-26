@@ -1,4 +1,10 @@
 
+<!-- Badges -->
+![Build Status](https://img.shields.io/github/actions/workflow/status/diogoangelim/openai-oauth/ci.yml?branch=main)
+![Coverage](https://img.shields.io/codecov/c/github/diogoangelim/openai-oauth?token=ghp_xxx)
+![License](https://img.shields.io/github/license/diogoangelim/openai-oauth)
+![Code Quality](https://img.shields.io/lgtm/grade/javascript/github/diogoangelim/openai-oauth)
+
 # OpenAI OAuth Backend — Beginner Guide
 
 ## Quick Start

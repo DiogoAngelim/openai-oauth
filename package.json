@@ -32,6 +32,7 @@
     "ts-jest": "^29.4.6"
   },
   "dependencies": {
+    "@nestjs/testing": "^10.2.7",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/common": "^10.4.20",
     "@nestjs/config": "^3.0.0",
