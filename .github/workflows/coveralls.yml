@@ -1,0 +1,27 @@
+name: Coveralls
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-and-cover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests with coverage
+        run: npm run test -- --coverage
+      - name: Upload coverage to Coveralls
+        run: |
+          npm install coveralls
+          cat ./apps/backend/coverage/lcov.info | npx coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
