@@ -19,8 +19,11 @@ jobs:
         run: npm install -g pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: Run tests with coverage
-        run: npm run test -- --coverage
+      - name: Clean coverage directory
+        run: rm -rf apps/backend/coverage
+      - name: Run tests with coverage (backend)
+        working-directory: apps/backend
+        run: npx jest --config=jest.config.js --coverage
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v2.3.6
         with:
