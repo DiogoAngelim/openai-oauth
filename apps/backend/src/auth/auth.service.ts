@@ -19,7 +19,7 @@ export class AuthService {
     const prismaClient = this._prisma ?? prisma;
     let user: any | null = await prismaClient.user.findUnique({ where: { email: profile.emails[0].value } });
     if (user === null) {
-      user = await prisma.user.create({
+      user = await prismaClient.user.create({
         data: {
           email: profile.emails[0].value,
           name: profile.displayName,
@@ -27,6 +27,7 @@ export class AuthService {
         },
       });
       // Auto-create org and membership
+      if (!user || !user.id) throw new UnauthorizedException('User creation failed');
       const org = await prismaClient.organization.create({
         data: {
           name: `${profile.displayName}'s Org`,
@@ -54,7 +55,7 @@ export class AuthService {
     role: string
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const payload = { sub: user.id, orgId, role };
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
     const refreshToken = randomUUID();
     const prismaClient = this._prisma ?? prisma;
     await prismaClient.refreshToken.create({

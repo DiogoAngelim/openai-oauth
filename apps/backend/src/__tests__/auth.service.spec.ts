@@ -22,7 +22,14 @@ describe('AuthService', () => {
   let jwtService: any;
 
   beforeEach(() => {
-    jwtService = { sign: jest.fn(() => 'signed-jwt') };
+    jwtService = {
+      sign: jest.fn((payload, options) => {
+        if (options && options.expiresIn === '15m') {
+          return 'signed-jwt';
+        }
+        return 'signed-jwt';
+      })
+    };
     authService = new AuthService(jwtService, prisma as any);
   });
 

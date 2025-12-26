@@ -48,7 +48,10 @@ export class OpenAIService {
       throw err;
     }
     // Check org existence
-    const org = await prisma.organization.findUnique({ where: { id: orgId } });
+    const org = await prisma.organization.findUnique({
+      where: { id: orgId },
+      include: { subscription: true }
+    });
     if (!org) {
       const err: any = new Error('Organization not found');
       err.name = 'ForbiddenException';

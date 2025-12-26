@@ -22,9 +22,9 @@ export class OpenAIController {
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
-      // Streaming is not implemented in the current service, so just return a placeholder
-      const result = await this.openai.createChatCompletion(orgId, userId, body, true);
-      res.write(`data: ${JSON.stringify(result)}\n\n`);
+      await this.openai.createChatCompletion(orgId, userId, body, true, (chunk: string) => {
+        res.write(`data: ${chunk}\n\n`);
+      });
       res.end();
     } else {
       const result = await this.openai.createChatCompletion(orgId, userId, body, false);
