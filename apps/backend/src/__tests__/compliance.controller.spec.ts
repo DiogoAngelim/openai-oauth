@@ -1,5 +1,3 @@
-import 'jest';
-import 'reflect-metadata';
 import { ComplianceController } from '../compliance.controller';
 
 describe('ComplianceController', () => {

@@ -1,9 +1,7 @@
-import 'jest';
-import 'reflect-metadata';
 // No top-level exception imports needed
 describe('OpenAIService', () => {
   let service: any;
-  let openaiCreateMock: jest.Mock;
+  let openaiCreateMock: any;
   let prismaInstance: any;
   beforeEach(() => {
     jest.resetModules();

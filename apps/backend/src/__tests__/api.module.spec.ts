@@ -1,14 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { ApiModule } from '../api/api.module';
 
 describe('ApiModule', () => {
-  let module: ApiModule;
+  let module: any;
 
   beforeEach(async () => {
-    const testingModule: TestingModule = await Test.createTestingModule({
+    const testingModule = await Test.createTestingModule({
       imports: [ApiModule],
     }).compile();
-    module = testingModule.get<ApiModule>(ApiModule);
+    module = testingModule.get(ApiModule);
   });
 
   it('should be defined', () => {

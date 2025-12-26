@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "allowJs": true,
+    "esModuleInterop": true,
     "target": "es2021",
     "baseUrl": ".",
     "typeRoots": [
@@ -16,6 +18,8 @@
     },
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }

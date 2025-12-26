@@ -4,6 +4,20 @@
     "types": [
       "jest",
       "node"
-    ]
-  }
+    ],
+    "module": "commonjs",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": [
+    "src/**/*",
+    "__tests__/**/*",
+    "../__tests__/**/*",
+    "**/*.spec.ts"
+  ]
 }

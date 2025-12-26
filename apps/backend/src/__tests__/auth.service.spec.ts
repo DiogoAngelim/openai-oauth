@@ -1,6 +1,4 @@
-import 'reflect-metadata';
-import 'jest';
-import { AuthService } from '../auth/auth.service';
+const { AuthService } = require('../auth/auth.service');
 
 const prisma = {
   user: { findUnique: jest.fn(), create: jest.fn() },
@@ -19,7 +17,7 @@ jest.mock('@prisma/client', () => {
   };
 });
 describe('AuthService', () => {
-  let authService: AuthService;
+  let authService: any;
   let jwtService: any;
 
   beforeEach(() => {
@@ -31,7 +29,7 @@ describe('AuthService', () => {
         return 'signed-jwt';
       })
     };
-    authService = new AuthService(jwtService, prisma as any);
+    authService = new AuthService(jwtService, prisma);
   });
 
   it('should be defined', () => {

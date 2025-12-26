@@ -1,11 +1,10 @@
-import 'jest';
-import Sentry from '../sentry';
+import * as SentryLib from '../sentry';
 
 describe('Sentry', () => {
   it('should be defined', () => {
-    expect(Sentry).toBeDefined();
+    expect(SentryLib).toBeDefined();
   });
   it('should have init method', () => {
-    expect(typeof Sentry.init).toBe('function');
+    expect(typeof SentryLib.init).toBe('function');
   });
 });

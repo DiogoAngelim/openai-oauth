@@ -24,7 +24,7 @@ describe('CI/CD Docker Backend', () => {
     // Clean up any containers using port 4000 before running
     try {
       const containers = execSync("docker ps -q --filter 'publish=4000'").toString().trim().split('\n').filter(Boolean);
-      containers.forEach((id: string) => {
+      containers.forEach((id: any) => {
         execSync(`docker rm -f ${id}`);
       });
     } catch (e) {

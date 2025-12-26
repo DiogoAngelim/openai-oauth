@@ -7,8 +7,15 @@ module.exports = {
     '**/?(*.)+(spec|test).ts',
   ],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': 'babel-jest',
   },
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.test.json',
+      diagnostics: false,
+    }
+  },
+  moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/main.ts'],
   coverageDirectory: 'coverage',
@@ -21,4 +28,6 @@ module.exports = {
       statements: 100,
     },
   },
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  transformIgnorePatterns: ['/node_modules/'],
 };

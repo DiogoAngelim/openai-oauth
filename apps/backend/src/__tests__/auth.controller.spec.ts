@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { AuthController } from '../auth/auth.controller';
 jest.mock('@prisma/client', () => {
   return {
@@ -13,7 +12,7 @@ jest.mock('@prisma/client', () => {
 
 // Expanded test suite for AuthController (see previous patch)
 describe('AuthController', () => {
-  let controller: AuthController;
+  let controller: any;
   let authService: any;
   let res: any;
   let req: any;

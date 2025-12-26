@@ -1,6 +1,4 @@
-import 'jest';
-import 'reflect-metadata';
-import { BillingService } from '../billing.service';
+const { BillingService } = require('../billing.service');
 
 describe('BillingService', () => {
   it('should be defined', () => {

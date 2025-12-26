@@ -1,4 +1,5 @@
 // __mocks__/prisma-client.mock.js
+/* global jest */
 const prismaMockFactory = () => ({
   organization: { findUnique: jest.fn().mockResolvedValue({ subscription: { monthlyQuota: 10000 } }) },
   openAIUsageLog: { aggregate: jest.fn().mockResolvedValue({ _sum: { totalTokens: 0 } }), create: jest.fn() },

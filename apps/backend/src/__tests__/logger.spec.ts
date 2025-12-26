@@ -1,4 +1,3 @@
-import 'jest';
 import { getLogger } from '../logger';
 
 describe('logger', () => {
