@@ -1,0 +1,68 @@
+{
+  "family": "openai-saas-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "openai-saas-backend",
+      "image": "<account-id>.dkr.ecr.<region>.amazonaws.com/openai-saas-backend:latest",
+      "portMappings": [
+        {
+          "containerPort": 4000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "PORT",
+          "value": "4000"
+        },
+        {
+          "name": "DATABASE_URL",
+          "value": "<your-db-url>"
+        },
+        {
+          "name": "REDIS_URL",
+          "value": "<your-redis-url>"
+        },
+        {
+          "name": "JWT_SECRET",
+          "value": "<your-jwt-secret>"
+        },
+        {
+          "name": "GOOGLE_CLIENT_ID",
+          "value": "<your-google-client-id>"
+        },
+        {
+          "name": "GOOGLE_CLIENT_SECRET",
+          "value": "<your-google-client-secret>"
+        },
+        {
+          "name": "OPENAI_API_KEY",
+          "value": "<your-openai-api-key>"
+        },
+        {
+          "name": "OPENAI_ORG_ID",
+          "value": "<your-openai-org-id>"
+        },
+        {
+          "name": "FRONTEND_URL",
+          "value": "<your-frontend-url>"
+        },
+        {
+          "name": "BACKEND_URL",
+          "value": "<your-backend-url>"
+        }
+      ],
+      "essential": true
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: openai_saas
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openai_saas
+      REDIS_URL: redis://localhost:6379
+      JWT_SECRET: testsecret
+      GOOGLE_CLIENT_ID: dummy
+      GOOGLE_CLIENT_SECRET: dummy
+      OPENAI_API_KEY: dummy
+      OPENAI_ORG_ID: dummy
+      FRONTEND_URL: http://localhost:3000
+      BACKEND_URL: http://localhost:4000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx prisma generate --schema=packages/prisma/schema.prisma
+      - run: npx prisma migrate deploy --schema=packages/prisma/schema.prisma
+      - run: npm run build --workspace=apps/backend
+      - run: npm run build --workspace=apps/frontend
+      # Add your test scripts here
+      # - run: npm test
+
+  docker-backend:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run build --workspace=apps/backend
+      - name: Build Docker image
+        run: docker build -t openai-saas-backend:latest apps/backend
+      # Add ECR login/push steps for AWS or Fly.io deploy here
+      # - run: ...
