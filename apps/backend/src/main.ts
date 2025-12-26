@@ -17,7 +17,8 @@ async function bootstrap() {
   });
   // Use logger middleware for all routes (Fastify)
   const fastify = app.getHttpAdapter().getInstance();
-  const logger = (await import('./logger')).default;
+  let loggerModule = await import('./logger');
+  const logger = loggerModule.default || loggerModule;
   fastify.addHook('onResponse', (request, reply, done) => {
     const { method, url } = request.raw;
     const { statusCode } = reply.raw;
