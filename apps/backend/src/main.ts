@@ -26,6 +26,23 @@ async function bootstrap() {
   });
   // Sentry error handler
   // Sentry error handler not available for Fastify in this context
-  await app.listen(4001, '0.0.0.0');
+  const ports = [4000, 4001, 4002, 4003];
+  let started = false;
+  for (const port of ports) {
+    try {
+      await app.listen(port, '0.0.0.0');
+      console.log(`Backend listening on http://0.0.0.0:${port}`);
+      console.log('Health endpoint available at /health');
+      started = true;
+      break;
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error(`Port ${port} is busy or failed:`, errorMsg);
+    }
+  }
+  if (!started) {
+    console.error('Failed to start backend on any port 4000-4003');
+    process.exit(1);
+  }
 }
 bootstrap();

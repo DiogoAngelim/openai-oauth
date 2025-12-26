@@ -19,22 +19,24 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.0",
     "@prisma/internals": "^7.2.0",
+    "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prisma": "^6.19.1"
+    "prisma": "^6.19.1",
+    "ts-jest": "^29.4.6"
   },
   "dependencies": {
+    "@nestjs/cli": "^10.0.0",
     "@nestjs/common": "^10.4.20",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.4.20",
     "@nestjs/jwt": "^10.0.0",
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-fastify": "^10.4.20",
-    "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.4.20",
     "@prisma/client": "^6.19.1"
