@@ -32,7 +32,7 @@ This project supports automated and manual rollback/versioning for safe deployme
 ## 4. Notes
 - Always verify the application and database after rollback.
 - For destructive DB rollbacks, review and test migration scripts carefully.
-- ECS and ECR details may need to be customized in the scripts for your AWS account.
+- Container registry and deployment details may need to be customized for your cloud provider or environment.
 
 ---
 

@@ -19,8 +19,8 @@ This file documents the allowed environment variables for the project. Only the 
 
 # Environment Variables Reference
 
-## Backend (ECS/NestJS)
-Set these in AWS Secrets Manager or ECS task definition:
+## Backend (NestJS)
+Set these in your secrets manager or environment variables:
 - `DATABASE_URL`
 - `REDIS_URL`
 - `JWT_SECRET`
@@ -40,5 +40,5 @@ Set these in Vercel dashboard:
 
 ## Notes
 - Never commit secrets to git.
-- Use Vercel’s dashboard for frontend, AWS Secrets Manager for backend.
+- Use Vercel’s dashboard for frontend, a secure secrets manager for backend.
 - See README_DEPLOY.md for deployment steps.

@@ -24,13 +24,12 @@ git checkout "$ROLLBACK_TAG"
 echo "[INFO] Building backend Docker image..."
 docker build -f apps/backend/Dockerfile -t openai-saas-backend:$ROLLBACK_TAG .
 
-echo "[INFO] Tagging and pushing to ECR (requires AWS CLI configured)..."
-ECR_REGISTRY="<your-ecr-registry>"
-docker tag openai-saas-backend:$ROLLBACK_TAG $ECR_REGISTRY/openai-saas-backend:$ROLLBACK_TAG
-docker push $ECR_REGISTRY/openai-saas-backend:$ROLLBACK_TAG
-
 echo "[INFO] Updating ECS service to use image $ROLLBACK_TAG..."
-aws ecs update-service --cluster openai-saas-cluster --service openai-saas-backend --force-new-deployment --region <your-region>
+echo "[INFO] Tagging and pushing to your container registry (customize as needed)..."
+# Add your container registry push commands here
+
+echo "[INFO] Update your deployment service to use image $ROLLBACK_TAG (customize as needed)..."
+# Add your deployment update commands here
 
 if $DB_ROLLBACK; then
   echo "[INFO] Rolling back database migration..."
