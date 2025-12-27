@@ -5,18 +5,15 @@
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "build": "npm run prisma:generate && nest build",
-    "test": "npm run prisma:generate && npx jest --passWithNoTests --coverage --config=jest.config.js",
-    "test:watch": "npm run prisma:generate && npx jest --watchAll --config=jest.config.js",
-    "test:ci": "npm run prisma:generate && npx jest --coverage --runInBand --config=jest.config.js",
-    "prisma:generate": "prisma generate --schema=../../packages/prisma/schema.prisma",
-    "postinstall": "npm run prisma:generate",
-    "migrate:deploy": "prisma migrate deploy --schema=../../packages/prisma/schema.prisma",
-    "migrate:status": "prisma migrate status --schema=../../packages/prisma/schema.prisma",
+    "build": "node ./env-check.ts && nest build",
+    "test": "npx jest --passWithNoTests --coverage --config=jest.config.js",
+    "test:watch": "npx jest --watchAll --config=jest.config.js",
+    "test:ci": "npx jest --coverage --runInBand --config=jest.config.js",
     "rollback": "../../rollback.sh",
     "db:rollback": "../../packages/prisma/rollback.sh"
   },
   "dependencies": {
+    "drizzle-orm": "0.45.1",
     "@nestjs/common": "^10.4.20",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.4.20",
