@@ -6,6 +6,13 @@ coverage/
 .env
 .env.*
 *.log
+.cache/
+.turbo/
+.output/
+.vercel/
+.parcel-cache/
+.eslintcache
+.next/
 
 # VSCode
 .vscode/
@@ -13,9 +20,119 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+ehthumbs.db
+*.swo
+*~
+__MACOSX/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.python-version
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+.classpath
+.project
+.settings/
+
+# Go
+bin/
+*.exe
+*.test
+*.out
+
+# Ruby
+*.gem
+.bundle/
+vendor/bundle/
+.ruby-version
+
+# C/C++
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+*.out
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# Windows
+$RECYCLE.BIN/
+
+# Linux
+lost+found/
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Misc/Temp
+*.bak
+*.tmp
+*.temp
+*.orig
+*.old
+*.save
+
+# Editor/IDE
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+
+# Linux/Unix temp
+.directory
+.Trash-*
+.nfs*
+
+# Log/debug artifacts
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Package manager
+.pnp/
+.pnp.js
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Test/coverage tools
+.nyc_output/
+coverage-final.json
+
+# Misc
+*.pid
+*.seed
+*.pid.lock
+Desktop.ini
+Icon?
+.Spotlight-V100
+.Trashes
+*.swp
+*.swo
+*~
+__MACOSX/
 
 # Prisma
 prisma/migrations/
 
 # Others
 *.sqlite
+
+# Next.js build output
+apps/*/.next/
+packages/*/.next/
