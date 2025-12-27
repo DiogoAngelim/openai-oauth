@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -88,45 +88,45 @@
 <a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable, CanActivate, ExecutionContext, SetMetadata, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 &nbsp;
-export const Roles = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(.</span>..roles: string[]): ReturnType&lt;typeof SetMetadata&gt; =&gt; <span class="cstat-no" title="statement not covered" >SetMetadata('roles', roles);</span></span>
+export const Roles = (...roles: string[]): ReturnType&lt;typeof SetMetadata&gt; =&gt; SetMetadata('roles', roles);
 &nbsp;
 @Injectable()
 export class RolesGuard implements CanActivate {
-<span class="fstat-no" title="function not covered" >  co</span>nstructor(private reflector: Reflector) { }
+  constructor(private reflector: Reflector) { }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  ca</span>nActivate(context: ExecutionContext): boolean {
-    const requiredRoles = <span class="cstat-no" title="statement not covered" >this.reflector.getAllAndOverride&lt;string[]&gt;('roles', [</span>
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride&lt;string[]&gt;('roles', [
       context.getHandler(),
       context.getClass(),
     ]);
-<span class="cstat-no" title="statement not covered" >    if (requiredRoles == null || requiredRoles.length === 0) <span class="cstat-no" title="statement not covered" >return true;</span></span>
-    const { user } = <span class="cstat-no" title="statement not covered" >context.switchToHttp().getRequest();</span>
-<span class="cstat-no" title="statement not covered" >    if (user == null || typeof user.role !== 'string' || !requiredRoles.includes(user.role)) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new ForbiddenException('Insufficient role');</span>
+    if (requiredRoles == null || requiredRoles.length === 0) return true;
+    const { user } = context.switchToHttp().getRequest();
+    if (user == null || typeof user.role !== 'string' || !requiredRoles.includes(user.role)) {
+      throw new ForbiddenException('Insufficient role');
     }
-<span class="cstat-no" title="statement not covered" >    return true;</span>
+    return true;
   }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -136,7 +136,7 @@ export class RolesGuard implements CanActivate {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-27T17:38:36.972Z
+                at 2025-12-27T18:23:54.632Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
