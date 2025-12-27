@@ -9,7 +9,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "pnpm --filter ./apps/backend test -- --config=apps/backend/jest.config.js",
+    "test": "cd apps/backend && jest --config=jest.config.js",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings=0",
     "deploy": "echo 'Add your deployment command here'",
     "postinstall": "npx prisma generate --schema=packages/prisma/schema.prisma"
