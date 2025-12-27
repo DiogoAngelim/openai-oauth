@@ -1,23 +1,21 @@
 import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 
-import { PrismaClient } from '@prisma/client';
-const prisma = {
+// Mock Drizzle ORM client structure
+const dbClient = {
   user: { findUnique: jest.fn(), create: jest.fn() },
   organization: { create: jest.fn(), findUnique: jest.fn() },
   membership: { findFirst: jest.fn() },
   refreshToken: { create: jest.fn(), findUnique: jest.fn() },
-} as jest.Mocked<PrismaClient>;
-// No need to mock @prisma/client here, we use the local prisma mock
+};
+
 describe('AuthService', () => {
   let authService: AuthService;
   let jwtService: JwtService;
 
   beforeEach(() => {
     jwtService = new JwtService();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jest.spyOn(jwtService, 'sign').mockImplementation(() => 'signed-jwt');
-    // Explicitly type generics for verify, verifyAsync, decode
     jest.spyOn(jwtService, 'verify').mockImplementation(<T extends object>(): T => {
       return {} as T;
     });
@@ -27,23 +25,24 @@ describe('AuthService', () => {
     jest.spyOn(jwtService, 'decode').mockImplementation(<T extends object>(): T => {
       return {} as T;
     });
-    authService = new AuthService(jwtService, prisma);
+    // Use the Drizzle mock instead of Prisma
+    authService = new AuthService(jwtService, dbClient as any);
   });
-  jwtService = new JwtService();
+
   it('should be defined', () => {
     expect(AuthService).toBeDefined();
   });
 
   describe('validateOAuthLogin', () => {
     it('should create user/org/membership if user does not exist', async () => {
-      prisma.user.findUnique.mockResolvedValueOnce(null);
-      prisma.user.create.mockResolvedValueOnce({ id: 'user1', email: 'test@example.com', name: 'Test User' });
-      prisma.organization.create.mockResolvedValueOnce({
+      dbClient.user.findUnique.mockResolvedValueOnce(null);
+      dbClient.user.create.mockResolvedValueOnce({ id: 'user1', email: 'test@example.com', name: 'Test User' });
+      dbClient.organization.create.mockResolvedValueOnce({
         id: 'org1',
-        name: 'Test User\'s Org',
+        name: "Test User's Org",
         memberships: [{ userId: 'user1', role: 'OWNER' }]
       });
-      const profile: { emails: { value: string }[]; displayName: string; photos?: { value: string }[] } = { emails: [{ value: 'test@example.com' }], displayName: 'Test User', photos: [{ value: 'img.png' }] };
+      const profile = { emails: [{ value: 'test@example.com' }], displayName: 'Test User', photos: [{ value: 'img.png' }] };
       const result = await authService.validateOAuthLogin(profile);
       expect(result.user).toMatchObject({ id: 'user1', email: 'test@example.com' });
       expect(result.org).toMatchObject({ id: 'org1', name: expect.any(String) });
@@ -51,13 +50,13 @@ describe('AuthService', () => {
     });
 
     it('should return user/org/membership if user exists', async () => {
-      prisma.user.findUnique.mockResolvedValueOnce({ id: 'user2', email: 'exists@example.com', name: 'Exists' });
-      prisma.membership.findFirst.mockResolvedValueOnce({
+      dbClient.user.findUnique.mockResolvedValueOnce({ id: 'user2', email: 'exists@example.com', name: 'Exists' });
+      dbClient.membership.findFirst.mockResolvedValueOnce({
         userId: 'user2',
         role: 'MEMBER',
         organization: { id: 'org2', name: 'Org2' }
       });
-      const profile: { emails: { value: string }[]; displayName: string } = { emails: [{ value: 'exists@example.com' }], displayName: 'Exists' };
+      const profile = { emails: [{ value: 'exists@example.com' }], displayName: 'Exists' };
       const result = await authService.validateOAuthLogin(profile);
       expect(result.user).toMatchObject({ id: 'user2', email: 'exists@example.com' });
       expect(result.org).toMatchObject({ id: 'org2', name: 'Org2' });
@@ -65,16 +64,16 @@ describe('AuthService', () => {
     });
 
     it('should throw if no membership found', async () => {
-      prisma.user.findUnique.mockResolvedValueOnce({ id: 'user3', email: 'noorg@example.com', name: 'NoOrg' });
-      prisma.membership.findFirst.mockResolvedValueOnce(null);
-      const profile: { emails: { value: string }[]; displayName: string } = { emails: [{ value: 'noorg@example.com' }], displayName: 'NoOrg' };
+      dbClient.user.findUnique.mockResolvedValueOnce({ id: 'user3', email: 'noorg@example.com', name: 'NoOrg' });
+      dbClient.membership.findFirst.mockResolvedValueOnce(null);
+      const profile = { emails: [{ value: 'noorg@example.com' }], displayName: 'NoOrg' };
       await expect(authService.validateOAuthLogin(profile)).rejects.toMatchObject({ name: 'UnauthorizedException' });
     });
   });
 
   describe('generateTokens', () => {
     it('should generate and return tokens', async () => {
-      prisma.refreshToken.create.mockResolvedValueOnce({});
+      dbClient.refreshToken.create.mockResolvedValueOnce({});
       const user = { id: 'user4' } as { id: string };
       const result = await authService.generateTokens(user, 'org4', 'ADMIN');
       expect(jwtService.sign).toHaveBeenCalledWith({ sub: 'user4', orgId: 'org4', role: 'ADMIN' }, { expiresIn: '15m' });
@@ -85,12 +84,12 @@ describe('AuthService', () => {
 
   describe('validateUserFromJwt', () => {
     it('should return user if found', async () => {
-      prisma.user.findUnique.mockResolvedValueOnce({ id: 'user5', email: 'jwt@example.com' });
+      dbClient.user.findUnique.mockResolvedValueOnce({ id: 'user5', email: 'jwt@example.com' });
       const result = await authService.validateUserFromJwt({ sub: 'user5' });
       expect(result).toMatchObject({ id: 'user5', email: 'jwt@example.com' });
     });
     it('should return null if user not found', async () => {
-      prisma.user.findUnique.mockResolvedValueOnce(null);
+      dbClient.user.findUnique.mockResolvedValueOnce(null);
       const result = await authService.validateUserFromJwt({ sub: 'nouser' });
       expect(result).toBeNull();
     });
@@ -98,12 +97,12 @@ describe('AuthService', () => {
 
   describe('refreshAccessToken', () => {
     it('should return new tokens if refresh token is valid', async () => {
-      prisma.refreshToken.findUnique.mockResolvedValueOnce({
+      dbClient.refreshToken.findUnique.mockResolvedValueOnce({
         userId: 'user6',
         expiresAt: new Date(Date.now() + 100000),
         user: { id: 'user6' }
       });
-      prisma.membership.findFirst.mockResolvedValueOnce({
+      dbClient.membership.findFirst.mockResolvedValueOnce({
         userId: 'user6',
         organization: { id: 'org6' },
         role: 'MEMBER'
@@ -113,11 +112,11 @@ describe('AuthService', () => {
       expect(result).toEqual({ accessToken: 'jwt', refreshToken: 'rtok' });
     });
     it('should throw if refresh token not found', async () => {
-      prisma.refreshToken.findUnique.mockResolvedValueOnce(null);
+      dbClient.refreshToken.findUnique.mockResolvedValueOnce(null);
       await expect(authService.refreshAccessToken('badtoken')).rejects.toMatchObject({ name: 'UnauthorizedException' });
     });
     it('should throw if refresh token expired', async () => {
-      prisma.refreshToken.findUnique.mockResolvedValueOnce({
+      dbClient.refreshToken.findUnique.mockResolvedValueOnce({
         userId: 'user7',
         expiresAt: new Date(Date.now() - 100000),
         user: { id: 'user7' }
@@ -125,12 +124,12 @@ describe('AuthService', () => {
       await expect(authService.refreshAccessToken('expiredtoken')).rejects.toMatchObject({ name: 'UnauthorizedException' });
     });
     it('should throw if no membership found', async () => {
-      prisma.refreshToken.findUnique.mockResolvedValueOnce({
+      dbClient.refreshToken.findUnique.mockResolvedValueOnce({
         userId: 'user8',
         expiresAt: new Date(Date.now() + 100000),
         user: { id: 'user8' }
       });
-      prisma.membership.findFirst.mockResolvedValueOnce(null);
+      dbClient.membership.findFirst.mockResolvedValueOnce(null);
       await expect(authService.refreshAccessToken('nomembership')).rejects.toMatchObject({ name: 'UnauthorizedException' });
     });
   });
