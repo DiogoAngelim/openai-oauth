@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GoogleStrategy, isGoogleStrategyEnabled } from '../google.strategy';
 import { AuthService } from '../auth.service';
 
@@ -10,9 +11,9 @@ describe('GoogleStrategy', () => {
       validateOAuthLogin: jest.fn().mockResolvedValue({ user: { id: 'id', email: 'email', name: 'name' } })
     });
     if (isGoogleStrategyEnabled) {
-      strategy = new (GoogleStrategy as typeof import('../google.strategy').GoogleStrategy)(authService);
+      strategy = new (GoogleStrategy as any)(authService);
     } else {
-      strategy = new (GoogleStrategy as typeof import('../google.strategy').GoogleStrategy)();
+      strategy = new (GoogleStrategy as any)();
     }
   });
 
@@ -24,9 +25,7 @@ describe('GoogleStrategy', () => {
     it('should call validateOAuthLogin and done', async () => {
       const profile = { emails: [{ value: 'test@example.com' }], displayName: 'Test User' };
       const done = jest.fn();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof (strategy as any).validate === 'function') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (strategy as any).validate('token', 'refresh', profile, done);
         expect(authService.validateOAuthLogin).toHaveBeenCalledWith(profile);
         expect(done).toHaveBeenCalledWith(null, { id: 'id', email: 'email', name: 'name' });

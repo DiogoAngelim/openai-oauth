@@ -14,6 +14,7 @@ describe('OpenAIService', () => {
       openAIUsageLog: { aggregate: jest.fn() },
       chatMessage: { findMany: jest.fn() }
     };
+    // @ts-expect-error: PrismaClient mock conversion
     service = new OpenAIService(prismaMock);
   });
 

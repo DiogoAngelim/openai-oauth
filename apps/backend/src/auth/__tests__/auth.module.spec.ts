@@ -8,8 +8,10 @@ describe('AuthModule', () => {
   });
   it('should conditionally provide GoogleStrategy', () => {
     if (isGoogleStrategyEnabled) {
+      // @ts-expect-error: Provider type does not have 'name'
       expect(GoogleStrategy.name).toBe('GoogleStrategyClass');
     } else {
+      // @ts-expect-error: Provider type does not have 'name'
       expect(GoogleStrategy.name).toBe('DummyGoogleStrategy');
     }
   });

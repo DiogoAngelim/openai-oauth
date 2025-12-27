@@ -8,7 +8,7 @@ describe('JwtStrategy', () => {
   });
   it('should use JWT_SECRET if set', () => {
     process.env.JWT_SECRET = 'testsecret';
-    const authService = Object.assign(new AuthService({ sign: jest.fn() } as import('@nestjs/jwt').JwtService, {} as import('@prisma/client').PrismaClient), {
+    const authService = Object.assign(new AuthService({ sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService, {} as import('@prisma/client').PrismaClient), {
       validateUserFromJwt: jest.fn()
     });
     const strategy = new JwtStrategy(authService);
@@ -17,7 +17,7 @@ describe('JwtStrategy', () => {
   });
   it('should fallback to random secret if JWT_SECRET not set', () => {
     delete process.env.JWT_SECRET;
-    const jwtService = { sign: jest.fn() } as import('@nestjs/jwt').JwtService;
+    const jwtService = { sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService;
     const prisma = {} as import('@prisma/client').PrismaClient;
     const authService = Object.assign(new AuthService(jwtService, prisma), {
       validateUserFromJwt: jest.fn()

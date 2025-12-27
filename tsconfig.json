@@ -17,7 +17,6 @@
       ]
     },
     "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
