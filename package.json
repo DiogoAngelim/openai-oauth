@@ -1,26 +1,57 @@
 {
-  "type": "module",
   "name": "openai-oauth",
   "version": "1.0.0",
+  "description": "Full stack monorepo for OpenAI OAuth integration.",
+  "keywords": [
+    "openai",
+    "oauth",
+    "monorepo",
+    "nestjs",
+    "nextjs",
+    "typescript"
+  ],
+  "author": "Diogo <diogoangelim@gmail.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DiogoAngelim/openai-oauth.git"
+  },
+  "homepage": "https://github.com/DiogoAngelim/openai-oauth#readme",
+  "bugs": {
+    "url": "https://github.com/DiogoAngelim/openai-oauth/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/DiogoAngelim"
+  },
   "private": true,
+  "type": "module",
+  "main": "index.js",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
-  "main": "index.js",
+  "files": [
+    "apps/",
+    "packages/",
+    "infra/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "test": "cd apps/backend && jest --config=jest.config.js",
-    "lint": "npx eslint . --max-warnings=0",
+    "lint": "npx eslint .",
+    "format": "npx prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "start": "pnpm --filter ./apps/frontend dev",
     "deploy": "echo 'Add your deployment command here'",
     "postinstall": "npx prisma generate --schema=packages/prisma/schema.prisma"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.0",
-    "@prisma/internals": "^7.2.0",
+    "@prisma/internals": "6.19.1",
     "@types/expect": "^24.3.2",
     "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
