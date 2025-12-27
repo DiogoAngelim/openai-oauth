@@ -42,7 +42,6 @@
   },
   "scripts": {
     "test": "cd apps/backend && jest --config=jest.config.js",
-    "lint": "npx eslint .",
     "format": "npx prettier --write .",
     "typecheck": "tsc --noEmit",
     "start": "pnpm --filter ./apps/frontend dev",
