@@ -1,0 +1,36 @@
+# Default .gitignore for full stack (Node.js, Next.js, monorepo)
+
+# Node
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.*
+*.log
+
+# Build & Cache
+.cache/
+.turbo/
+.output/
+.vercel/
+.parcel-cache/
+.eslintcache
+.next/
+
+# Monorepo (Next.js apps/packages)
+apps/*/.next/
+packages/*/.next/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Prisma
+prisma/migrations/
+
+# Others
+*.sqlite
