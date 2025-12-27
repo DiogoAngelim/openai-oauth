@@ -4,7 +4,7 @@
       "esbuild": ">=0.25.0"
     }
   },
-  "name": "openai-oauth",
+  "name": "@openai-oauth/backend",
   "version": "1.0.0",
   "description": "Full stack monorepo for OpenAI OAuth integration.",
   "keywords": [

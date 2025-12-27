@@ -3,9 +3,7 @@ import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 
-
-
-// Expanded test suite for AuthController (see previous patch)
+// Remove PrismaClient usage and mock with a generic object
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
@@ -17,9 +15,9 @@ describe('AuthController', () => {
     const jwtService = {
       sign: jest.fn(() => 'signed-jwt'),
     } as unknown as JwtService;
-    // Mock PrismaClient
-    const prisma = {} as jest.Mocked<PrismaClient>;
-    authService = new AuthService(jwtService, prisma);
+    // Use a generic object as a placeholder for the DB client
+    const dbClient = {} as any;
+    authService = new AuthService(jwtService, dbClient);
     // Mock methods on AuthService
     jest.spyOn(authService, 'generateTokens').mockResolvedValue({ accessToken: 'jwt', refreshToken: 'rtok' });
     jest.spyOn(authService, 'refreshAccessToken').mockResolvedValue({ accessToken: 'jwt', refreshToken: 'rtok' });
