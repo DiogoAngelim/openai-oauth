@@ -1,16 +1,18 @@
 import { AuthController } from '../auth/auth.controller';
 import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 import { Request, Response } from 'express';
-jest.mock('@prisma/client', () => {
+import { PrismaClient } from '@prisma/client';
+
+jest.mock('../prisma', () => {
   return {
-    PrismaClient: jest.fn().mockImplementation(() => ({
+    prisma: {
       user: { findUnique: jest.fn(), create: jest.fn() },
       organization: { create: jest.fn(), findUnique: jest.fn() },
       membership: { findFirst: jest.fn() },
       refreshToken: { create: jest.fn(), findUnique: jest.fn() }
-    }))
+    }
   };
 });
 
