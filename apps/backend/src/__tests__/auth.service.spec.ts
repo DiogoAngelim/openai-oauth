@@ -1,37 +1,34 @@
-const { AuthService } = require('../auth/auth.service');
+import { AuthService } from '../auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 const prisma = {
   user: { findUnique: jest.fn(), create: jest.fn() },
   organization: { create: jest.fn(), findUnique: jest.fn() },
   membership: { findFirst: jest.fn() },
   refreshToken: { create: jest.fn(), findUnique: jest.fn() },
-};
-jest.mock('@prisma/client', () => {
-  return {
-    PrismaClient: jest.fn().mockImplementation(() => ({
-      user: { findUnique: jest.fn(), create: jest.fn() },
-      organization: { create: jest.fn(), findUnique: jest.fn() },
-      membership: { findFirst: jest.fn() },
-      refreshToken: { create: jest.fn(), findUnique: jest.fn() }
-    }))
-  };
-});
+} as unknown as PrismaClient;
+// No need to mock @prisma/client here, we use the local prisma mock
 describe('AuthService', () => {
-  let authService: any;
-  let jwtService: any;
+  let authService: AuthService;
+  let jwtService: JwtService;
 
   beforeEach(() => {
-    jwtService = {
-      sign: jest.fn((payload, options) => {
-        if (options && options.expiresIn === '15m') {
-          return 'signed-jwt';
-        }
-        return 'signed-jwt';
-      })
-    };
+    jwtService = new JwtService();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jest.spyOn(jwtService, 'sign').mockImplementation(() => 'signed-jwt');
+    // Explicitly type generics for verify, verifyAsync, decode
+    jest.spyOn(jwtService, 'verify').mockImplementation(<T extends object>(): T => {
+      return {} as T;
+    });
+    jest.spyOn(jwtService, 'verifyAsync').mockImplementation(<T extends object>(): Promise<T> => {
+      return Promise.resolve({} as T);
+    });
+    jest.spyOn(jwtService, 'decode').mockImplementation(<T extends object>(): T => {
+      return {} as T;
+    });
     authService = new AuthService(jwtService, prisma);
   });
-
+  jwtService = new JwtService();
   it('should be defined', () => {
     expect(AuthService).toBeDefined();
   });
@@ -45,7 +42,7 @@ describe('AuthService', () => {
         name: 'Test User\'s Org',
         memberships: [{ userId: 'user1', role: 'OWNER' }]
       });
-      const profile = { emails: [{ value: 'test@example.com' }], displayName: 'Test User', photos: [{ value: 'img.png' }] };
+      const profile: { emails: { value: string }[]; displayName: string; photos?: { value: string }[] } = { emails: [{ value: 'test@example.com' }], displayName: 'Test User', photos: [{ value: 'img.png' }] };
       const result = await authService.validateOAuthLogin(profile);
       expect(result.user).toMatchObject({ id: 'user1', email: 'test@example.com' });
       expect(result.org).toMatchObject({ id: 'org1', name: expect.any(String) });
@@ -59,7 +56,7 @@ describe('AuthService', () => {
         role: 'MEMBER',
         organization: { id: 'org2', name: 'Org2' }
       });
-      const profile = { emails: [{ value: 'exists@example.com' }], displayName: 'Exists' };
+      const profile: { emails: { value: string }[]; displayName: string } = { emails: [{ value: 'exists@example.com' }], displayName: 'Exists' };
       const result = await authService.validateOAuthLogin(profile);
       expect(result.user).toMatchObject({ id: 'user2', email: 'exists@example.com' });
       expect(result.org).toMatchObject({ id: 'org2', name: 'Org2' });
@@ -69,7 +66,7 @@ describe('AuthService', () => {
     it('should throw if no membership found', async () => {
       prisma.user.findUnique.mockResolvedValueOnce({ id: 'user3', email: 'noorg@example.com', name: 'NoOrg' });
       prisma.membership.findFirst.mockResolvedValueOnce(null);
-      const profile = { emails: [{ value: 'noorg@example.com' }], displayName: 'NoOrg' };
+      const profile: { emails: { value: string }[]; displayName: string } = { emails: [{ value: 'noorg@example.com' }], displayName: 'NoOrg' };
       await expect(authService.validateOAuthLogin(profile)).rejects.toMatchObject({ name: 'UnauthorizedException' });
     });
   });
@@ -77,7 +74,7 @@ describe('AuthService', () => {
   describe('generateTokens', () => {
     it('should generate and return tokens', async () => {
       prisma.refreshToken.create.mockResolvedValueOnce({});
-      const user = { id: 'user4' };
+      const user = { id: 'user4' } as { id: string };
       const result = await authService.generateTokens(user, 'org4', 'ADMIN');
       expect(jwtService.sign).toHaveBeenCalledWith({ sub: 'user4', orgId: 'org4', role: 'ADMIN' }, { expiresIn: '15m' });
       expect(result).toHaveProperty('accessToken', 'signed-jwt');

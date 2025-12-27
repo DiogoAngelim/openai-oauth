@@ -1,4 +1,4 @@
-const { LoggerMiddleware } = require('../logger.middleware');
+import { LoggerMiddleware } from '../logger.middleware';
 
 describe('LoggerMiddleware', () => {
   it('should be defined', () => {
@@ -23,7 +23,10 @@ describe('LoggerMiddleware', () => {
     const res = { statusCode: 201, on: jest.fn((event, cb) => { if (event === 'finish') cb(); }) };
     const next = jest.fn();
     // Spy on getLogger
-    const spy = jest.spyOn(require('../logger'), 'getLogger').mockReturnValue({ info: jest.fn() });
+    // Import getLogger for spying
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const getLogger = require('../logger').getLogger;
+    const spy = jest.spyOn({ getLogger }, 'getLogger').mockReturnValue({ info: jest.fn() });
     middleware.use(req, res, next);
     expect(next).toHaveBeenCalled();
     expect(res.on).toHaveBeenCalledWith('finish', expect.any(Function));

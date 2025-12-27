@@ -4,17 +4,25 @@ import { JwtService } from '@nestjs/jwt';
 describe('AuthService', () => {
   let service: AuthService;
   let jwtService: JwtService;
-  let prismaMock: any;
+  let prismaMock: {
+    user: { findUnique: jest.Mock; create: jest.Mock };
+    organization: { create: jest.Mock };
+    membership: { findFirst: jest.Mock };
+    refreshToken: { create: jest.Mock; findUnique: jest.Mock };
+  };
 
   beforeEach(() => {
-    jwtService = { sign: jest.fn().mockReturnValue('token') } as any;
+    jwtService = {
+      sign: jest.fn().mockReturnValue('token'),
+    } as unknown as JwtService;
     prismaMock = {
       user: { findUnique: jest.fn(), create: jest.fn() },
       organization: { create: jest.fn() },
       membership: { findFirst: jest.fn() },
       refreshToken: { create: jest.fn(), findUnique: jest.fn() }
-    };
-    service = new AuthService(jwtService, prismaMock);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as unknown as any; // Use 'any' to match PrismaClient
+    service = new AuthService(jwtService, prismaMock as unknown as import('@prisma/client').PrismaClient);
   });
 
   it('should throw UnauthorizedException if user creation fails', async () => {
@@ -31,7 +39,15 @@ describe('AuthService', () => {
 
   it('should create tokens and save refreshToken', async () => {
     prismaMock.refreshToken.create.mockResolvedValue({});
-    const result = await service.generateTokens({ id: '1' }, 'org1', 'ADMIN');
+    const user = {
+      id: '1',
+      name: null,
+      email: '',
+      image: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const result = await service.generateTokens(user, 'org1', 'ADMIN');
     expect(result).toHaveProperty('accessToken');
     expect(result).toHaveProperty('refreshToken');
     expect(prismaMock.refreshToken.create).toHaveBeenCalled();

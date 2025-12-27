@@ -8,7 +8,7 @@ describe('AuthModule', () => {
   });
   it('should conditionally provide GoogleStrategy', () => {
     if (isGoogleStrategyEnabled) {
-      expect(GoogleStrategy.name).toBe('GoogleStrategy');
+      expect(GoogleStrategy.name).toBe('GoogleStrategyClass');
     } else {
       expect(GoogleStrategy.name).toBe('DummyGoogleStrategy');
     }

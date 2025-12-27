@@ -1,7 +1,7 @@
 import { AdminController } from '../admin.controller';
 
 describe('AdminController', () => {
-  let controller: any;
+  let controller: AdminController;
 
   beforeEach(() => {
     controller = new AdminController();

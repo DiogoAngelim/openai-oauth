@@ -2,7 +2,11 @@ import { OpenAIService } from '../openai.service';
 
 describe('OpenAIService', () => {
   let service: OpenAIService;
-  let prismaMock: any;
+  let prismaMock: {
+    organization: { findUnique: jest.Mock };
+    openAIUsageLog: { aggregate: jest.Mock };
+    chatMessage: { findMany: jest.Mock };
+  };
 
   beforeEach(() => {
     prismaMock = {

@@ -10,7 +10,7 @@ async function bootstrap() {
   // Sentry Express error handler is not applicable for Fastify
   // TypeScript workaround: cast FastifyAdapter to AbstractHttpAdapter to resolve type mismatch error.
   // WARNING: This should only be used if @nestjs/core and @nestjs/platform-fastify are truly aligned.
-  const adapter = new FastifyAdapter() as unknown as AbstractHttpAdapter<any, any, any>;
+  const adapter = new FastifyAdapter() as unknown as AbstractHttpAdapter<unknown, unknown, unknown>;
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
   app.enableCors({
     origin: typeof process.env.FRONTEND_URL === 'string' && process.env.FRONTEND_URL.length > 0 ? process.env.FRONTEND_URL : 'http://localhost:3000',
@@ -22,8 +22,8 @@ async function bootstrap() {
   fastify.addHook('onResponse', (request, reply, done) => {
     const { method, url } = request.raw;
     const { statusCode } = reply.raw;
-    const duration = reply.getResponseTime ? reply.getResponseTime() : undefined;
-    (logger as any).info('%s %s %d %s', method, url, statusCode, duration ? `${duration}ms` : '');
+    const duration = typeof reply.getResponseTime === 'function' ? reply.getResponseTime() : undefined;
+    logger.info('%s %s %d %s', method, url, statusCode, (typeof duration === 'number' && !isNaN(duration) && duration > 0) ? `${duration}ms` : '');
     done();
   });
   // Sentry error handler

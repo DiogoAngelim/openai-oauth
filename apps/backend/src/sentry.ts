@@ -1,11 +1,17 @@
 
-let Sentry: any;
+type SentryType = {
+  init: () => void;
+  captureException: (...args: unknown[]) => void;
+  captureMessage: (...args: unknown[]) => void;
+  withScope: (fn: (() => void) | undefined) => void;
+};
+let Sentry: SentryType | typeof import('@sentry/node');
 if (process.env.NODE_ENV === 'test') {
   Sentry = {
     init: () => { },
     captureException: () => { },
     captureMessage: () => { },
-    withScope: (fn: any) => fn && fn(),
+    withScope: (fn?: (() => void)) => { if (fn) fn(); },
   };
 } else {
   Sentry = require('@sentry/node');

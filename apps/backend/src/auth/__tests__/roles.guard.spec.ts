@@ -6,8 +6,12 @@ import { ForbiddenException, ExecutionContext } from '@nestjs/common';
 
 describe('RolesGuard', () => {
   let guard: RolesGuard;
-  let reflector: any;
-  let context: any;
+  let reflector: { getAllAndOverride: jest.Mock };
+  let context: {
+    switchToHttp: () => { getRequest: () => { user: { role: string } | null } };
+    getHandler: jest.Mock;
+    getClass: jest.Mock;
+  };
 
   beforeEach(() => {
     reflector = { getAllAndOverride: jest.fn() };

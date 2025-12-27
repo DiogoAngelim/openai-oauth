@@ -6,9 +6,9 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "build": "nest build",
-    "test": "jest --passWithNoTests --coverage",
-    "test:watch": "jest --watchAll",
-    "test:ci": "jest --coverage --runInBand",
+    "test": "npx jest --passWithNoTests --coverage --config=jest.config.js",
+    "test:watch": "npx jest --watchAll --config=jest.config.js",
+    "test:ci": "npx jest --coverage --runInBand --config=jest.config.js",
     "postinstall": "prisma generate --schema=../../packages/prisma/schema.prisma"
   },
   "dependencies": {

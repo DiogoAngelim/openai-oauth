@@ -6,7 +6,9 @@ describe('GithubStrategy', () => {
   let authService: AuthService;
 
   beforeEach(() => {
-    authService = { validateOAuthLogin: jest.fn().mockResolvedValue('user') } as any;
+    authService = Object.assign(new AuthService({ sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService, {} as unknown as import('@prisma/client').PrismaClient), {
+      validateOAuthLogin: jest.fn().mockResolvedValue({ user: { id: 'id', email: 'email', name: 'name' } })
+    });
     strategy = new GithubStrategy(authService);
   });
 
@@ -19,7 +21,7 @@ describe('GithubStrategy', () => {
     const done = jest.fn();
     await strategy.validate('token', 'refresh', profile, done);
     expect(authService.validateOAuthLogin).toHaveBeenCalledWith(profile);
-    expect(done).toHaveBeenCalledWith(null, 'user');
+    expect(done).toHaveBeenCalledWith(null, { id: 'id', email: 'email', name: 'name' });
   });
 });
 

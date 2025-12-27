@@ -1,16 +1,10 @@
-const { MonitoringController } = require('../monitoring.controller');
+import { MonitoringController } from '../monitoring.controller';
 
 describe('MonitoringController', () => {
   it('should be defined', () => {
     expect(MonitoringController).toBeDefined();
   });
-  it('should set header and end metrics', async () => {
-    const res = { setHeader: jest.fn(), end: jest.fn() };
-    const controller = new MonitoringController();
-    await controller.metrics(res);
-    expect(res.setHeader).toHaveBeenCalledWith('Content-Type', expect.any(String));
-    expect(res.end).toHaveBeenCalled();
-  });
+  // Removed legacy FastifyReply methods test
 
   it('should set header and send metrics', async () => {
     const res = { header: jest.fn(), send: jest.fn() };

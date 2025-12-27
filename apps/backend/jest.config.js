@@ -1,10 +1,16 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/src', '<rootDir>/__tests__', '<rootDir>'],
+  roots: ['<rootDir>/src', '<rootDir>/src/__tests__', '<rootDir>/__tests__'],
   testMatch: [
-    '**/__tests__/**/*.spec.ts',
-    '**/__tests__/**/*.test.ts',
+    '<rootDir>/src/**/__tests__/**/*.spec.ts',
+    '<rootDir>/src/**/__tests__/**/*.test.ts',
+    '<rootDir>/src/**/__tests__/*.spec.ts',
+    '<rootDir>/src/**/__tests__/*.test.ts',
+    '<rootDir>/__tests__/**/*.spec.ts',
+    '<rootDir>/__tests__/**/*.test.ts',
+    '<rootDir>/src/**/*.spec.ts',
+    '<rootDir>/src/**/*.test.ts',
     '**/?(*.)+(spec|test).ts',
   ],
   transform: {

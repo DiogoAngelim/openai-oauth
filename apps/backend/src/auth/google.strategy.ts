@@ -1,14 +1,17 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
+import { Strategy } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
-export const isGoogleStrategyEnabled = !!process.env.GOOGLE_CLIENT_ID;
+export const isGoogleStrategyEnabled = typeof process.env.GOOGLE_CLIENT_ID === 'string' && process.env.GOOGLE_CLIENT_ID.trim().length > 0;
 
-let GoogleStrategyImpl: any;
+
+import { Provider } from '@nestjs/common';
+
+let GoogleStrategy: Provider;
 if (isGoogleStrategyEnabled) {
   @Injectable()
-  class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+  class GoogleStrategyClass extends PassportStrategy(Strategy, 'google') {
     constructor(private readonly authService: AuthService) {
       super({
         clientID: process.env.GOOGLE_CLIENT_ID,
@@ -19,18 +22,21 @@ if (isGoogleStrategyEnabled) {
       });
     }
 
-    async validate(_accessToken: string, _refreshToken: string, profile: { emails: { value: string }[]; displayName: string; photos?: { value: string }[] }, done: VerifyCallback): Promise<void> {
-      const result = await this.authService.validateOAuthLogin(profile);
-      done(null, result);
+    async validate(
+      _accessToken: string,
+      _refreshToken: string,
+      profile: { emails: { value: string }[]; displayName: string; photos?: { value: string }[] },
+      done: (err: Error | null, result?: { id?: string; email?: string; name?: string } | null) => void
+    ): Promise<void> {
+      const { user } = await this.authService.validateOAuthLogin(profile);
+      done(null, { id: user.id ?? undefined, email: user.email ?? undefined, name: user.name ?? undefined });
     }
   }
-  GoogleStrategyImpl = GoogleStrategy;
+  GoogleStrategy = GoogleStrategyClass;
 } else {
   @Injectable()
-  class DummyGoogleStrategy {
-    // No-op
-  }
-  GoogleStrategyImpl = DummyGoogleStrategy;
+  class DummyGoogleStrategy { }
+  GoogleStrategy = DummyGoogleStrategy;
 }
 
-export { GoogleStrategyImpl as GoogleStrategy };
+export { GoogleStrategy };

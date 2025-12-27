@@ -4,8 +4,8 @@ import { getLogger } from './logger';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  private logger: any;
-  constructor(loggerInstance?: any) {
+  private logger: { info: (message: string, method: string, url: string, status: number, duration: number) => void };
+  constructor(loggerInstance?: { info: (message: string, method: string, url: string, status: number, duration: number) => void }) {
     this.logger = loggerInstance || getLogger();
   }
   use(req: Request, res: Response, next: NextFunction): void {

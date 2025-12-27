@@ -1,4 +1,4 @@
-const { OpenAIController } = require('../openai/openai.controller');
+import { OpenAIController } from '../openai/openai.controller';
 jest.mock('@prisma/client', () => {
   return {
     PrismaClient: jest.fn().mockImplementation(() => ({
@@ -19,9 +19,9 @@ describe('OpenAIController', () => {
     const mockCreateChatCompletion = jest.fn();
     const controller = new OpenAIController({
       createChatCompletion: mockCreateChatCompletion
-    } as any);
-    const req = { user: { orgId: 'org1', sub: 'user1' } } as any;
-    const res = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() } as any;
+    } as Partial<OpenAIController>);
+    const req: { user: { orgId: string; sub: string } } = { user: { orgId: 'org1', sub: 'user1' } };
+    const res: { json: jest.Mock; setHeader: jest.Mock; write: jest.Mock; end: jest.Mock } = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() };
     const body = { prompt: 'Hello world', model: 'gpt-3.5-turbo' };
     await controller.chat(req, res, body, 'false');
     expect(mockCreateChatCompletion).toHaveBeenCalledWith('org1', 'user1', body, false);
@@ -39,9 +39,9 @@ describe('OpenAIController', () => {
     });
     const controller = new OpenAIController({
       createChatCompletion: mockCreateChatCompletion
-    } as any);
-    const req = { user: { orgId: 'org1', sub: 'user1' } } as any;
-    const res = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() } as any;
+    } as Partial<OpenAIController>);
+    const req: { user: { orgId: string; sub: string } } = { user: { orgId: 'org1', sub: 'user1' } };
+    const res: { json: jest.Mock; setHeader: jest.Mock; write: jest.Mock; end: jest.Mock } = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() };
     const body = { prompt: 'stream test', model: 'gpt-3.5-turbo' };
     await controller.chat(req, res, body, 'true');
     expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'text/event-stream');
@@ -54,15 +54,15 @@ describe('OpenAIController', () => {
     const mockCreateChatCompletion = jest.fn().mockRejectedValue(new Error('fail'));
     const controller = new OpenAIController({
       createChatCompletion: mockCreateChatCompletion
-    } as any);
-    const req = { user: { orgId: 'org1', sub: 'user1' } } as any;
-    const res = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+    } as Partial<OpenAIController>);
+    const req: { user: { orgId: string; sub: string } } = { user: { orgId: 'org1', sub: 'user1' } };
+    const res: { json: jest.Mock; setHeader: jest.Mock; write: jest.Mock; end: jest.Mock; status: jest.Mock } = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn(), status: jest.fn().mockReturnThis() };
     const body = { prompt: 'error test', model: 'gpt-3.5-turbo' };
     // Patch controller to catch error and call res.status(500)
-    controller.chat = async function (...args: any[]) {
+    controller.chat = async function (...args: [unknown, unknown, unknown, unknown]) {
       try {
         // Ensure correct argument structure for apply
-        await OpenAIController.prototype.chat.apply(this, args as [any, any, any, any]);
+        await OpenAIController.prototype.chat.apply(this, args);
       } catch (e) {
         const error = e instanceof Error ? e : new Error(String(e));
         res.status(500).json({ error: error.message });

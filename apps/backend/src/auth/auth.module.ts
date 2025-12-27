@@ -6,15 +6,21 @@ import { AuthController } from './auth.controller';
 import { GoogleStrategy, isGoogleStrategyEnabled } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.registerAsync({
-      useFactory: async () => ({
-        secret: process.env.JWT_SECRET || require('crypto').randomBytes(32).toString('hex'),
-        signOptions: { expiresIn: '15m' },
-      }),
+      useFactory: async () => {
+        const secret = typeof process.env.JWT_SECRET === 'string' && process.env.JWT_SECRET.trim().length > 0
+          ? process.env.JWT_SECRET
+          : crypto.randomBytes(32).toString('hex');
+        return {
+          secret,
+          signOptions: { expiresIn: '15m' },
+        };
+      },
     }),
   ],
   providers: [

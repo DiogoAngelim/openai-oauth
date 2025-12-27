@@ -18,9 +18,9 @@ export class LinkedinStrategy extends PassportStrategy(Strategy, 'linkedin') {
     _accessToken: string,
     _refreshToken: string,
     profile: { emails: { value: string }[]; displayName: string; photos?: { value: string }[] },
-    done: (err: Error | null, result?: any) => void
+    done: (err: Error | null, result?: { id?: string; email?: string; name?: string } | null) => void
   ): Promise<void> {
-    const result = await this.authService.validateOAuthLogin(profile);
-    done(null, result);
+    const { user } = await this.authService.validateOAuthLogin(profile);
+    done(null, { id: user.id ?? undefined, email: user.email ?? undefined, name: user.name ?? undefined });
   }
 }

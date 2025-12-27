@@ -1,4 +1,4 @@
-const { RateLimitService } = require('../rate-limit/rate-limit.service');
+import { RateLimitService } from '../rate-limit/rate-limit.service';
 
 jest.mock('ioredis', () => {
   return jest.fn().mockImplementation(() => ({
@@ -7,11 +7,11 @@ jest.mock('ioredis', () => {
   }));
 });
 
-const Redis = require('ioredis');
+import Redis from 'ioredis';
 
 describe('RateLimitService', () => {
-  let service: any;
-  let redisMock: any;
+  let service: RateLimitService;
+  let redisMock: { incr: jest.Mock; expire: jest.Mock };
 
   beforeEach(() => {
     redisMock = new Redis();

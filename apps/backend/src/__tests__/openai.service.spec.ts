@@ -1,12 +1,14 @@
 // No top-level exception imports needed
+import { OpenAIService } from '../openai/openai.service';
+import { openaiCreateMock as oaiMock, openaiMockFactory } from '../__mocks__/openai.mock';
+import { prismaMockFactory } from '../__mocks__/prisma-client.mock';
+
 describe('OpenAIService', () => {
-  let service: any;
-  let openaiCreateMock: any;
-  let prismaInstance: any;
+  let service: OpenAIService;
+  let openaiCreateMock: jest.Mock;
+  let prismaInstance: ReturnType<typeof prismaMockFactory>;
   beforeEach(() => {
     jest.resetModules();
-    const { openaiCreateMock: oaiMock, openaiMockFactory } = require('../../__mocks__/openai.mock');
-    const { prismaMockFactory } = require('../../__mocks__/prisma-client.mock');
     openaiCreateMock = oaiMock;
     prismaInstance = prismaMockFactory();
     jest.doMock('openai', () => ({
@@ -15,9 +17,7 @@ describe('OpenAIService', () => {
     jest.doMock('@prisma/client', () => ({
       PrismaClient: jest.fn().mockImplementation(() => prismaInstance)
     }));
-    const { OpenAIService } = require('../openai/openai.service');
-    service = new OpenAIService();
-    service._prismaInstance = prismaInstance;
+    service = new OpenAIService(prismaInstance);
   });
 
   it('should be defined', () => {
@@ -25,6 +25,9 @@ describe('OpenAIService', () => {
   });
 
   it('should handle prompt input', async () => {
+    const prisma = (service as import('../openai/openai.service').OpenAIService)._prismaInstance;
+    prisma.organization.findUnique.mockResolvedValue({ id: 'org1', subscription: { monthlyQuota: 1000 } });
+    prisma.openAIUsageLog.aggregate.mockResolvedValue({ _sum: { totalTokens: 0 } });
     await expect(service.createChatCompletion('org1', 'user1', { prompt: 'hi' }, false)).resolves.toBeDefined();
   });
 
@@ -41,7 +44,7 @@ describe('OpenAIService', () => {
   });
 
   it('should throw ForbiddenException if quota exceeded', async () => {
-    const prisma = (service as any)._prismaInstance;
+    const prisma = (service as import('../openai/openai.service').OpenAIService)._prismaInstance;
     prisma.organization.findUnique.mockResolvedValue({ subscription: { monthlyQuota: 1 } });
     prisma.openAIUsageLog.aggregate.mockResolvedValue({ _sum: { totalTokens: 1000 } });
     await expect(service.createChatCompletion('org1', 'user1', { prompt: 'hi' }, false)).rejects.toThrow(
@@ -50,6 +53,9 @@ describe('OpenAIService', () => {
   });
 
   it('should handle streaming', async () => {
+    const prisma = (service as import('../openai/openai.service').OpenAIService)._prismaInstance;
+    prisma.organization.findUnique.mockResolvedValue({ id: 'org1', subscription: { monthlyQuota: 1000 } });
+    prisma.openAIUsageLog.aggregate.mockResolvedValue({ _sum: { totalTokens: 0 } });
     // Patch OpenAI mock for streaming
     const streamData = [{ choices: [{ delta: { content: 'A' } }] }, { choices: [{ delta: { content: 'B' } }] }];
     openaiCreateMock.mockImplementation(async function* () {
@@ -62,7 +68,7 @@ describe('OpenAIService', () => {
   });
 
   it('should throw ForbiddenException if org not found', async () => {
-    const prisma = (service as any)._prismaInstance;
+    const prisma = (service as OpenAIService)._prismaInstance;
     prisma.organization.findUnique.mockResolvedValue(null);
     await expect(service.createChatCompletion('org1', 'user1', { prompt: 'hi' }, false)).rejects.toThrow(
       expect.objectContaining({ name: 'ForbiddenException' })

@@ -1,4 +1,4 @@
-const { registry } = require('../monitoring');
+import { registry } from '../monitoring';
 
 describe('monitoring registry', () => {
   it('should be defined', () => {

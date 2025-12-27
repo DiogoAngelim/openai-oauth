@@ -1,4 +1,4 @@
-const { BillingService } = require('../billing.service');
+import { BillingService } from '../billing.service';
 
 describe('BillingService', () => {
   it('should be defined', () => {

@@ -18,9 +18,9 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     _accessToken: string,
     _refreshToken: string,
     profile: { emails: { value: string }[]; displayName: string; photos?: { value: string }[] },
-    done: (err: Error | null, result?: any) => void // Changed from specific types to 'any' for testability
+    done: (err: Error | null, result?: { id?: string; email?: string; name?: string } | null) => void
   ): Promise<void> {
-    const result = await this.authService.validateOAuthLogin(profile);
-    done(null, result);
+    const { user } = await this.authService.validateOAuthLogin(profile);
+    done(null, { id: user.id ?? undefined, email: user.email ?? undefined, name: user.name ?? undefined });
   }
 }

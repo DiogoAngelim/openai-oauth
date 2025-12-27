@@ -1,7 +1,7 @@
 import { ApiController } from '../api/api.controller';
 
 describe('ApiController', () => {
-  let controller: any;
+  let controller: ApiController;
 
   beforeEach(() => {
     controller = new ApiController();

@@ -3,8 +3,7 @@ import { BillingController } from '../billing.controller';
 import { BillingService } from '../billing.service';
 
 describe('BillingController', () => {
-  let controller: any;
-  let service: any;
+  let controller: BillingController;
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       controllers: [BillingController],

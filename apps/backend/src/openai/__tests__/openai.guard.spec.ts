@@ -7,7 +7,7 @@ describe('OpenAIRateLimitGuard', () => {
   let rateLimit: RateLimitService;
 
   beforeEach(() => {
-    rateLimit = { check: jest.fn().mockResolvedValue(true) } as any;
+    rateLimit = { check: jest.fn().mockResolvedValue(true) } as RateLimitService;
     guard = new OpenAIRateLimitGuard(rateLimit);
   });
 

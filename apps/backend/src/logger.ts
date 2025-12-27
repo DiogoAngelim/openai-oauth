@@ -1,6 +1,7 @@
 import { createLogger, format, transports } from 'winston';
 
-export function getLogger() {
+import { Logger } from 'winston';
+export function getLogger(): Logger {
   return createLogger({
     level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
     format: format.combine(

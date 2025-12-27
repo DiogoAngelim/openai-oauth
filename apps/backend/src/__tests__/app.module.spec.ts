@@ -2,13 +2,12 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../app.module';
 
 describe('AppModule', () => {
-  let module: any;
+  let module: AppModule;
 
   beforeEach(async () => {
     const testingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-    /** @type {any} */
     module = testingModule.get(AppModule);
   });
 

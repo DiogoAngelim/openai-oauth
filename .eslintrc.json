@@ -40,7 +40,8 @@
     "@typescript-eslint/strict-boolean-expressions": [
       "error"
     ],
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "@next/next/no-html-link-for-pages": "off"
   },
   "ignorePatterns": [
     "**/*.config.js",
@@ -51,5 +52,16 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.spec.ts",
+        "*.spec.js"
+      ],
+      "rules": {
+        "@next/next/no-assign-module-variable": "off"
+      }
+    }
+  ]
 }

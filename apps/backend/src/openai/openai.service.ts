@@ -7,6 +7,8 @@ export interface ChatMessage {
   createdAt: Date;
 }
 import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 
 
 
@@ -14,10 +16,15 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class OpenAIService {
-  prisma: any;
+  prisma: PrismaClient;
+  _prismaInstance?: PrismaClient;
 
-  constructor(prismaInstance?: any) {
-    this.prisma = prismaInstance || require('../prisma').prisma;
+  constructor(prismaInstance?: PrismaClient) {
+    this.prisma = prismaInstance ?? prisma;
+    if (prismaInstance) {
+      this._prismaInstance = prismaInstance;
+      this.prisma = prismaInstance;
+    }
   }
 
   async getUserChatHistory(orgId: string, userId: string): Promise<ChatMessage[]> {
@@ -43,14 +50,14 @@ export class OpenAIService {
   ): Promise<unknown> {
     // BadRequestException for empty prompt
     if (!body.prompt || body.prompt.trim() === '') {
-      const err: any = new Error('Prompt is required');
-      err.name = 'BadRequestException';
+      const err = new Error('Prompt is required');
+      (err as Error & { name: string }).name = 'BadRequestException';
       throw err;
     }
     // ForbiddenException for forbidden prompt
     if (body.prompt === 'api_key') {
-      const err: any = new Error('Forbidden prompt');
-      err.name = 'ForbiddenException';
+      const err = new Error('Forbidden prompt');
+      (err as Error & { name: string }).name = 'ForbiddenException';
       throw err;
     }
     // Check org existence
@@ -58,25 +65,25 @@ export class OpenAIService {
       where: { id: orgId },
       include: { subscription: true }
     });
-    if (!org) {
-      const err: any = new Error('Organization not found');
-      err.name = 'ForbiddenException';
+    if (org == null) {
+      const err = new Error('Organization not found');
+      (err as Error & { name: string }).name = 'ForbiddenException';
       throw err;
     }
     // Quota check (simulate)
-    if (org.subscription && org.subscription.monthlyQuota) {
+    if (org.subscription !== undefined && org.subscription !== null && org.subscription.monthlyQuota !== undefined && org.subscription.monthlyQuota !== null) {
       const usage = await this.prisma.openAIUsageLog.aggregate({
         where: { organizationId: orgId },
         _sum: { totalTokens: true },
       });
-      if (usage._sum && usage._sum.totalTokens && usage._sum.totalTokens > 999) {
-        const err: any = new Error('Quota exceeded');
-        err.name = 'ForbiddenException';
+      if (usage._sum !== undefined && usage._sum !== null && usage._sum.totalTokens !== undefined && usage._sum.totalTokens !== null && usage._sum.totalTokens > 999) {
+        const err = new Error('Quota exceeded');
+        (err as Error & { name: string }).name = 'ForbiddenException';
         throw err;
       }
     }
     // Streaming support for test
-    if (stream && typeof onData === 'function') {
+    if (stream === true && typeof onData === 'function') {
       onData('A');
       onData('B');
       return;

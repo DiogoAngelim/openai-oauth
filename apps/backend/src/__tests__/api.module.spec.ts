@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { ApiModule } from '../api/api.module';
 
 describe('ApiModule', () => {
-  let module: any;
+  let module: ApiModule;
 
   beforeEach(async () => {
     const testingModule = await Test.createTestingModule({
