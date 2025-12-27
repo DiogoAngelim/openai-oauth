@@ -1,9 +1,15 @@
 # Default .gitignore for full stack (Node.js, Next.js, monorepo)
 
 # Node
-node_modules/
 dist/
 build/
+coverage/
+.env
+.env.*
+*.log
+# Node
+node_modules/
+dist/
 coverage/
 .env
 .env.*

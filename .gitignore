@@ -2,7 +2,6 @@
 node_modules/
 dist/
 build/
-coverage/
 .env
 .env.*
 *.log
@@ -16,6 +15,7 @@ coverage/
 
 # VSCode
 .vscode/
+
 
 # OS
 .DS_Store
