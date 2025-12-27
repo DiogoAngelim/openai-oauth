@@ -1,0 +1,57 @@
+# Rollback to a previous deployment tag
+# Usage: Set the `ROLLBACK_TAG` variable to the desired git tag (e.g., v1.2.3)
+# This workflow will checkout the code at that tag, build, and redeploy the backend service.
+
+name: Rollback Backend to Previous Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      rollback_tag:
+        description: 'Git tag to rollback to (e.g., v1.2.3)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout code at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.rollback_tag }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm@8.15.5
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build backend
+        run: pnpm --filter ./apps/backend... build
+
+      - name: Docker build & push
+        run: |
+          docker build -f apps/backend/Dockerfile -t ${{ secrets.ECR_REGISTRY }}/openai-saas-backend:${{ github.event.inputs.rollback_tag }} .
+          echo ${{ secrets.AWS_ECR_LOGIN }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          docker push ${{ secrets.ECR_REGISTRY }}/openai-saas-backend:${{ github.event.inputs.rollback_tag }}
+
+      - name: Update ECS service to previous revision
+        uses: aws-actions/amazon-ecs-update-task-definition@v1
+        with:
+          task-definition: openai-saas-backend
+          service: openai-saas-backend
+          cluster: openai-saas-cluster
+          image: ${{ secrets.ECR_REGISTRY }}/openai-saas-backend:${{ github.event.inputs.rollback_tag }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: (Optional) Rollback database migration
+        run: |
+          echo "If you need to rollback DB, run the manual script in packages/prisma/rollback.sh or use the workflow input."
+        shell: bash
