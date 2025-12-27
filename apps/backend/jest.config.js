@@ -1,5 +1,4 @@
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/src', '<rootDir>/src/__tests__', '<rootDir>/__tests__'],
   testMatch: [
@@ -14,20 +13,16 @@ module.exports = {
     '**/?(*.)+(spec|test).ts',
   ],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
-  },
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.test.json',
-      diagnostics: false,
-    }
+    // Use ts-jest for controller files to support parameter decorators
+    '^.+\\.(controller|module)\\.ts$': 'ts-jest',
+    // Use babel-jest for all other files
+    '^.+\\.(ts|js)$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/main.ts'],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
-  // coverageThreshold removed to allow coverage reporting even if not 100%
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   transformIgnorePatterns: ['/node_modules/'],
 };
