@@ -63,6 +63,7 @@
     "@types/passport-linkedin-oauth2": "^1.5.6",
     "babel-jest": "^30.2.0",
     "get-port": "^7.1.0",
+    "istanbul": "^0.4.5",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
