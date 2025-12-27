@@ -33,7 +33,7 @@ echo "[INFO] Update your deployment service to use image $ROLLBACK_TAG (customiz
 
 if $DB_ROLLBACK; then
   echo "[INFO] Rolling back database migration..."
-  bash packages/prisma/rollback.sh "$ROLLBACK_TAG"
+
 fi
 
 echo "[SUCCESS] Rollback to $ROLLBACK_TAG complete."

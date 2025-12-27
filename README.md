@@ -27,10 +27,9 @@
    - Copy `.env.example` to `.env` and fill in all required values (DB, Redis, OpenAI keys, etc).
 4. **Set up the database:**
    - Edit `DATABASE_URL` in `.env` for your PostgreSQL instance.
-   - Run migrations and generate Prisma client:
+   - Run migrations and generate Drizzle client:
      ```sh
-     npx prisma migrate deploy
-     npx prisma generate
+     npx drizzle-kit generate:sqlite # or your DB
      ```
 5. **Start Redis:**
    - Homebrew (macOS):
@@ -57,7 +56,7 @@ openai-oauth/
 ├── apps/
 │   ├── backend/      # NestJS API backend
 │   └── frontend/     # Next.js frontend
-├── packages/         # Shared code (config, types, utils, prisma)
+├── packages/         # Shared code (config, types, utils)
 ├── infra/            # Infrastructure as code (Terraform)
 ├── .env.example      # Environment variable template
 ├── README.md         # Project documentation
@@ -219,7 +218,7 @@ Response:
   lsof -i :4000 | grep LISTEN | awk '{print $2}' | xargs kill -9
   ```
 - **Redis errors**: Ensure Redis is running and `REDIS_URL` is correct in `.env`.
-- **Prisma errors**: Check your database connection and run `npx prisma generate`.
+
 - **/metrics 500 error**: Ensure you are using Fastify-compatible controllers.
 - **Missing .env file**: Copy `.env.example` to `.env` and fill in all required values.
 

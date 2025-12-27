@@ -22,7 +22,7 @@ This project supports automated and manual rollback/versioning for safe deployme
 ## 3. Manual Database Migration Rollback
 - To mark a migration as rolled back:
   ```sh
-  cd packages/prisma
+
   ./rollback.sh <migration-name>
   # Example:
   ./rollback.sh 20251226033003_add_chat_message

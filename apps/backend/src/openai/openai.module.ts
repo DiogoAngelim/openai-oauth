@@ -5,16 +5,10 @@ import { AuthModule } from '../auth/auth.module';
 // ...existing code...
 
 
-import { prisma } from '../prisma';
 
 @Module({
   imports: [AuthModule],
-  providers: [
-    {
-      provide: OpenAIService,
-      useFactory: () => new OpenAIService(prisma),
-    },
-  ],
+  providers: [OpenAIService],
   controllers: [OpenAIController],
   exports: [OpenAIService],
 })

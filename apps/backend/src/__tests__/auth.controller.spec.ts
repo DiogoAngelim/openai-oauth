@@ -3,20 +3,7 @@ import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 
-// Workaround: define a minimal PrismaClient type for testing
-type PrismaClient = any;
 
-
-jest.mock('../prisma', () => {
-  return {
-    prisma: {
-      user: { findUnique: jest.fn(), create: jest.fn() },
-      organization: { create: jest.fn(), findUnique: jest.fn() },
-      membership: { findFirst: jest.fn() },
-      refreshToken: { create: jest.fn(), findUnique: jest.fn() }
-    }
-  };
-});
 
 // Expanded test suite for AuthController (see previous patch)
 describe('AuthController', () => {

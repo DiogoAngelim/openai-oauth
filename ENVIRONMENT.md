@@ -3,7 +3,7 @@
 This file documents the allowed environment variables for the project. Only the following variables should be used in `.env` files:
 
 ## Required
-- `DATABASE_URL` - PostgreSQL connection string for Prisma
+- `DATABASE_URL` - PostgreSQL connection string for Drizzle ORM
 - `JWT_SECRET` - Secret for JWT authentication
 - `OPENAI_API_KEY` - OpenAI API key
 - `REDIS_URL` - Redis connection string
