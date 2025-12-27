@@ -1,9 +1,9 @@
 import { AuthController } from '../auth/auth.controller';
 import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { prisma } from '../prisma';
 import { Request, Response } from 'express';
 import type { PrismaClient } from '@prisma/client';
+
 
 jest.mock('../prisma', () => {
   return {
