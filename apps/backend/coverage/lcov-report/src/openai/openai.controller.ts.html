@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/25</span>
+                <span class='fraction'>0/25</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">34.78% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/23</span>
+                <span class='fraction'>0/23</span>
             </div>
         
             
@@ -109,19 +109,19 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,7 +143,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,19 +155,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Controller, Post, Get, Req, Res, UseGuards, Body, Query } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { OpenAIService } from './openai.service';
-import { OpenAIRateLimitGuard } from './openai.guard';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { Controller, Post, Get, Req, Res, UseGuards, Body, Query } from '@nestjs/common';</span>
+<span class="cstat-no" title="statement not covered" >import { JwtAuthGuard } from '../auth/jwt-auth.guard';</span>
+<span class="cstat-no" title="statement not covered" >import { OpenAIService } from './openai.service';</span>
+<span class="cstat-no" title="statement not covered" >import { OpenAIRateLimitGuard } from './openai.guard';</span>
 import { Request, Response } from 'express';
 &nbsp;
 @Controller('openai')
 @UseGuards(JwtAuthGuard, OpenAIRateLimitGuard)
-export class OpenAIController {
-  constructor(private readonly openai: OpenAIService) { }
+export <span class="cstat-no" title="statement not covered" >class <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >OpenAIController </span>{</span></span>
+<span class="fstat-no" title="function not covered" >  constructor(private readonly <span class="cstat-no" title="statement not covered" >o</span>penai: O</span>penAIService) { }
 &nbsp;
   @Post('chat')
-  async <span class="fstat-no" title="function not covered" >chat(</span>
+  async <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >chat(</span></span>
     @Req() req: Request &amp; { user: { orgId: string; sub: string } },
     @Res() res: Response,
     @Body() body: { prompt: string; model?: string; max_tokens?: number; stream?: boolean },
@@ -189,7 +189,7 @@ export class OpenAIController {
     }
   }
   @Get('history')
-  async <span class="fstat-no" title="function not covered" >getHistory(</span>
+  async <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >getHistory(</span></span>
     @Req() req: Request &amp; { user: { orgId: string; sub: string } },
     @Res() res: Response
   ): Promise&lt;void&gt; {
@@ -208,7 +208,7 @@ export class OpenAIController {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-27T17:28:29.185Z
+                at 2025-12-27T17:38:36.972Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

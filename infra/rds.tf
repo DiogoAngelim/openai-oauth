@@ -5,18 +5,14 @@ resource "aws_db_instance" "postgres" {
   instance_class      = "db.t3.micro"
   name                = "openai_saas"
   username            = "postgres"
-  password            = var.db_password
+  password            = random_password.db.result
   parameter_group_name = "default.postgres15"
   skip_final_snapshot = true
   publicly_accessible = false
   vpc_security_group_ids = [aws_security_group.db.id]
 }
 
-variable "db_password" {
-  description = "The password for the RDS Postgres instance."
-  type        = string
-  sensitive   = true
-}
+
 
 resource "aws_security_group" "db" {
   name        = "openai-saas-db"
