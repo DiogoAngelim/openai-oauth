@@ -41,7 +41,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "test": "cd apps/backend && jest --config=jest.config.js",
+    "test": "pnpm --filter @openai-oauth/backend test",
     "format": "npx prettier --write .",
     "typecheck": "tsc --noEmit",
     "start": "pnpm --filter ./apps/frontend dev",
