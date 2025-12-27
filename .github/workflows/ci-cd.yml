@@ -7,8 +7,39 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+      fail-fast: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            ~/.local/share/pnpm/store/v3
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm lint
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      matrix:
+        node-version: [18, 20]
+      fail-fast: true
     services:
       postgres:
         image: postgres:15
@@ -23,30 +54,85 @@ jobs:
         ports:
           - 6379:6379
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openai_saas
-      REDIS_URL: redis://localhost:6379
-      JWT_SECRET: testsecret
-      GOOGLE_CLIENT_ID: dummy
-      GOOGLE_CLIENT_SECRET: dummy
-      OPENAI_API_KEY: dummy
-      OPENAI_ORG_ID: dummy
-      FRONTEND_URL: http://localhost:3000
-      BACKEND_URL: http://localhost:4000
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_ORG_ID: ${{ secrets.OPENAI_ORG_ID }}
+      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      BACKEND_URL: ${{ secrets.BACKEND_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            ~/.local/share/pnpm/store/v3
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - run: pnpm install --no-frozen-lockfile
+      - run: npx prisma generate --schema=packages/prisma/schema.prisma
+      - run: npx prisma migrate deploy --schema=packages/prisma/schema.prisma
+      - run: pnpm test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  security-audit:
+    runs-on: ubuntu-latest
+    needs: lint
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npx prisma generate --schema=packages/prisma/schema.prisma
-      - run: npx prisma migrate deploy --schema=packages/prisma/schema.prisma
-      - run: npm run build --workspace=apps/backend
-      - run: npm run build --workspace=apps/frontend
-      # Add your test scripts here
-      # - run: npm test
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm audit --audit-level=high || true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      matrix:
+        node-version: [18, 20]
+      fail-fast: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            ~/.local/share/pnpm/store/v3
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm run build --filter backend
+      - run: pnpm run build --filter frontend
 
   docker-backend:
-    needs: build-and-test
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,6 +142,27 @@ jobs:
       - run: npm install
       - run: npm run build --workspace=apps/backend
       - name: Build Docker image
-        run: docker build -f apps/backend/Dockerfile -t openai-saas-backend:latest .
-      # Add ECR login/push steps for AWS or Fly.io deploy here
-      # - run: ...
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/backend/Dockerfile
+          push: false
+          tags: openai-saas-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: docker-backend
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy (placeholder)
+        run: echo "Add your deployment command here"
+
+  notify:
+    needs: [build, test, security-audit, deploy]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify (placeholder)
+        run: echo "Add Slack/Discord/email notification here"
