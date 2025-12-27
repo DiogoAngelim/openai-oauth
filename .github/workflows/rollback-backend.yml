@@ -36,20 +36,7 @@ jobs:
       - name: Build backend
         run: pnpm --filter ./apps/backend... build
 
-      - name: Docker build & push
-        run: |
-          docker build -f apps/backend/Dockerfile -t ${{ secrets.ECR_REGISTRY }}/openai-saas-backend:${{ github.event.inputs.rollback_tag }} .
-          echo ${{ secrets.AWS_ECR_LOGIN }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
-          docker push ${{ secrets.ECR_REGISTRY }}/openai-saas-backend:${{ github.event.inputs.rollback_tag }}
 
-      - name: Update ECS service to previous revision
-        uses: aws-actions/amazon-ecs-update-task-definition@v1
-        with:
-          task-definition: openai-saas-backend
-          service: openai-saas-backend
-          cluster: openai-saas-cluster
-          image: ${{ secrets.ECR_REGISTRY }}/openai-saas-backend:${{ github.event.inputs.rollback_tag }}
-          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: (Optional) Rollback database migration
         run: |

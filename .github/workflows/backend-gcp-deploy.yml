@@ -1,0 +1,53 @@
+name: Deploy Backend to Google Cloud Run
+
+on:
+  push:
+    paths:
+      - 'apps/backend/**'
+      - '.github/workflows/backend-gcp-deploy.yml'
+    branches: [main]
+
+env:
+  GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  GCP_REGION: ${{ secrets.GCP_REGION }}
+  DB_INSTANCE_NAME: ${{ secrets.DB_INSTANCE_NAME }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  BACKEND_IMAGE: ${{ secrets.BACKEND_IMAGE }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT }}
+          install_components: 'beta'
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t $BACKEND_IMAGE ./apps/backend
+          docker push $BACKEND_IMAGE
+
+      - name: Terraform Apply
+        run: |
+          cd infra
+          terraform init
+          terraform apply -auto-approve
+        env:
+          GCP_PROJECT: ${{ env.GCP_PROJECT }}
+          GCP_REGION: ${{ env.GCP_REGION }}
+          DB_INSTANCE_NAME: ${{ env.DB_INSTANCE_NAME }}
+          DB_USER: ${{ env.DB_USER }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          DB_NAME: ${{ env.DB_NAME }}
+          BACKEND_IMAGE: ${{ env.BACKEND_IMAGE }}
