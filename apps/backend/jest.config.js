@@ -2,7 +2,16 @@ module.exports = {
   testEnvironment: 'node',
   globalSetup: '<rootDir>/jest.global-setup.js',
   roots: ['<rootDir>/src'],
-  testMatch: ['<rootDir>/src/**/*.{spec,test}.{js,ts,jsx,tsx}'],
+  testMatch: [
+    '<rootDir>/src/**/*.spec.ts',
+    '<rootDir>/src/**/*.test.ts',
+    '<rootDir>/src/**/*.spec.js',
+    '<rootDir>/src/**/*.test.js',
+    '<rootDir>/src/**/*.spec.tsx',
+    '<rootDir>/src/**/*.test.tsx',
+    '<rootDir>/src/**/*.spec.jsx',
+    '<rootDir>/src/**/*.test.jsx',
+  ],
   transform: {
     '^.+\\.(controller|module)\\.ts$': 'ts-jest',
     '^.+\\.(ts|js)$': 'babel-jest',
