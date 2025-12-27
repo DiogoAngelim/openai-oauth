@@ -3,7 +3,7 @@ import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { prisma } from '../prisma';
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 
 jest.mock('../prisma', () => {
   return {
@@ -20,8 +20,8 @@ jest.mock('../prisma', () => {
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
-  let res: Response;
-  let req: Request;
+  let res: jest.Mocked<Response>;
+  let req: jest.Mocked<Request>;
 
   beforeEach(() => {
     // Mock JwtService
@@ -29,16 +29,31 @@ describe('AuthController', () => {
       sign: jest.fn(() => 'signed-jwt'),
     } as unknown as JwtService;
     // Mock PrismaClient
-    const prisma = {} as unknown as PrismaClient;
+    const prisma = {} as jest.Mocked<PrismaClient>;
     authService = new AuthService(jwtService, prisma);
     // Mock methods on AuthService
     jest.spyOn(authService, 'generateTokens').mockResolvedValue({ accessToken: 'jwt', refreshToken: 'rtok' });
     jest.spyOn(authService, 'refreshAccessToken').mockResolvedValue({ accessToken: 'jwt', refreshToken: 'rtok' });
     controller = new AuthController(authService);
-    // Minimal Response mock
-    res = { cookie: jest.fn(), json: jest.fn() } as unknown as Response;
-    // Minimal Request mock
-    req = { user: undefined, cookies: undefined, body: undefined } as unknown as Request;
+    // Proper Response mock
+    res = {
+      cookie: jest.fn(),
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      setHeader: jest.fn(),
+      end: jest.fn(),
+      send: jest.fn(),
+    } as unknown as jest.Mocked<Response>;
+    // Proper Request mock
+    req = {
+      user: undefined,
+      cookies: undefined,
+      body: undefined,
+      get: jest.fn(),
+      header: jest.fn(),
+      accepts: jest.fn(),
+      acceptsCharsets: jest.fn(),
+    } as unknown as jest.Mocked<Request>;
   });
 
   it('should be defined', () => {

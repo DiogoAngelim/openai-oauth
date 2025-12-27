@@ -10,7 +10,7 @@ describe('OpenAIService', () => {
   beforeEach(() => {
     jest.resetModules();
     openaiCreateMock = oaiMock;
-    prismaInstance = prismaMockFactory();
+    prismaInstance = prismaMockFactory() as jest.Mocked<import('@prisma/client').PrismaClient>;
     jest.doMock('openai', () => ({
       default: jest.fn().mockImplementation(openaiMockFactory)
     }));

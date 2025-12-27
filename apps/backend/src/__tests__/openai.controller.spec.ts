@@ -20,8 +20,8 @@ describe('OpenAIController', () => {
     const controller = new OpenAIController({
       createChatCompletion: mockCreateChatCompletion
     } as Partial<OpenAIController>);
-    const req: { user: { orgId: string; sub: string } } = { user: { orgId: 'org1', sub: 'user1' } };
-    const res: { json: jest.Mock; setHeader: jest.Mock; write: jest.Mock; end: jest.Mock } = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() };
+    const req = { user: { orgId: 'org1', sub: 'user1' } } as unknown as jest.Mocked<Request>;
+    const res = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() } as unknown as jest.Mocked<Response>;
     const body = { prompt: 'Hello world', model: 'gpt-3.5-turbo' };
     await controller.chat(req, res, body, 'false');
     expect(mockCreateChatCompletion).toHaveBeenCalledWith('org1', 'user1', body, false);
@@ -40,8 +40,8 @@ describe('OpenAIController', () => {
     const controller = new OpenAIController({
       createChatCompletion: mockCreateChatCompletion
     } as Partial<OpenAIController>);
-    const req: { user: { orgId: string; sub: string } } = { user: { orgId: 'org1', sub: 'user1' } };
-    const res: { json: jest.Mock; setHeader: jest.Mock; write: jest.Mock; end: jest.Mock } = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() };
+    const req = { user: { orgId: 'org1', sub: 'user1' } } as unknown as jest.Mocked<Request>;
+    const res = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn() } as unknown as jest.Mocked<Response>;
     const body = { prompt: 'stream test', model: 'gpt-3.5-turbo' };
     await controller.chat(req, res, body, 'true');
     expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'text/event-stream');
@@ -55,8 +55,8 @@ describe('OpenAIController', () => {
     const controller = new OpenAIController({
       createChatCompletion: mockCreateChatCompletion
     } as Partial<OpenAIController>);
-    const req: { user: { orgId: string; sub: string } } = { user: { orgId: 'org1', sub: 'user1' } };
-    const res: { json: jest.Mock; setHeader: jest.Mock; write: jest.Mock; end: jest.Mock; status: jest.Mock } = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn(), status: jest.fn().mockReturnThis() };
+    const req = { user: { orgId: 'org1', sub: 'user1' } } as unknown as jest.Mocked<Request>;
+    const res = { json: jest.fn(), setHeader: jest.fn(), write: jest.fn(), end: jest.fn(), status: jest.fn().mockReturnThis() } as unknown as jest.Mocked<Response>;
     const body = { prompt: 'error test', model: 'gpt-3.5-turbo' };
     // Patch controller to catch error and call res.status(500)
     controller.chat = async function (...args: [unknown, unknown, unknown, unknown]) {

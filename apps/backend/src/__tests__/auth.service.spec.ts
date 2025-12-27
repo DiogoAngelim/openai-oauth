@@ -1,12 +1,13 @@
 import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 
+import { PrismaClient } from '@prisma/client';
 const prisma = {
   user: { findUnique: jest.fn(), create: jest.fn() },
   organization: { create: jest.fn(), findUnique: jest.fn() },
   membership: { findFirst: jest.fn() },
   refreshToken: { create: jest.fn(), findUnique: jest.fn() },
-} as unknown as PrismaClient;
+} as jest.Mocked<PrismaClient>;
 // No need to mock @prisma/client here, we use the local prisma mock
 describe('AuthService', () => {
   let authService: AuthService;
