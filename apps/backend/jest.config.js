@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: 'node',
+  globalSetup: '<rootDir>/jest.global-setup.js',
   roots: ['<rootDir>/src'],
   testMatch: ['<rootDir>/src/**/*.{spec,test}.{js,ts,jsx,tsx}'],
   transform: {
