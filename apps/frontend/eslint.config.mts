@@ -57,8 +57,4 @@ export default defineConfig([
     extends: ["markdown/recommended"],
   },
   {
-    files: ["**/*.css"],
-    plugins: { css },
-    extends: ["css/recommended"],
-  },
 ]);
