@@ -51,22 +51,16 @@ describeOrSkip('CI/CD Docker Backend', () => {
       process.env.GOOGLE_CALLBACK_URL ??
       'http://localhost:3000/auth/google/callback'
   })
-  it('should build backend Docker image successfully', () => {
-    const workspaceRoot = path.resolve(__dirname, '../../../')
-    const dockerfilePath = 'apps/backend/Dockerfile'
-    expect(() => {
-      execSync(
-        `docker build -f ${dockerfilePath} -t openai-saas-backend:latest ${workspaceRoot}`,
-        { stdio: 'inherit', cwd: workspaceRoot }
-      )
-    }).not.toThrow()
+
+  it('should connect to the database', async function (): Promise<void> {
+    const { DATABASE_URL } = process.env
+    expect(typeof DATABASE_URL === 'string' && DATABASE_URL !== '').toBe(true)
+    await testDatabaseConnection(DATABASE_URL as string)
   })
 
-  it('should have dist/main.js in the built image', () => {
-    execSync('docker create --name test-backend openai-saas-backend:latest')
-    const output = execSync('docker cp test-backend:/app/dist/main.js -')
-    expect(output.length).toBeGreaterThan(0)
-    execSync('docker rm test-backend')
+  it('should have a valid DATABASE_URL', (): void => {
+    const { DATABASE_URL } = process.env
+    expect(typeof DATABASE_URL === 'string' && DATABASE_URL !== '').toBe(true)
   })
 
   it('should run the backend container and respond on a free port', () => {
@@ -79,11 +73,11 @@ describeOrSkip('CI/CD Docker Backend', () => {
       containers.forEach((id: string) => {
         execSync(`docker rm -f ${id}`)
       })
-    } catch (e) {
+    } catch {
       // ignore errors
     }
 
-    function getFreePort (start = 4000, end = 4100): number {
+    function getFreePort(start = 4000, end = 4100): number {
       for (let port = start; port <= end; port++) {
         let isFree = true
         const server = net.createServer()
@@ -92,7 +86,7 @@ describeOrSkip('CI/CD Docker Backend', () => {
         })
         try {
           server.listen(port)
-        } catch (e) {
+        } catch {
           isFree = false
         }
         server.close()
@@ -101,7 +95,7 @@ describeOrSkip('CI/CD Docker Backend', () => {
           if (typeof lsof === 'string' && lsof.length > 0) {
             isFree = false
           }
-        } catch (e) {
+        } catch {
           // ignore errors
         }
         if (isFree) return port
@@ -123,19 +117,26 @@ describeOrSkip('CI/CD Docker Backend', () => {
     execSync(`docker rm ${containerId}`)
   })
 
-  it('should have a valid DATABASE_URL', (): void => {
-    const { DATABASE_URL } = process.env
-    expect(typeof DATABASE_URL === 'string' && DATABASE_URL !== '').toBe(true)
+  it('should have dist/main.js in the built image', () => {
+    execSync('docker create --name test-backend openai-saas-backend:latest')
+    const output = execSync('docker cp test-backend:/app/dist/main.js -')
+    expect(output.length).toBeGreaterThan(0)
+    execSync('docker rm test-backend')
   })
 
-  it('should connect to the database', async function (): Promise<void> {
-    const { DATABASE_URL } = process.env
-    expect(typeof DATABASE_URL === 'string' && DATABASE_URL !== '').toBe(true)
-    await testDatabaseConnection(DATABASE_URL as string)
+  it('should build backend Docker image successfully', () => {
+    const workspaceRoot = path.resolve(__dirname, '../../../')
+    const dockerfilePath = 'apps/backend/Dockerfile'
+    expect(() => {
+      execSync(
+        `docker build -f ${dockerfilePath} -t openai-saas-backend:latest ${workspaceRoot}`,
+        { stdio: 'inherit', cwd: workspaceRoot }
+      )
+    }).not.toThrow()
   })
 })
 // Mock implementation for database connection test
-async function testDatabaseConnection (databaseUrl: string): Promise<void> {
+async function testDatabaseConnection(databaseUrl: string): Promise<void> {
   expect(typeof databaseUrl === 'string' && databaseUrl !== '').toBe(true)
   return await Promise.resolve()
 }

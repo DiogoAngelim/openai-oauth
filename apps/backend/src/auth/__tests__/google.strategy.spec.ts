@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { GoogleStrategy, isGoogleStrategyEnabled } from '../google.strategy'
 import { AuthService } from '../auth.service'
 

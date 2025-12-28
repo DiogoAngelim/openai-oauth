@@ -7,8 +7,7 @@ resource "google_sql_database_instance" "main" {
   settings {
     tier = "db-f1-micro"
     ip_configuration {
-      ipv4_enabled    = true
-      require_ssl     = false
+      ipv4_enabled = true
     }
   }
 }

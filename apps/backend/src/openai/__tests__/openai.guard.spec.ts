@@ -64,8 +64,8 @@ describe('OpenAIController', () => {
     const body = { prompt: 'Hello' }
     openai.createChatCompletion.mockImplementation(
       async (_orgId, _userId, _body, _stream, cb) => {
-        cb(new Error('chunk1'))
-        cb(new Error('chunk2'))
+        cb('chunk1')
+        cb('chunk2')
       }
     )
     await controller.chat(req, res, body, 'true')

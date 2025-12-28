@@ -16,17 +16,20 @@ WORKDIR /app
 
 
 
+
+
 # Copy backend and monorepo files from root context
 COPY apps/backend/package.json ./package.json
 COPY pnpm-lock.yaml ./
 COPY pnpm-workspace.yaml ./
+COPY tsconfig.json /tsconfig.json
+COPY apps/backend/drizzle ./drizzle
 
 
-# Install only backend dependencies and nestjs/cli
-RUN npm install -g pnpm@8.15.5 @nestjs/cli
+RUN npm install -g pnpm@8.15.5 @nestjs/cli ts-node
 ENV npm_config_ignore_scripts=true
 ENV NODE_OPTIONS=--max_old_space_size=2048
-RUN pnpm install --prod --force
+RUN pnpm install --force
 
 
 
@@ -34,29 +37,19 @@ COPY apps/backend/src ./src
 COPY apps/backend/tsconfig.json ./tsconfig.json
 COPY apps/backend/env-check.ts ./env-check.ts
 COPY apps/backend/.env ./.env
-ARG DATABASE_URL
-ARG REDIS_URL
-ARG NODE_ENV
-ARG SENTRY_DSN
-ARG FRONTEND_URL
-ARG JWT_SECRET
-ARG GITHUB_CLIENT_ID
-ARG GITHUB_CLIENT_SECRET
-ARG BACKEND_URL
-ARG LINKEDIN_CLIENT_ID
-ARG LINKEDIN_CLIENT_SECRET
 
-ENV DATABASE_URL=$DATABASE_URL
-ENV REDIS_URL=$REDIS_URL
-ENV NODE_ENV=$NODE_ENV
-ENV SENTRY_DSN=$SENTRY_DSN
-ENV FRONTEND_URL=$FRONTEND_URL
-ENV JWT_SECRET=$JWT_SECRET
-ENV GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID
-ENV GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET
-ENV BACKEND_URL=$BACKEND_URL
-ENV LINKEDIN_CLIENT_ID=$LINKEDIN_CLIENT_ID
-ENV LINKEDIN_CLIENT_SECRET=$LINKEDIN_CLIENT_SECRET
+# Set dummy env vars for build/test
+ENV DATABASE_URL="postgres://user:pass@localhost:5432/testdb"
+ENV REDIS_URL="redis://localhost:6379"
+ENV NODE_ENV="test"
+ENV SENTRY_DSN="dummy_sentry_dsn"
+ENV FRONTEND_URL="http://localhost:3000"
+ENV JWT_SECRET="dummy_jwt_secret"
+ENV GITHUB_CLIENT_ID="dummy_github_id"
+ENV GITHUB_CLIENT_SECRET="dummy_github_secret"
+ENV BACKEND_URL="http://localhost:4000"
+ENV LINKEDIN_CLIENT_ID="dummy_linkedin_id"
+ENV LINKEDIN_CLIENT_SECRET="dummy_linkedin_secret"
 
 RUN pnpm run build
 

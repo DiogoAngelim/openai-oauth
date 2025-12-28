@@ -1,6 +1,5 @@
-import { PassportStrategy } from '@nestjs/passport'
-import { Injectable } from '@nestjs/common'
-import { AuthService } from '../auth.service'
+import { RolesGuard } from '../roles.guard';
+
 
 /**
  * Indicates if Google OAuth strategy should be enabled.
@@ -13,38 +12,48 @@ export const isGoogleStrategyEnabled =
  * Google OAuth Strategy for Passport.
  * Uses environment variables for configuration.
  */
-@Injectable()
-export class GoogleStrategy extends PassportStrategy(
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  require('passport-google-oauth20').Strategy,
-  'google'
-) {
-  constructor (private readonly authService: AuthService) {
-    super({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
-      scope: ['email', 'profile']
-    })
-  }
 
-  async validate (
-    accessToken: string,
-    refreshToken: string,
-    profile: any,
-    done: (err: any, user?: any) => void
-  ): Promise<void> {
-    try {
-      const result = await this.authService.validateOAuthLogin(profile)
-      done(null, result.user)
-    } catch (err) {
-      done(err)
-    }
-  }
-}
 
 describe('RolesGuard', () => {
   it('should be defined', () => {
     expect(true).toBe(true)
   })
-})
+
+  it('should allow access if no roles are required', async () => {
+    const reflector = { getAllAndOverride: jest.fn().mockReturnValue(undefined) } as any;
+    const guard = new RolesGuard(reflector);
+    const context = { getHandler: jest.fn(), getClass: jest.fn(), switchToHttp: () => ({ getRequest: () => ({}) }) } as any;
+    expect(guard.canActivate(context)).toBe(true);
+  });
+
+  it('should allow access if user has required role', async () => {
+    const reflector = { getAllAndOverride: jest.fn().mockReturnValue(['admin']) } as any;
+    const { RolesGuard } = await import('../roles.guard');
+    const guard = new RolesGuard(reflector);
+    const context = {
+      getHandler: jest.fn(),
+      getClass: jest.fn(),
+      switchToHttp: () => ({ getRequest: () => ({ user: { role: 'admin' } }) })
+    } as any;
+    expect(guard.canActivate(context)).toBe(true);
+  });
+
+  it('should throw ForbiddenException if user is missing or role is not allowed', async () => {
+    const reflector = { getAllAndOverride: jest.fn().mockReturnValue(['admin']) } as any;
+    const { RolesGuard } = await import('../roles.guard');
+    const guard = new RolesGuard(reflector);
+    const contextNoUser = {
+      getHandler: jest.fn(),
+      getClass: jest.fn(),
+      switchToHttp: () => ({ getRequest: () => ({}) })
+    } as any;
+    expect(() => guard.canActivate(contextNoUser)).toThrow('Insufficient role');
+
+    const contextWrongRole = {
+      getHandler: jest.fn(),
+      getClass: jest.fn(),
+      switchToHttp: () => ({ getRequest: () => ({ user: { role: 'user' } }) })
+    } as any;
+    expect(() => guard.canActivate(contextWrongRole)).toThrow('Insufficient role');
+  });
+});

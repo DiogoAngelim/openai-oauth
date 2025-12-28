@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "autoprefixer": "^10.4.23",
@@ -16,10 +18,21 @@
     "tailwindcss": "^3.4.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/react": "19.2.7",
     "@types/react-dom": "18.3.7",
     "globals": "^16.5.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "jiti": "^2.6.1",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.50.1"
   }

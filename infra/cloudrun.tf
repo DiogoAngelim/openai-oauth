@@ -7,16 +7,14 @@ resource "google_cloud_run_service" "backend" {
     spec {
       containers {
         image = var.backend_image
-        env = [
-          {
-            name  = "DATABASE_URL"
-            value = "postgresql://${var.db_user}:${var.db_password}@${google_sql_database_instance.main.public_ip_address}:5432/${var.db_name}?sslmode=disable"
-          },
-          {
-            name  = "NODE_ENV"
-            value = "production"
-          }
-        ]
+        env {
+          name  = "DATABASE_URL"
+          value = "postgresql://${var.db_user}:${var.db_password}@${google_sql_database_instance.main.public_ip_address}:5432/${var.db_name}?sslmode=disable"
+        }
+        env {
+          name  = "NODE_ENV"
+          value = "production"
+        }
       }
     }
   }
