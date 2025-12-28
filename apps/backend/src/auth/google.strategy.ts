@@ -9,7 +9,7 @@ export const isGoogleStrategyEnabled =
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
-  // @ts-ignore
+  // @ts-expect-error
   require("passport-google-oauth20").Strategy,
   "google",
 ) {

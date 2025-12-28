@@ -1,9 +1,9 @@
+import { Test } from "@nestjs/testing";
+import { AppModule } from "../app.module";
+
 process.env.GOOGLE_CLIENT_ID = "test-client-id";
 process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
 process.env.GOOGLE_CALLBACK_URL = "http://localhost/callback";
-
-import { Test } from "@nestjs/testing";
-import { AppModule } from "../app.module";
 
 describe("AppModule", () => {
   let module: AppModule;

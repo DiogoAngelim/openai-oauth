@@ -142,7 +142,9 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build --workspace=apps/backend
-      - name: Build Docker image
+      - name: Build Docker image (CLI)
+        run: docker build -t openai-saas-backend:latest ./apps/backend
+      - name: Build Docker image (GitHub Action)
         uses: docker/build-push-action@v5
         with:
           context: .

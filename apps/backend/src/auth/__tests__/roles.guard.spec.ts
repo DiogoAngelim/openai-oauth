@@ -15,7 +15,6 @@ export const isGoogleStrategyEnabled =
  */
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
-  // @ts-ignore
   require("passport-google-oauth20").Strategy,
   "google",
 ) {

@@ -26,7 +26,7 @@ if (!process.env.GITHUB_ACTIONS) {
 }
 
 // Handle nullable/empty strings explicitly
-const envVar = process.env["YOUR_ENV_VAR_NAME"];
+const envVar = process.env.YOUR_ENV_VAR_NAME;
 if (typeof envVar === "string" && envVar !== "") {
   // valid
 }

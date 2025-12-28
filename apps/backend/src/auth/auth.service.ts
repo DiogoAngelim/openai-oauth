@@ -2,8 +2,8 @@ import { UnauthorizedException } from "@nestjs/common";
 
 export class AuthService {
   constructor(
-    private jwtService: any,
-    private drizzle: any,
+    private readonly jwtService: any,
+    private readonly drizzle: any,
   ) {}
 
   async validateOAuthLogin(profile: any) {
@@ -18,8 +18,9 @@ export class AuthService {
     const membership = await this.drizzle.membership.findFirst({
       where: { userId: user.id },
     });
-    if (!membership)
+    if (!membership) {
       throw new UnauthorizedException("No organization membership found");
+    }
     return { user };
   }
 
@@ -61,9 +62,10 @@ export class AuthService {
       where: { userId: refreshToken.userId },
       include: { organization: true },
     });
-    if (!membership)
+    if (!membership) {
       throw new UnauthorizedException("No organization membership found");
-    return this.generateTokens(
+    }
+    return await this.generateTokens(
       refreshToken.user,
       membership.organizationId,
       membership.role,
