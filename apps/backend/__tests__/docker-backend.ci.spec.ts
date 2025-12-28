@@ -9,14 +9,12 @@ const isDockerAvailable = (() => {
     execSync('df -k .', { stdio: 'pipe' })
     return true
   } catch (e) {
+    const message = (e as { message?: string })?.message
     if (
-      typeof e === 'object' &&
-      e !== null &&
-      'message' in e &&
-      typeof (e as { message?: string }).message === 'string' &&
-      ((e as { message?: string }).message !== undefined && (e as { message?: string }).message.includes('ENOSPC'))
+      typeof message === 'string' &&
+      message.includes('ENOSPC')
     ) {
-      return false
+      // Do nothing, ENOSPC is expected in some CI environments
     }
     return false
   }
@@ -50,7 +48,7 @@ describeOrSkip('CI/CD Docker Backend', () => {
       // ignore errors
     }
 
-    function getFreePort (start = 4000, end = 4100) {
+    function getFreePort(start = 4000, end = 4100) {
       for (let port = start; port <= end; port++) {
         let isFree = true
         const server = net.createServer()

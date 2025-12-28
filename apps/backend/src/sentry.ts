@@ -1,4 +1,3 @@
-
 interface SentryType {
   init: () => void
   captureException: (...args: unknown[]) => void
@@ -23,3 +22,5 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 module.exports = Sentry
+
+export {}

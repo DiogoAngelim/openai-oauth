@@ -2,6 +2,10 @@
 import { GoogleStrategy, isGoogleStrategyEnabled } from '../google.strategy'
 import { AuthService } from '../auth.service'
 
+process.env.GOOGLE_CLIENT_ID = 'test-client-id'
+process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret'
+process.env.GOOGLE_CALLBACK_URL = 'http://localhost/callback'
+
 describe('GoogleStrategy', () => {
   let strategy: any
   let authService: AuthService

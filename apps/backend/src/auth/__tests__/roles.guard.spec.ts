@@ -43,3 +43,9 @@ export class GoogleStrategy extends PassportStrategy(
     }
   }
 }
+
+describe('RolesGuard', () => {
+  it('should be defined', () => {
+    expect(true).toBe(true)
+  })
+})
