@@ -6,9 +6,19 @@ describe('GithubStrategy', () => {
   let authService: AuthService
 
   beforeEach(() => {
-    authService = Object.assign(new AuthService({ sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService, {} as unknown as import('@prisma/client').PrismaClient), {
-      validateOAuthLogin: jest.fn().mockResolvedValue({ user: { id: 'id', email: 'email', name: 'name' } })
-    })
+    // Remove PrismaClient reference and mock Dizzle instead
+    const mockDizzle = {} as any // Replace with actual Dizzle mock if available
+    authService = Object.assign(
+      new AuthService(
+        { sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService,
+        mockDizzle // Use Dizzle here
+      ),
+      {
+        validateOAuthLogin: jest.fn().mockResolvedValue({
+          user: { id: 'id', email: 'email', name: 'name' }
+        })
+      }
+    )
     strategy = new GithubStrategy(authService)
   })
 

@@ -6,9 +6,19 @@ describe('LinkedinStrategy', () => {
   let authService: AuthService
 
   beforeEach(() => {
-    authService = Object.assign(new AuthService({ sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService, {} as unknown as import('@prisma/client').PrismaClient), {
-      validateOAuthLogin: jest.fn().mockResolvedValue({ user: { id: 'id', email: 'email', name: 'name' } })
-    })
+    // Replace PrismaClient with Dizzle mock
+    const mockDizzle = {} as any
+    authService = Object.assign(
+      new AuthService(
+        { sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService,
+        mockDizzle // Use Dizzle here
+      ),
+      {
+        validateOAuthLogin: jest.fn().mockResolvedValue({
+          user: { id: 'id', email: 'email', name: 'name' }
+        })
+      }
+    )
     strategy = new LinkedinStrategy(authService)
   })
 

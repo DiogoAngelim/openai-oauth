@@ -8,8 +8,8 @@ describe('LoggerMiddleware', () => {
   it('should call next and log on finish', () => {
     const logger = { info: jest.fn() }
     const middleware = new LoggerMiddleware(logger)
-    const req = { method: 'GET', originalUrl: '/test' }
-    const res = { statusCode: 200, on: jest.fn((event, cb) => { if (event === 'finish') cb() }) }
+    const req = { method: 'GET', originalUrl: '/test', get: jest.fn(), header: jest.fn(), accepts: jest.fn(), acceptsCharsets: jest.fn() } as unknown as import('express').Request
+    const res = { statusCode: 200, on: jest.fn((event, cb) => { if (event === 'finish') cb() }) } as unknown as import('express').Response
     const next = jest.fn()
     middleware.use(req, res, next)
     expect(next).toHaveBeenCalled()
@@ -19,8 +19,15 @@ describe('LoggerMiddleware', () => {
 
   it('should use default logger if not injected', () => {
     const middleware = new LoggerMiddleware()
-    const req = { method: 'POST', originalUrl: '/default' }
-    const res = { statusCode: 201, on: jest.fn((event, cb) => { if (event === 'finish') cb() }) }
+    const req = {
+      method: 'POST',
+      originalUrl: '/default',
+      get: jest.fn(),
+      header: jest.fn(),
+      accepts: jest.fn(),
+      acceptsCharsets: jest.fn()
+    } as unknown as import('express').Request
+    const res = { statusCode: 201, on: jest.fn((event, cb) => { if (event === 'finish') cb() }) } as unknown as import('express').Response
     const next = jest.fn()
     // Spy on getLogger
     // Import getLogger for spying
