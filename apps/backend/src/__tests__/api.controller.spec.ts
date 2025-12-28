@@ -1,13 +1,13 @@
-import { ApiController } from '../api/api.controller'
+import { ApiController } from "../api/api.controller";
 
-describe('ApiController', () => {
-  let controller: ApiController
+describe("ApiController", () => {
+  let controller: ApiController;
 
   beforeEach(() => {
-    controller = new ApiController()
-  })
+    controller = new ApiController();
+  });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined()
-  })
-})
+  it("should be defined", () => {
+    expect(controller).toBeDefined();
+  });
+});

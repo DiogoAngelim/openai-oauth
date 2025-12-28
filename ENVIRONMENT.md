@@ -3,12 +3,14 @@
 This file documents the allowed environment variables for the project. Only the following variables should be used in `.env` files:
 
 ## Required
+
 - `DATABASE_URL` - PostgreSQL connection string for Drizzle ORM
 - `JWT_SECRET` - Secret for JWT authentication
 - `OPENAI_API_KEY` - OpenAI API key
 - `REDIS_URL` - Redis connection string
 
 ## Optional
+
 - `SENTRY_DSN` - Sentry DSN for error tracking
 - `NODE_ENV` - Node environment (development, production, test)
 - `PORT` - Port for backend server (default: 3000)
@@ -20,7 +22,9 @@ This file documents the allowed environment variables for the project. Only the 
 # Environment Variables Reference
 
 ## Backend (NestJS)
+
 Set these in your secrets manager or environment variables:
+
 - `DATABASE_URL`
 - `REDIS_URL`
 - `JWT_SECRET`
@@ -34,11 +38,14 @@ Set these in your secrets manager or environment variables:
 - `PORT`
 
 ## Frontend (Vercel/Next.js)
+
 Set these in Vercel dashboard:
+
 - `NEXT_PUBLIC_API_URL` (should point to your backend, e.g., https://api.yourdomain.com)
 - Any other public config needed by the frontend
 
 ## Notes
+
 - Never commit secrets to git.
 - Use Vercel’s dashboard for frontend, a secure secrets manager for backend.
 - See README_DEPLOY.md for deployment steps.

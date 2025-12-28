@@ -1,10 +1,10 @@
-import { drizzle } from 'drizzle-orm/node-postgres'
-import { Pool } from 'pg'
-import * as schema from './schema'
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+import * as schema from "./schema";
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-})
+  connectionString: process.env.DATABASE_URL,
+});
 
 /**
  * Drizzle ORM database client for the backend service.
@@ -19,4 +19,4 @@ const pool = new Pool({
 /**
  * The main Drizzle database client instance.
  */
-export const db = drizzle(pool, { schema })
+export const db = drizzle(pool, { schema });

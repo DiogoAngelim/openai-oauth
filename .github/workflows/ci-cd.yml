@@ -8,7 +8,6 @@ on:
   workflow_dispatch: # <-- Add this to allow manual runs
 
 jobs:
-
   lint:
     runs-on: ubuntu-latest
     strategy:
@@ -91,7 +90,8 @@ jobs:
           path: coverage/
 
   security-audit:
-    runs-on: ubuntu-latest
+    runs-on:
+      ubuntu-latest
       # removed: needs: lint
     steps:
       - uses: actions/checkout@v4

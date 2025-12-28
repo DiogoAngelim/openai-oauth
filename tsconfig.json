@@ -12,18 +12,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "useDefineForClassFields": false,
-    "types": [
-      "jest",
-      "node"
-    ]
+    "types": ["jest", "node"]
   },
-  "include": [
-    "apps/**/*",
-    "packages/**/*",
-    "frontend/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["apps/**/*", "packages/**/*", "frontend/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

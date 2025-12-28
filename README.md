@@ -1,7 +1,9 @@
 <!-- Badges -->
+
 [![Coverage Status](https://coveralls.io/repos/github/DiogoAngelim/openai-oauth/badge.svg?branch=main)](https://coveralls.io/github/DiogoAngelim/openai-oauth?branch=main)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/diogoangelim/openai-oauth/ci-cd.yml?branch=main)
 ![License](https://img.shields.io/github/license/diogoangelim/openai-oauth)
+
 <!-- Coverage and code scanning badges temporarily removed due to repository or service configuration issues. -->
 
 ![OpenAI + Google Logo](openai+google.png)
@@ -9,6 +11,7 @@
 # OpenAI OAuth Backend — Beginner Guide
 
 > **Important:** Always run Docker builds from the monorepo root directory to avoid missing files in the build context. Example:
+>
 > ```sh
 > cd /Users/diogoangelim/openai-oauth
 > docker build -f apps/backend/Dockerfile -t openai-saas-backend:latest .
@@ -42,11 +45,13 @@
    - Docker:
      ```sh
      docker run -p 6379:6379 redis
+     ```
 6. **Start the backend server:**
    ```sh
    cd apps/backend
    npm run start:dev
    ```
+
    - The server runs on [http://localhost:4000](http://localhost:4000)
 
 ---
@@ -72,14 +77,12 @@ openai-oauth/
 ### Health & Monitoring
 
 ### Authentication
+
 - `POST /auth/refresh` — Refresh JWT
 
 - `GET /api/admin` — Admin-only endpoint
 
-
 ### Billing
-
-
 
 ## Frontend Integration
 
@@ -98,24 +101,25 @@ openai-oauth/
 3. **Example: Chat Page Integration**
    - The chat page in `apps/frontend/app/chat/page.tsx` sends prompts to `/openai/chat` and displays responses.
    - Example usage:
+
      ```tsx
-     'use client';
-     import { useState, useRef } from 'react';
+     "use client";
+     import { useState, useRef } from "react";
 
      export default function Chat() {
-       const [prompt, setPrompt] = useState('');
-       const [response, setResponse] = useState('');
+       const [prompt, setPrompt] = useState("");
+       const [response, setResponse] = useState("");
        const [loading, setLoading] = useState(false);
        const eventSourceRef = useRef<EventSource | null>(null);
 
        const handleSubmit = async (e: React.FormEvent) => {
          e.preventDefault();
-         setResponse('');
+         setResponse("");
          setLoading(true);
          if (eventSourceRef.current) {
            eventSourceRef.current.close();
          }
-         const url = `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/openai/chat?stream=true`;
+         const url = `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/openai/chat?stream=true`;
          const es = new EventSource(url, { withCredentials: true });
          eventSourceRef.current = es;
          es.onmessage = (event) => {
@@ -126,9 +130,9 @@ openai-oauth/
            es.close();
          };
          await fetch(url, {
-           method: 'POST',
-           credentials: 'include',
-           headers: { 'Content-Type': 'application/json' },
+           method: "POST",
+           credentials: "include",
+           headers: { "Content-Type": "application/json" },
            body: JSON.stringify({ prompt }),
          });
        };
@@ -136,10 +140,17 @@ openai-oauth/
        return (
          <main>
            <form onSubmit={handleSubmit}>
-             <textarea value={prompt} onChange={e => setPrompt(e.target.value)} />
-             <button type="submit" disabled={loading}>{loading ? 'Loading...' : 'Send'}</button>
+             <textarea
+               value={prompt}
+               onChange={(e) => setPrompt(e.target.value)}
+             />
+             <button type="submit" disabled={loading}>
+               {loading ? "Loading..." : "Send"}
+             </button>
            </form>
-           <div><pre>{response}</pre></div>
+           <div>
+             <pre>{response}</pre>
+           </div>
          </main>
        );
      }
@@ -155,29 +166,35 @@ openai-oauth/
 ---
 
 ### Chat with OpenAI
+
 **POST /openai/chat**
 Request:
+
 ```json
 {
   "prompt": "Hello, how are you?",
   "model": "gpt-3.5-turbo"
 }
 ```
+
 Response:
+
 ```json
 {
   "response": "I'm an AI, so I don't have feelings, but I'm here to help!"
 }
 ```
+
 **GET /openai/history?orgId=ORG_ID&userId=USER_ID**
 Response:
-    "id": "chat1",
-    "response": "I'm an AI, so I don't have feelings, but I'm here to help!",
-    "model": "gpt-3.5-turbo",
-    "createdAt": "2025-12-26T12:00:00Z"
-  }
+"id": "chat1",
+"response": "I'm an AI, so I don't have feelings, but I'm here to help!",
+"model": "gpt-3.5-turbo",
+"createdAt": "2025-12-26T12:00:00Z"
+}
 ]
-```
+
+````
 
 ### Authentication
 **GET /auth/google** — Redirects to Google OAuth login
@@ -187,8 +204,10 @@ Request:
 {
   "refreshToken": "your-refresh-token"
 }
-```
+````
+
 Response:
+
 ```json
 {
   "accessToken": "new-access-token"
@@ -206,12 +225,12 @@ Response:
 ### Monitoring & Debugging
 
 ### Development Workflow
+
 1. **Pull latest code** before starting work.
 2. **Create a new branch** for each feature or bugfix.
 3. **Write tests** for all new code.
 4. **Run lint and tests** before pushing.
 5. **Open a pull request** for review.
-
 
 ## Common Errors & Solutions
 
@@ -225,6 +244,7 @@ Response:
 - **Missing .env file**: Copy `.env.example` to `.env` and fill in all required values.
 
 ---
+
 - **Port 4000 in use**: Kill any process using the port (`lsof -i :4000 | grep LISTEN | awk '{print $2}' | xargs kill -9`).
 - **Redis errors**: Ensure Redis is running and `REDIS_URL` is correct.
 
@@ -235,9 +255,10 @@ Response:
 5. **Open a pull request** for review.
 6. **Respond to feedback** and update your code as needed.
 
-All code must be reviewed and pass CI before merging.
----
+## All code must be reviewed and pass CI before merging.
+
 ## Contributing
+
 - Follow the code style and commit guidelines.
 - [NestJS Docs](https://docs.nestjs.com/)
 - [Fastify Docs](https://www.fastify.io/docs/)
@@ -247,4 +268,5 @@ All code must be reviewed and pass CI before merging.
 ---
 
 ## Support
+
 If you get stuck, ask for help in your team chat or open an issue in the repository.

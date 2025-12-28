@@ -13,13 +13,16 @@
 - **Document all major architectural or refactor decisions in the repo (e.g., in a `docs/` folder or README).**
 
 ## How to Track and Address TODOs
+
 - Use your issue tracker to create tasks for each TODO.
 - Assign and prioritize them as part of your sprint or workflow.
 
 ## Example: Cleaning Up a TODO
+
 ```ts
 // TODO: Integrate with Stripe or Paddle
 ```
+
 - Create an issue: "Integrate billing with Stripe or Paddle."
 - Assign, implement, and close the issue when done.
 

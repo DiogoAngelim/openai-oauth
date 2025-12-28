@@ -12,9 +12,9 @@ If you discover a security vulnerability, please report it privately. Do **not**
 We only support the latest major version. Please update to the latest release for security patches.
 
 | Version | Supported          |
-| ------- | ----------------- |
-| latest  | :white_check_mark:|
-| <latest | :x:               |
+| ------- | ------------------ |
+| latest  | :white_check_mark: |
+| <latest | :x:                |
 
 ## Security Best Practices
 
@@ -40,7 +40,6 @@ For any security concerns, please contact the maintainers directly.
 ---
 
 _This project follows security best practices. For more details, see the CI/CD workflow and documentation._
-
 
 ## Sensitive Data Recovery (Recommended)
 

@@ -1,6 +1,7 @@
 # Google Cloud Infrastructure Setup
 
 ## Prerequisites
+
 - Set the following environment variables and GitHub secrets before running Terraform or CI/CD:
   - `GCP_PROJECT` (your GCP project ID, secret)
   - `GCP_REGION` (default: us-central1, secret)
@@ -45,10 +46,12 @@
    - Frontend is live on Vercel, talking to backend on Cloud Run, which connects securely to Cloud SQL.
 
 ## Integration
+
 - The backend will use the DATABASE_URL from Cloud SQL.
 - The frontend (on Vercel) should set `NEXT_PUBLIC_API_URL` to the backend Cloud Run URL.
 
 ## GitHub Actions Secrets Required
+
 - `GCP_PROJECT`
 - `GCP_REGION`
 - `DB_INSTANCE_NAME`

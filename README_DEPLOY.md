@@ -20,11 +20,13 @@
 4. **Custom rewrites**: See `apps/frontend/vercel.json` for API proxying.
 
 ## Connectivity
+
 - Expose backend via HTTPS (e.g., api.yourdomain.com)
 - Set CORS in backend to allow only your Vercel domains
 - Set `NEXT_PUBLIC_API_URL` in Vercel to your backend URL
 
 ## Best Practices
+
 - Never commit secrets to git
 - Use AWS Secrets Manager and Vercel’s env management
 - Use ECS and Vercel rollback features

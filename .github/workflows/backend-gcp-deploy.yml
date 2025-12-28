@@ -3,8 +3,8 @@ name: Deploy Backend to Google Cloud Run
 on:
   push:
     paths:
-      - 'apps/backend/**'
-      - '.github/workflows/backend-gcp-deploy.yml'
+      - "apps/backend/**"
+      - ".github/workflows/backend-gcp-deploy.yml"
     branches: [main]
 
 env:
@@ -26,7 +26,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ env.GCP_PROJECT }}
-          install_components: 'beta'
+          install_components: "beta"
           service_account_key: ${{ secrets.GCP_SA_KEY }}
 
       - name: Configure Docker for Artifact Registry
