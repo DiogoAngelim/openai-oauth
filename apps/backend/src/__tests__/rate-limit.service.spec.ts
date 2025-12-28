@@ -1,5 +1,4 @@
 import { RateLimitService } from '../rate-limit/rate-limit.service'
-
 import Redis from 'ioredis'
 
 jest.mock('ioredis', () => {
@@ -11,10 +10,10 @@ jest.mock('ioredis', () => {
 
 describe('RateLimitService', () => {
   let service: RateLimitService
-  let redisMock: { incr: jest.Mock, expire: jest.Mock }
+  let redisMock: jest.Mocked<Redis>
 
   beforeEach(() => {
-    redisMock = new Redis()
+    redisMock = new (Redis as any)() as jest.Mocked<Redis>
     redisMock.incr.mockReset()
     redisMock.expire.mockReset()
     service = new RateLimitService(redisMock)
@@ -25,20 +24,20 @@ describe('RateLimitService', () => {
   })
 
   it('should allow under the limit', async () => {
-    redisMock.incr.mockResolvedValueOnce(1)
-    redisMock.expire.mockResolvedValueOnce(1)
+    redisMock.incr.mockResolvedValueOnce(1 as any)
+    redisMock.expire.mockResolvedValueOnce(1 as any)
     await expect(service.check('user1', 5, 60)).resolves.toBeUndefined()
     expect(redisMock.incr).toHaveBeenCalled()
     expect(redisMock.expire).toHaveBeenCalled()
   })
 
   it('should allow at the limit', async () => {
-    redisMock.incr.mockResolvedValueOnce(5)
+    redisMock.incr.mockResolvedValueOnce(5 as any)
     await expect(service.check('user1', 5, 60)).resolves.toBeUndefined()
   })
 
   it('should throw if over the limit', async () => {
-    redisMock.incr.mockResolvedValueOnce(6)
-    await expect(service.check('user1', 5, 60)).rejects.toMatchObject({ name: 'BadRequestException' })
+    redisMock.incr.mockResolvedValueOnce(6 as any)
+    await expect(service.check('user1', 5, 60)).rejects.toHaveProperty('name', 'BadRequestException')
   })
 })

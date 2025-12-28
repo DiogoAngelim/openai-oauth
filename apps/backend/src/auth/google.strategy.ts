@@ -1,39 +1,37 @@
+// This file should define and export the GoogleStrategy and isGoogleStrategyEnabled, not contain tests.
+
 import { PassportStrategy } from '@nestjs/passport'
-import { Strategy } from 'passport-google-oauth20'
-import { Injectable, Provider } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { AuthService } from './auth.service'
 
-export const isGoogleStrategyEnabled = typeof process.env.GOOGLE_CLIENT_ID === 'string' && process.env.GOOGLE_CLIENT_ID.trim().length > 0
+export const isGoogleStrategyEnabled = !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET
 
-let GoogleStrategy: Provider
-if (isGoogleStrategyEnabled) {
-  @Injectable()
-  class GoogleStrategyClass extends PassportStrategy(Strategy, 'google') {
-    constructor (private readonly authService: AuthService) {
-      super({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.BACKEND_URL + '/auth/google/callback',
-        scope: ['email', 'profile'],
-        passReqToCallback: false
-      })
-    }
+@Injectable()
+export class GoogleStrategy extends PassportStrategy(
+  // @ts-ignore
+  require('passport-google-oauth20').Strategy,
+  'google'
+) {
+  constructor(private readonly authService: AuthService) {
+    super({
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      scope: ['email', 'profile']
+    })
+  }
 
-    async validate (
-      _accessToken: string,
-      _refreshToken: string,
-      profile: { emails: Array<{ value: string }>, displayName: string, photos?: Array<{ value: string }> },
-      done: (err: Error | null, result?: { id?: string, email?: string, name?: string } | null) => void
-    ): Promise<void> {
-      const { user } = await this.authService.validateOAuthLogin(profile)
-      done(null, { id: user.id ?? undefined, email: user.email ?? undefined, name: user.name ?? undefined })
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: (err: any, user?: any) => void
+  ) {
+    try {
+      const result = await this.authService.validateOAuthLogin(profile)
+      done(null, result.user)
+    } catch (err) {
+      done(err)
     }
   }
-  GoogleStrategy = GoogleStrategyClass
-} else {
-  @Injectable()
-  class DummyGoogleStrategy { }
-  GoogleStrategy = DummyGoogleStrategy
 }
-
-export { GoogleStrategy }

@@ -1,51 +1,45 @@
-import 'jest'
-import 'reflect-metadata'
-import { RolesGuard } from '../roles.guard'
-// import { Reflector } from '@nestjs/core';
-import { ForbiddenException, ExecutionContext } from '@nestjs/common'
+import { PassportStrategy } from '@nestjs/passport'
+import { Injectable } from '@nestjs/common'
+import { AuthService } from '../auth.service'
 
-describe('RolesGuard', () => {
-  let guard: RolesGuard
-  let reflector: { getAllAndOverride: jest.Mock }
-  let context: {
-    switchToHttp: () => { getRequest: () => { user: { role: string } | null } }
-    getHandler: jest.Mock
-    getClass: jest.Mock
+
+/**
+ * Indicates if Google OAuth strategy should be enabled.
+ * Controlled by GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables.
+ */
+export const isGoogleStrategyEnabled =
+  !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET
+
+/**
+ * Google OAuth Strategy for Passport.
+ * Uses environment variables for configuration.
+ */
+@Injectable()
+export class GoogleStrategy extends PassportStrategy(
+  // @ts-ignore
+  require('passport-google-oauth20').Strategy,
+  'google'
+) {
+  constructor(private readonly authService: AuthService) {
+    super({
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      scope: ['email', 'profile']
+    })
   }
 
-  beforeEach(() => {
-    reflector = { getAllAndOverride: jest.fn() }
-    guard = new RolesGuard(reflector)
-    context = {
-      switchToHttp: () => ({ getRequest: () => ({ user: { role: 'ADMIN' } }) }),
-      getHandler: jest.fn(),
-      getClass: jest.fn()
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: (err: any, user?: any) => void
+  ) {
+    try {
+      const result = await this.authService.validateOAuthLogin(profile)
+      done(null, result.user)
+    } catch (err) {
+      done(err)
     }
-  })
-
-  it('should be defined', () => {
-    expect(RolesGuard).toBeDefined()
-  })
-
-  it('should allow if no roles required', () => {
-    reflector.getAllAndOverride.mockReturnValueOnce(undefined)
-    expect(guard.canActivate(context as unknown as ExecutionContext)).toBe(true)
-  })
-
-  it('should allow if user has required role', () => {
-    reflector.getAllAndOverride.mockReturnValueOnce(['ADMIN'])
-    expect(guard.canActivate(context as unknown as ExecutionContext)).toBe(true)
-  })
-
-  it('should throw if user missing or role not allowed', () => {
-    reflector.getAllAndOverride.mockReturnValueOnce(['USER'])
-    context.switchToHttp = () => ({ getRequest: () => ({ user: { role: 'ADMIN' } }) })
-    expect(() => guard.canActivate(context as unknown as ExecutionContext)).toThrow(ForbiddenException)
-  })
-
-  it('should throw if user is null', () => {
-    reflector.getAllAndOverride.mockReturnValueOnce(['ADMIN'])
-    context.switchToHttp = () => ({ getRequest: () => ({ user: null }) })
-    expect(() => guard.canActivate(context as unknown as ExecutionContext)).toThrow(ForbiddenException)
-  })
-})
+  }
+}

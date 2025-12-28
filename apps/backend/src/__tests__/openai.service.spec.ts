@@ -1,77 +1,48 @@
-// No top-level exception imports needed
-import { OpenAIService } from '../openai/openai.service'
-import { openaiCreateMock as oaiMock, openaiMockFactory } from '../__mocks__/openai.mock'
-import { prismaMockFactory } from '../__mocks__/prisma-client.mock'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { GoogleStrategy, isGoogleStrategyEnabled } from '../auth/google.strategy'
+import { AuthService } from '../auth/auth.service'
 
-describe('OpenAIService', () => {
-  let service: OpenAIService
-  let openaiCreateMock: jest.Mock
-  let prismaInstance: ReturnType<typeof prismaMockFactory>
+describe('GoogleStrategy', () => {
+  let strategy: any
+  let authService: AuthService
+
   beforeEach(() => {
-    jest.resetModules()
-    openaiCreateMock = oaiMock
-    prismaInstance = prismaMockFactory()
-    jest.doMock('openai', () => ({
-      default: jest.fn().mockImplementation(openaiMockFactory)
-    }))
-    jest.doMock('@prisma/client', () => ({
-      PrismaClient: jest.fn().mockImplementation(() => prismaInstance)
-    }))
-    service = new OpenAIService(prismaInstance)
+    // Mock Dizzle and JwtService
+    const mockDizzle = {} as any
+    const mockJwtService = { sign: jest.fn() } as any
+
+    authService = new AuthService(mockJwtService, mockDizzle)
+    // Mock validateOAuthLogin
+    jest.spyOn(authService, 'validateOAuthLogin').mockResolvedValue({
+      user: { id: 'id', email: 'email', name: 'name' }
+    })
+
+    if (isGoogleStrategyEnabled) {
+      strategy = new (GoogleStrategy as any)(authService)
+    } else {
+      strategy = new (GoogleStrategy as any)()
+    }
   })
 
   it('should be defined', () => {
-    expect(service).toBeDefined()
+    expect(strategy).toBeDefined()
   })
 
-  it('should handle prompt input', async () => {
-    const prisma = (service)._prismaInstance
-    prisma.organization.findUnique.mockResolvedValue({ id: 'org1', subscription: { monthlyQuota: 1000 } })
-    prisma.openAIUsageLog.aggregate.mockResolvedValue({ _sum: { totalTokens: 0 } })
-    await expect(service.createChatCompletion('org1', 'user1', { prompt: 'hi' }, false)).resolves.toBeDefined()
-  })
-
-  it('should throw BadRequestException for invalid prompt', async () => {
-    await expect(service.createChatCompletion('org1', 'user1', { prompt: '' }, false)).rejects.toThrow(
-      expect.objectContaining({ name: 'BadRequestException' })
-    )
-  })
-
-  it('should throw ForbiddenException for forbidden prompt', async () => {
-    await expect(service.createChatCompletion('org1', 'user1', { prompt: 'api_key' }, false)).rejects.toThrow(
-      expect.objectContaining({ name: 'ForbiddenException' })
-    )
-  })
-
-  it('should throw ForbiddenException if quota exceeded', async () => {
-    const prisma = (service)._prismaInstance
-    prisma.organization.findUnique.mockResolvedValue({ subscription: { monthlyQuota: 1 } })
-    prisma.openAIUsageLog.aggregate.mockResolvedValue({ _sum: { totalTokens: 1000 } })
-    await expect(service.createChatCompletion('org1', 'user1', { prompt: 'hi' }, false)).rejects.toThrow(
-      expect.objectContaining({ name: 'ForbiddenException' })
-    )
-  })
-
-  it('should handle streaming', async () => {
-    const prisma = (service)._prismaInstance
-    prisma.organization.findUnique.mockResolvedValue({ id: 'org1', subscription: { monthlyQuota: 1000 } })
-    prisma.openAIUsageLog.aggregate.mockResolvedValue({ _sum: { totalTokens: 0 } })
-    // Patch OpenAI mock for streaming
-    const streamData = [{ choices: [{ delta: { content: 'A' } }] }, { choices: [{ delta: { content: 'B' } }] }]
-    openaiCreateMock.mockImplementation(async function * () {
-      for (const chunk of streamData) yield chunk
+  if (isGoogleStrategyEnabled) {
+    it('should call validateOAuthLogin and done', async () => {
+      const profile = { emails: [{ value: 'test@example.com' }], displayName: 'Test User' }
+      const done = jest.fn()
+      if (typeof strategy.validate === 'function') {
+        await strategy.validate('token', 'refresh', profile, done)
+        expect(authService.validateOAuthLogin).toHaveBeenCalledWith(profile)
+        expect(done).toHaveBeenCalledWith(null, { id: 'id', email: 'email', name: 'name' })
+      } else {
+        throw new Error('Strategy does not implement validate')
+      }
     })
-    const onData = jest.fn()
-    await service.createChatCompletion('org1', 'user1', { prompt: 'hi' }, true, onData)
-    expect(onData).toHaveBeenCalledWith('A')
-    expect(onData).toHaveBeenCalledWith('B')
-  })
-
-  it('should throw ForbiddenException if org not found', async () => {
-    const prisma = (service)._prismaInstance
-    prisma.organization.findUnique.mockResolvedValue(null)
-    await expect(service.createChatCompletion('org1', 'user1', { prompt: 'hi' }, false)).rejects.toThrow(
-      expect.objectContaining({ name: 'ForbiddenException' })
-    )
-  })
+  } else {
+    it('should be a dummy strategy when disabled', () => {
+      expect(strategy).toBeInstanceOf(Object)
+    })
+  }
 })

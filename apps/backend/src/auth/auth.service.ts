@@ -1,61 +1,50 @@
-import { UnauthorizedException, Injectable } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-// TODO: Replace with the actual Drizzle client import used in your project.
-// For example, if you use a Drizzle client instance:
+import { UnauthorizedException } from '@nestjs/common'
 
-interface Membership {
-  userId: string
-  organizationId: string
-  role: string
-  [key: string]: unknown
-}
-
-function normalizeMembership (m: any): Membership {
-  return {
-    userId: typeof m.userId === 'string' ? m.userId : (m.userId ?? '').toString(),
-    organizationId: typeof m.organizationId === 'string' ? m.organizationId : (m.organizationId ?? '').toString(),
-    role: typeof m.role === 'string' ? m.role : (m.role ?? '').toString(),
-    ...m
-  }
-}
-
-function assertValidMembership (m: unknown): asserts m is Membership {
-  const mem = normalizeMembership(m)
-  if (!mem.userId) throw new UnauthorizedException('Membership userId must be a non-empty string')
-  if (!mem.organizationId) throw new UnauthorizedException('Membership organizationId must be a non-empty string')
-  if (!mem.role || mem.role.trim() === '') throw new UnauthorizedException('Membership role must be a non-empty string')
-  if (!['OWNER', 'ADMIN', 'MEMBER'].includes(mem.role)) {
-    mem.role = ''
-  }
-}
-
-@Injectable()
 export class AuthService {
-  constructor (
-    private readonly jwtService: JwtService,
-    // Replace 'any' with the actual type of your Drizzle client/instance if available
-    private readonly drizzle: any
-  ) { }
+  constructor(private jwtService: any, private drizzle: any) { }
 
-  async generateTokens (
-    user: { id: string, email: string, name?: string | null, image?: string | null, createdAt?: Date, updatedAt?: Date },
-    organizationId: string,
-    role: string
-  ): Promise<{ accessToken: string, refreshToken: string }> {
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      image: user.image,
-      organizationId,
-      role
+  async validateOAuthLogin(profile: any) {
+    const email = profile.emails?.[0]?.value
+    let user = await this.drizzle.user.findUnique({ where: { email } })
+    if (!user) {
+      user = await this.drizzle.user.create({ data: { email, name: profile.displayName } })
+      if (!user) throw new UnauthorizedException('User creation failed')
     }
+    const membership = await this.drizzle.membership.findFirst({ where: { userId: user.id } })
+    if (!membership) throw new UnauthorizedException('No organization membership found')
+    return { user }
+  }
 
-    const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '15m' })
-    const refreshToken = await this.jwtService.signAsync({ sub: user.id }, { expiresIn: '30d' })
-
+  async generateTokens(user: any, organizationId: string, role: string) {
+    const accessToken = this.jwtService.sign({ sub: user.id, organizationId, role })
+    const refreshToken = this.jwtService.sign({ sub: user.id, organizationId, role, refresh: true })
+    await this.drizzle.refreshToken.create({
+      data: {
+        userId: user.id,
+        token: refreshToken,
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+      }
+    })
     return { accessToken, refreshToken }
   }
 
-  // Add other authentication methods as needed
+  async validateUserFromJwt(payload: any) {
+    return await this.drizzle.user.findUnique({ where: { id: payload.sub } })
+  }
+
+  async refreshAccessToken(token: string) {
+    const refreshToken = await this.drizzle.refreshToken.findUnique({
+      where: { token },
+      include: { user: true }
+    })
+    if (!refreshToken || refreshToken.expiresAt < new Date()) {
+      throw new UnauthorizedException('Invalid refresh token')
+    }
+    const membership = await this.drizzle.membership.findFirst({
+      where: { userId: refreshToken.userId },
+      include: { organization: true }
+    })
+    if (!membership) throw new UnauthorizedException('No organization membership found')
+    return this.generateTokens(refreshToken.user, membership.organizationId, membership.role)
+  }
 }

@@ -3,11 +3,18 @@ import { AuthService } from '../auth/auth.service'
 import { JwtService } from '@nestjs/jwt'
 import { Request, Response } from 'express'
 
+// Extend Express Request type for testing to include 'user'
+interface TestRequest extends Request {
+  user?: any;
+  cookies: any;
+  body: any;
+}
+
 describe('AuthController', () => {
   let controller: AuthController
   let authService: AuthService
   let res: jest.Mocked<Response>
-  let req: jest.Mocked<Request>
+  let req: jest.Mocked<TestRequest>
 
   beforeEach(() => {
     // Mock JwtService
