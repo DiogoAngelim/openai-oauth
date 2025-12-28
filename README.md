@@ -8,6 +8,10 @@
 
 ![OpenAI + Google Logo](openai+google.png)
 
+<!-- Architecture Diagram -->
+![Project Architecture](architecture.png)
+
+
 # OpenAI OAuth Backend — Beginner Guide
 
 > **Important:** Always run Docker builds from the monorepo root directory to avoid missing files in the build context. Example:
