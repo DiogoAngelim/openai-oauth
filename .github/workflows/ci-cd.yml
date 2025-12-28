@@ -197,9 +197,8 @@ jobs:
             -f apps/backend/Dockerfile -t openai-saas-backend:latest .
 
   notify:
-    needs: [build, test, security-audit, deploy]
+    needs: [build, test, security-audit, deploy-backend]
     runs-on: ubuntu-latest
-    if: always()
     steps:
-      - name: Notify (placeholder)
-        run: echo "Add Slack/Discord/email notification here"
+      - name: Notify
+        run: echo "Workflow complete"
