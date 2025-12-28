@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --check ."
   },
   "dependencies": {
     "@nestjs/common": "^11.1.10",
