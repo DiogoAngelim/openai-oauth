@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/react": "19.2.7",
+    "@types/react-dom": "18.3.7",
     "globals": "^16.5.0",
     "jiti": "^2.6.1",
     "typescript": "^5.0.0",

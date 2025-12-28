@@ -1,7 +1,7 @@
-import * as AuthIndex from '../index';
+import * as AuthIndex from '../index'
 
 describe('Auth Index', () => {
   it('should export expected members', () => {
-    expect(AuthIndex).toBeDefined();
-  });
-});
+    expect(AuthIndex).toBeDefined()
+  })
+})

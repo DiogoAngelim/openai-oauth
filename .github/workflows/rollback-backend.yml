@@ -35,10 +35,3 @@ jobs:
 
       - name: Build backend
         run: pnpm --filter ./apps/backend... build
-
-
-
-      - name: (Optional) Rollback database migration
-        run: |
-          echo "If you need to rollback DB, run the manual script in packages/prisma/rollback.sh or use the workflow input."
-        shell: bash

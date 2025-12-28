@@ -1,7 +1,6 @@
-import { createLogger, format, transports } from 'winston';
+import { createLogger, format, transports, Logger } from 'winston'
 
-import { Logger } from 'winston';
-export function getLogger(): Logger {
+export function getLogger (): Logger {
   return createLogger({
     level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
     format: format.combine(
@@ -11,7 +10,7 @@ export function getLogger(): Logger {
       format.json()
     ),
     transports: [
-      new transports.Console(),
-    ],
-  });
+      new transports.Console()
+    ]
+  })
 }

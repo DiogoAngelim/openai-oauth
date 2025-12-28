@@ -1,5 +1,22 @@
 {
   "compilerOptions": {
-    "strictNullChecks": true
-  }
+    "target": "es2021",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "declaration": true
+  },
+  "include": [
+    "apps/**/*",
+    "packages/**/*",
+    "frontend/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

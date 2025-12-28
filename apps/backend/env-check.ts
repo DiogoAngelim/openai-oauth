@@ -14,11 +14,11 @@ if (!process.env.GITHUB_ACTIONS) {
     'GITHUB_CLIENT_SECRET',
     'BACKEND_URL',
     'LINKEDIN_CLIENT_ID',
-    'LINKEDIN_CLIENT_SECRET',
-  ];
-  const missing = requiredVars.filter((v) => !process.env[v]);
+    'LINKEDIN_CLIENT_SECRET'
+  ]
+  const missing = requiredVars.filter((v) => !process.env[v])
   if (missing.length > 0) {
-    console.error(`Missing required environment variables: ${missing.join(', ')}`);
-    process.exit(1);
+    console.error(`Missing required environment variables: ${missing.join(', ')}`)
+    process.exit(1)
   }
 }

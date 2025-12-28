@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/11</span>
             </div>
         
             
@@ -88,16 +88,16 @@
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -113,16 +113,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AuthService } from './auth.service';
-import crypto from 'crypto';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { Injectable } from '@nestjs/common';</span>
+<span class="cstat-no" title="statement not covered" >import { PassportStrategy } from '@nestjs/passport';</span>
+<span class="cstat-no" title="statement not covered" >import { ExtractJwt, Strategy } from 'passport-jwt';</span>
+<span class="cstat-no" title="statement not covered" >import { AuthService } from './auth.service';</span>
+<span class="cstat-no" title="statement not covered" >import crypto from 'crypto';</span>
 &nbsp;
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export <span class="cstat-no" title="statement not covered" >class <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >JwtStrategy </span>extends PassportStrategy(Strategy) {</span></span>
   public readonly secretOrKey: string;
-<span class="fstat-no" title="function not covered" >  co</span>nstructor(private readonly authService: AuthService) {
+<span class="fstat-no" title="function not covered" >  constructor(private readonly <span class="cstat-no" title="statement not covered" >a</span>uthService: A</span>uthService) {
     const secret = <span class="cstat-no" title="statement not covered" >typeof process.env.JWT_SECRET === 'string' &amp;&amp; process.env.JWT_SECRET.trim().length &gt; 0</span>
       ? process.env.JWT_SECRET
       : crypto.randomBytes(32).toString('hex');
@@ -134,7 +134,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 <span class="cstat-no" title="statement not covered" >    this.secretOrKey = secret;</span>
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync validate(payload: { sub: string }): Promise&lt;{ id: string; email?: string } | null&gt; {
+<span class="fstat-no" title="function not covered" >  async </span>validate(payload: { sub: string }): Promise&lt;{ id: string; email?: string } | null&gt; {
 <span class="cstat-no" title="statement not covered" >    return this.authService.validateUserFromJwt(payload);</span>
   }
 }
@@ -145,7 +145,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-27T20:39:04.796Z
+                at 2025-12-27T21:34:14.396Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

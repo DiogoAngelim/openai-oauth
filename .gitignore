@@ -127,9 +127,6 @@ Icon?
 *~
 __MACOSX/
 
-# Prisma
-prisma/migrations/
-
 # Others
 *.sqlite
 

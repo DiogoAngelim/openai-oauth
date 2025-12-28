@@ -1,6 +1,6 @@
 module.exports = {
+  preset: 'ts-jest',
   testEnvironment: 'node',
-  globalSetup: '<rootDir>/jest.global-setup.js',
   roots: ['<rootDir>/src'],
   testMatch: [
     '<rootDir>/src/**/*.spec.ts',
@@ -10,17 +10,22 @@ module.exports = {
     '<rootDir>/src/**/*.spec.tsx',
     '<rootDir>/src/**/*.test.tsx',
     '<rootDir>/src/**/*.spec.jsx',
-    '<rootDir>/src/**/*.test.jsx',
+    '<rootDir>/src/**/*.test.jsx'
   ],
   transform: {
-    '^.+\\.(controller|module)\\.ts$': 'ts-jest',
-    '^.+\\.(ts|js)$': 'babel-jest',
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest'
   },
-  moduleFileExtensions: ['ts', 'js', 'json'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}', '!<rootDir>/src/main.ts'],
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['text', 'lcov'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   transformIgnorePatterns: ['/node_modules/'],
-};
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
+    }
+  }
+}
