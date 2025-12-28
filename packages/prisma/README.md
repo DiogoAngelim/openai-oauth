@@ -1,16 +1,13 @@
 ## Usage
 
-- To generate the Prisma client:
-  ```sh
-  pnpm run prisma:generate --filter backend
-  ```
+
+## Usage (Drizzle)
+
 - To run migrations:
   ```sh
-  pnpm run migrate:deploy --filter backend
+  npx drizzle-kit migrate:deploy --config=../../apps/backend/drizzle.config.ts
   ```
 - To rollback migrations:
-  ```sh
-  pnpm run db:rollback --filter backend
-  ```
+  (manual, see Drizzle docs)
 
 See the main `README.md` for more details.

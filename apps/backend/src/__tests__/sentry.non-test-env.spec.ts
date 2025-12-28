@@ -2,24 +2,26 @@ describe('Sentry (non-test env)', () => {
   const OLD_ENV = process.env
   beforeEach(() => {
     jest.resetModules()
-    process.env = { ...OLD_ENV, NODE_ENV: 'production', SENTRY_DSN: 'dummy' }
+    process.env = { ...OLD_ENV, NODE_ENV: 'production', SENTRY_DSN: 'https://publicKey@o0.ingest.sentry.io/0' }
   })
   afterEach(() => {
     process.env = OLD_ENV
   })
 
-  it('should require @sentry/node and call init', async () => {
-    const sentryNode = { init: jest.fn() }
-    jest.doMock('@sentry/node', () => sentryNode, { virtual: true })
-    const sentry = await import('../sentry')
+  it('should require @sentry/node and call init', () => {
+    const sentryNode = {
+      init: jest.fn(),
+      captureException: jest.fn(),
+      captureMessage: jest.fn(),
+      withScope: jest.fn()
+    }
+    jest.mock('@sentry/node', () => sentryNode)
+    const sentry = require('../sentry')
     expect(sentryNode.init).toHaveBeenCalledWith({
-      dsn: 'dummy',
+      dsn: 'https://publicKey@o0.ingest.sentry.io/0',
       environment: 'production',
       tracesSampleRate: 0.2
     })
-    // Jest's doMock with require returns a module with .default
-    expect(
-      typeof sentry.default !== 'undefined' ? sentry.default : sentry
-    ).toBe(sentryNode)
+    expect(sentry.default || sentry).toBe(sentryNode)
   })
 })

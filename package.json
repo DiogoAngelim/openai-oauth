@@ -9,7 +9,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "format": "prettier --check ."
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@nestjs/common": "^11.1.10",

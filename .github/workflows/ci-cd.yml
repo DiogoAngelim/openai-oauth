@@ -81,8 +81,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --no-frozen-lockfile
-      - run: npx prisma generate --schema=packages/prisma/schema.prisma
-      - run: npx prisma migrate deploy --schema=packages/prisma/schema.prisma
+      - run: npx drizzle-kit generate:sqlite --config=apps/backend/drizzle.config.ts
+      - run: npx drizzle-kit migrate:deploy --config=apps/backend/drizzle.config.ts
       - name: Run backend tests with coverage
         run: pnpm --filter @openai-oauth/backend test -- --coverage
 
@@ -141,8 +141,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --no-frozen-lockfile
-      - run: pnpm run build --filter backend
-      - run: pnpm run build --filter frontend
+      - run: pnpm --filter backend run build
+      - run: pnpm --filter frontend run build
 
   docker-backend:
     needs: build

@@ -189,39 +189,21 @@ else
 fi
 fi
 
-log INFO "Database setup complete. Proceeding to Prisma migration."
+log INFO "Database setup complete. Proceeding to Drizzle migration."
 
-log "[STEP 3] Updating .env DATABASE_URL..."
-ENV_PATH="$(dirname "$0")/../../.env"
-NEW_URL="postgresql://postgres:$USERPASS_URLENCODED@localhost:5432/openai_oauth?schema=public"
-log "[INFO] Using secure password for 'postgres': $USERPASS"
-if grep -q '^DATABASE_URL=' "$ENV_PATH"; then
-  sed -i '' "s|^DATABASE_URL=.*|DATABASE_URL=\"$NEW_URL\"|" "$ENV_PATH"
+# Step 3: Update .env DATABASE_URL (already handled above)
+
+# Step 4: Run Drizzle migration
+log INFO "Running Drizzle migration..."
+npx drizzle-kit migrate:deploy --config=../../apps/backend/drizzle.config.ts
+if [ $? -eq 0 ]; then
+  log SUCCESS "Drizzle migration completed."
 else
-  echo "DATABASE_URL=\"$NEW_URL\"" >> "$ENV_PATH"
-fi
-log "[INFO] .env DATABASE_URL updated to: $NEW_URL"
-
-# Step 3: (Optional) Increase file descriptor limit
-ulimit -n 4096 || echo "[WARN] Could not increase file descriptor limit."
-
-echo "[SUCCESS] Migration and client generation complete. Restart your backend server to apply changes."
-# Step 4: Run migration
-log INFO "Running Prisma migration..."
-if npx prisma migrate dev --name add_chat_message; then
-  log SUCCESS "Prisma migration completed."
-else
-  log ERROR "Prisma migration failed. Check the output above."
+  log ERROR "Drizzle migration failed. Check the output above."
   exit 1
 fi
 
-# Step 5: Regenerate Prisma client
-log INFO "Regenerating Prisma client..."
-if npx prisma generate --schema=schema.prisma; then
-  log SUCCESS "Prisma client generated."
-else
-  log ERROR "Prisma client generation failed. Check the output above."
-  exit 1
-fi
+# Step 5: Generate Drizzle client (no codegen needed, just restart backend)
+log SUCCESS "Drizzle migration and setup complete. Restart your backend server to apply changes."
 
 log SUCCESS "Migration and client generation complete. Restart your backend server to apply changes."
