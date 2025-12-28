@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>6/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -89,18 +89,15 @@
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -111,34 +108,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { PassportStrategy } from '@nestjs/passport';</span>
-<span class="cstat-no" title="statement not covered" >import { Strategy } from 'passport-linkedin-oauth2';</span>
-<span class="cstat-no" title="statement not covered" >import { Injectable } from '@nestjs/common';</span>
-<span class="cstat-no" title="statement not covered" >import { AuthService } from './auth.service';</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { PassportStrategy } from '@nestjs/passport'
+import { Strategy } from 'passport-linkedin-oauth2'
+import { Injectable } from '@nestjs/common'
+import { AuthService } from './auth.service'
 &nbsp;
 @Injectable()
-export <span class="cstat-no" title="statement not covered" >class <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >LinkedinStrategy </span>extends PassportStrategy(Strategy, 'linkedin') {</span></span>
-<span class="fstat-no" title="function not covered" >  constructor(private readonly <span class="cstat-no" title="statement not covered" >a</span>uthService: A</span>uthService) {
-<span class="cstat-no" title="statement not covered" >    super({</span>
+export class LinkedinStrategy extends PassportStrategy(Strategy, 'linkedin') {
+  constructor (private readonly authService: AuthService<span class="branch-1 cbranch-no" title="branch not covered" >) {</span>
+    super({
       clientID: process.env.LINKEDIN_CLIENT_ID!,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
       callbackURL: process.env.BACKEND_URL + '/auth/linkedin/callback',
-      scope: ['r_emailaddress', 'r_liteprofile'],
-    });
+      scope: ['r_emailaddress', 'r_liteprofile']
+    })
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  async </span>validate(
+  async validate (
     _accessToken: string,
     _refreshToken: string,
-    profile: { emails: { value: string }[]; displayName: string; photos?: { value: string }[] },
-    done: (err: Error | null, result?: { id?: string; email?: string; name?: string } | null) =&gt; void
+    profile: { emails: Array&lt;{ value: string }&gt;, displayName: string, photos?: Array&lt;{ value: string }&gt; },
+    done: (err: Error | null, result?: { id?: string, email?: string, name?: string } | null) =&gt; void
   ): Promise&lt;void&gt; {
-    const { user } = <span class="cstat-no" title="statement not covered" >await this.authService.validateOAuthLogin(profile);</span>
-<span class="cstat-no" title="statement not covered" >    done(null, { id: user.id ?? undefined, email: user.email ?? undefined, name: user.name ?? undefined });</span>
+    const { user } = await this.authService.validateOAuthLogin(profile)
+    done(null, { id: user.id ?? <span class="branch-1 cbranch-no" title="branch not covered" >undefined,</span> email: user.email ?? <span class="branch-1 cbranch-no" title="branch not covered" >undefined,</span> name: user.name ?? <span class="branch-1 cbranch-no" title="branch not covered" >undefined </span>})
   }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -148,7 +148,7 @@ export <span class="cstat-no" title="statement not covered" >class <span class="
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-27T21:34:14.396Z
+                at 2025-12-28T05:44:54.129Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

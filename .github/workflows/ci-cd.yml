@@ -166,3 +166,47 @@ jobs:
     steps:
       - name: Notify (placeholder)
         run: echo "Add Slack/Discord/email notification here"
+
+  deploy-backend:
+    needs: docker-backend
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    env:
+      GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+      REGION: ${{ secrets.REGION }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      NODE_ENV: ${{ secrets.NODE_ENV }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+      GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      BACKEND_URL: ${{ secrets.BACKEND_URL }}
+      LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+      LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install pnpm
+        run: npm install -g pnpm@8.15.5
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg DATABASE_URL=${{ env.DATABASE_URL }} \
+            --build-arg REDIS_URL=${{ env.REDIS_URL }} \
+            --build-arg NODE_ENV=${{ env.NODE_ENV }} \
+            --build-arg SENTRY_DSN=${{ env.SENTRY_DSN }} \
+            --build-arg FRONTEND_URL=${{ env.FRONTEND_URL }} \
+            --build-arg JWT_SECRET=${{ env.JWT_SECRET }} \
+            --build-arg GITHUB_CLIENT_ID=${{ env.GITHUB_CLIENT_ID }} \
+            --build-arg GITHUB_CLIENT_SECRET=${{ env.GITHUB_CLIENT_SECRET }} \
+            --build-arg BACKEND_URL=${{ env.BACKEND_URL }} \
+            --build-arg LINKEDIN_CLIENT_ID=${{ env.LINKEDIN_CLIENT_ID }} \
+            --build-arg LINKEDIN_CLIENT_SECRET=${{ env.LINKEDIN_CLIENT_SECRET }} \
+            -f apps/backend/Dockerfile -t openai-saas-backend:latest .

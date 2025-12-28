@@ -79,4 +79,25 @@ describeOrSkip('CI/CD Docker Backend', () => {
     execSync(`docker stop ${containerId}`)
     execSync(`docker rm ${containerId}`)
   })
+
+  it('should have a valid DATABASE_URL', (): void => {
+    const { DATABASE_URL } = process.env
+    expect(DATABASE_URL).toBeDefined()
+    expect(DATABASE_URL).not.toBeNull()
+    expect(typeof DATABASE_URL).toBe('string')
+    expect(DATABASE_URL).not.toBe('')
+  })
+
+  it('should connect to the database', async function (): Promise<void> {
+    const { DATABASE_URL } = process.env
+    expect(typeof DATABASE_URL).toBe('string')
+    expect(DATABASE_URL !== undefined && DATABASE_URL !== null && DATABASE_URL !== '').toBe(true)
+
+    await testDatabaseConnection(DATABASE_URL as string)
+  })
 })
+function testDatabaseConnection(arg0: string): Promise<void> {
+  // TODO: Implement actual database connection logic here
+  throw new Error('Function not implemented.')
+}
+

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>6/12</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>4/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -80,38 +80,38 @@
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { RateLimitService } from '../rate-limit/rate-limit.service';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
+import { RateLimitService } from '../rate-limit/rate-limit.service'
 &nbsp;
 @Injectable()
 export class OpenAIRateLimitGuard implements CanActivate {
-  constructor(private rateLimit: RateLimitService<span class="branch-1 cbranch-no" title="branch not covered" >) { }</span>
+  constructor (private readonly rateLimit: RateLimitService<span class="branch-1 cbranch-no" title="branch not covered" >) { }</span>
 &nbsp;
-  async canActivate(context: ExecutionContext): Promise&lt;boolean&gt; {
-    const req = context.switchToHttp().getRequest();
-    const userId = req.user?.sub;
-    const orgId = req.user?.orgId;
+<span class="fstat-no" title="function not covered" >  async </span>canActivate (context: ExecutionContext): Promise&lt;boolean&gt; {
+    const req = <span class="cstat-no" title="statement not covered" >context.switchToHttp().getRequest()</span>
+    const userId = <span class="cstat-no" title="statement not covered" >req.user?.sub</span>
+    const orgId = <span class="cstat-no" title="statement not covered" >req.user?.orgId</span>
     // Per-user: 60 req/min, per-org: 300 req/min
-    await this.rateLimit.check(`user:${userId}`, 60, 60);
-    await this.rateLimit.check(`org:${orgId}`, 300, 60);
-    return true;
+<span class="cstat-no" title="statement not covered" >    await this.rateLimit.check(`user:${userId}`, 60, 60)</span>
+<span class="cstat-no" title="statement not covered" >    await this.rateLimit.check(`org:${orgId}`, 300, 60)</span>
+<span class="cstat-no" title="statement not covered" >    return true</span>
   }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -121,7 +121,7 @@ export class OpenAIRateLimitGuard implements CanActivate {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-27T21:34:14.396Z
+                at 2025-12-28T05:44:54.129Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

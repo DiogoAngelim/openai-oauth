@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">94.11% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>16/17</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">92.85% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>13/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -97,22 +97,22 @@
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -128,24 +128,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-<span class="cstat-no" title="statement not covered" >import { Module, Controller, Get } from '@nestjs/common';</span>
-<span class="cstat-no" title="statement not covered" >import { ConfigModule } from '@nestjs/config';</span>
-<span class="cstat-no" title="statement not covered" >import { AuthModule } from './auth/auth.module';</span>
-<span class="cstat-no" title="statement not covered" >import { ApiModule } from './api/api.module';</span>
-<span class="cstat-no" title="statement not covered" >import { OpenAIModule } from './openai/openai.module';</span>
-<span class="cstat-no" title="statement not covered" >import { RateLimitModule } from './rate-limit/rate-limit.module';</span>
-<span class="cstat-no" title="statement not covered" >import { MonitoringController } from './monitoring.controller';</span>
-<span class="cstat-no" title="statement not covered" >import { ComplianceController } from './compliance.controller';</span>
-<span class="cstat-no" title="statement not covered" >import { BillingModule } from './billing.module';</span>
-<span class="cstat-no" title="statement not covered" >import { AdminController } from './admin.controller';</span>
+import { Module, Controller, Get } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { AuthModule } from './auth/auth.module'
+import { ApiModule } from './api/api.module'
+import { OpenAIModule } from './openai/openai.module'
+import { RateLimitModule } from './rate-limit/rate-limit.module'
+import { MonitoringController } from './monitoring.controller'
+import { ComplianceController } from './compliance.controller'
+import { BillingModule } from './billing.module'
+import { AdminController } from './admin.controller'
 &nbsp;
 @Controller('/')
-<span class="cstat-no" title="statement not covered" >class <span class="cstat-no" title="statement not covered" >HealthController {</span></span>
+class HealthController {
   @Get('health')
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  health(</span>) {</span>
-<span class="cstat-no" title="statement not covered" >    return { status: 'ok' };</span>
+<span class="fstat-no" title="function not covered" >  health </span>() {
+<span class="cstat-no" title="statement not covered" >    return { status: 'ok' }</span>
   }
 }
 &nbsp;
@@ -156,12 +156,12 @@
     ApiModule,
     OpenAIModule,
     RateLimitModule,
-    BillingModule,
+    BillingModule
   ],
   controllers: [MonitoringController, ComplianceController, AdminController, HealthController],
-  providers: [],
+  providers: []
 })
-export <span class="cstat-no" title="statement not covered" >class <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >AppModule </span>{ }</span></span>
+export class AppModule { }
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -169,7 +169,7 @@ export <span class="cstat-no" title="statement not covered" >class <span class="
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-27T21:34:14.396Z
+                at 2025-12-28T05:44:54.129Z
             </div>
         <script src="../prettify.js"></script>
         <script>

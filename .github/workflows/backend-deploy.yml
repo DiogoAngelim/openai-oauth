@@ -1,74 +1,18 @@
-name: Deploy Backend to AWS ECS
+name: Your Workflow Name
 
 on:
   push:
-    paths:
-      - 'apps/backend/**'
-      - '.github/workflows/backend-deploy.yml'
-    branches: [main]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 env:
-  AWS_REGION: us-east-1
-  ECR_REPOSITORY: openai-saas-backend
-  ECS_SERVICE: openai-saas-backend-service
-  ECS_CLUSTER: openai-saas-cluster
-  ECS_TASK_DEFINITION: apps/backend/ecs-task-definition.json
+  GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  REGION: ${{ secrets.REGION }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Log in to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push Docker image
-        run: |
-          docker build -t $ECR_REPOSITORY:latest ./apps/backend
-          docker tag $ECR_REPOSITORY:latest ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:latest
-
-      - name: Render new ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: backend
-          image: ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:latest
-
-      - name: Deploy to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-name: Deploy Backend to AWS ECS
-
-on:
-  push:
-    paths:
-      - 'apps/backend/**'
-      - '.github/workflows/backend-deploy.yml'
-    branches: [main]
-
-env:
-  AWS_REGION: us-east-1
-  ECR_REPOSITORY: openai-saas-backend
-  ECS_SERVICE: openai-saas-backend-service
-  ECS_CLUSTER: openai-saas-cluster
-  ECS_TASK_DEFINITION: apps/backend/ecs-task-definition.json
-
-jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

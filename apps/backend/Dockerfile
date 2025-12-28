@@ -33,10 +33,31 @@ RUN pnpm install --prod --force
 # Copy backend source and config from root context
 COPY apps/backend/src ./src
 COPY apps/backend/tsconfig.json ./tsconfig.json
-COPY packages/prisma ./prisma
+COPY apps/backend/env-check.ts ./env-check.ts
+ARG DATABASE_URL
+ARG REDIS_URL
+ARG NODE_ENV
+ARG SENTRY_DSN
+ARG FRONTEND_URL
+ARG JWT_SECRET
+ARG GITHUB_CLIENT_ID
+ARG GITHUB_CLIENT_SECRET
+ARG BACKEND_URL
+ARG LINKEDIN_CLIENT_ID
+ARG LINKEDIN_CLIENT_SECRET
 
-# Generate Prisma client and build
-RUN npx prisma generate --schema=prisma/schema.prisma
+ENV DATABASE_URL=$DATABASE_URL
+ENV REDIS_URL=$REDIS_URL
+ENV NODE_ENV=$NODE_ENV
+ENV SENTRY_DSN=$SENTRY_DSN
+ENV FRONTEND_URL=$FRONTEND_URL
+ENV JWT_SECRET=$JWT_SECRET
+ENV GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID
+ENV GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET
+ENV BACKEND_URL=$BACKEND_URL
+ENV LINKEDIN_CLIENT_ID=$LINKEDIN_CLIENT_ID
+ENV LINKEDIN_CLIENT_SECRET=$LINKEDIN_CLIENT_SECRET
+
 RUN pnpm run build
 
 
@@ -49,7 +70,6 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 4000
 CMD ["node", "dist/main.js"]
