@@ -4,6 +4,8 @@
 ![License](https://img.shields.io/github/license/diogoangelim/openai-oauth)
 <!-- Coverage and code scanning badges temporarily removed due to repository or service configuration issues. -->
 
+![OpenAI + Google Logo](openai+google.png)
+
 # OpenAI OAuth Backend — Beginner Guide
 
 > **Important:** Always run Docker builds from the monorepo root directory to avoid missing files in the build context. Example:
