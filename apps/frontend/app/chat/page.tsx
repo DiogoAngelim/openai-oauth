@@ -17,22 +17,28 @@ export default function Chat (): React.ReactElement {
       eventSourceRef.current.close()
     }
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:4000'}/openai/chat?stream=true`
-    const es = new EventSource(url, { withCredentials: true })
-    eventSourceRef.current = es
-    es.onmessage = (event: MessageEvent) => {
-      setResponse((prev) => String(prev) + String(event.data ?? ''))
-    }
-    es.onerror = () => {
+    let es: EventSource | null = null
+    try {
+      es = new EventSource(url, { withCredentials: true })
+      eventSourceRef.current = es
+      es.onmessage = (event: MessageEvent) => {
+        setResponse((prev) => String(prev) + String(event.data ?? ''))
+      }
+      es.onerror = () => {
+        setLoading(false)
+        es?.close()
+      }
+      // Send prompt via fetch (to set cookies)
+      await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      })
+    } catch (err) {
       setLoading(false)
-      es.close()
+      if (es != null) es.close()
     }
-    // Send prompt via fetch (to set cookies)
-    await fetch(url, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt })
-    })
   }
 
   // Ensure operands for + are both strings or numbers

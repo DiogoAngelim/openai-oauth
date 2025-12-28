@@ -7,9 +7,9 @@ describe('HealthController (e2e)', () => {
   let app: INestApplication
 
   beforeAll(async () => {
-    process.env.DATABASE_URL = 'postgres://user:pass@localhost:5432/db';
+    process.env.DATABASE_URL = 'postgres://user:pass@localhost:5432/db'
     const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule]
     }).compile()
     app = moduleFixture.createNestApplication()
     await app.init()

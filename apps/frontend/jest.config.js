@@ -8,9 +8,9 @@ module.exports = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
   },
-    transformIgnorePatterns: [
-      '/node_modules/(?!(react|react-dom|next)/)'
-    ],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(react|react-dom|next)/)'
+  ],
   collectCoverage: true,
   collectCoverageFrom: [
     'app/**/*.{ts,tsx}',

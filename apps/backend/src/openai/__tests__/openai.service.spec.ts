@@ -55,8 +55,8 @@ describe('OpenAIService', () => {
       // Simulate org undefined
       const org = undefined
       if (typeof org === 'undefined' || org === null) {
-        const { ForbiddenException } = await import('@nestjs/common');
-        throw new ForbiddenException('Organization not found');
+        const { ForbiddenException } = await import('@nestjs/common')
+        throw new ForbiddenException('Organization not found')
       }
       return null
     }
@@ -76,8 +76,8 @@ describe('OpenAIService', () => {
         org.subscription !== null &&
         usage.totalTokens > 999
       ) {
-        const { ForbiddenException } = await import('@nestjs/common');
-        throw new ForbiddenException('Quota exceeded');
+        const { ForbiddenException } = await import('@nestjs/common')
+        throw new ForbiddenException('Quota exceeded')
       }
       return null
     }
@@ -101,8 +101,8 @@ describe('OpenAIService', () => {
       true,
       onData
     )
-    expect(onData).toHaveBeenCalledWith('A')
-    expect(onData).toHaveBeenCalledWith('B')
+    expect(onData).toHaveBeenCalledWith(null, 'A')
+    expect(onData).toHaveBeenCalledWith(null, 'B')
   })
 
   it('should return result for non-stream', async () => {
@@ -138,7 +138,7 @@ describe('OpenAIService', () => {
   })
 
   it('should instantiate OpenAIService', () => {
-    const service = new OpenAIService();
-    expect(service).toBeInstanceOf(OpenAIService);
-  });
+    const service = new OpenAIService()
+    expect(service).toBeInstanceOf(OpenAIService)
+  })
 })

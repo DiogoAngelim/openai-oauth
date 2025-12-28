@@ -8,6 +8,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run backend tests with coverage
+        run: pnpm --filter @openai-oauth/backend test -- --coverage
+
+      - name: Run frontend tests with coverage
+        run: pnpm --filter @openai-oauth/frontend test -- --coverage
+
+      - name: Merge coverage reports
+        run: |
+          pnpm exec lcov-result-merger \
+            apps/backend/coverage/lcov.info \
+            apps/frontend/coverage/lcov.info \
+            > merged-lcov.info
+
+      - name: Upload coverage to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: pnpm exec coveralls < merged-lcov.info
+
       - name: Deploy to Vercel (manual, dummy token)
         uses: amondnet/vercel-action@v25
         with:

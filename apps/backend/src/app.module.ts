@@ -4,7 +4,7 @@ import { AuthModule } from './auth/auth.module'
 import { ApiModule } from './api/api.module'
 import { OpenAIModule } from './openai/openai.module'
 import { RateLimitModule } from './rate-limit/rate-limit.module'
-import { MonitoringController } from './monitoring.controller'
+import { MonitoringModule } from './monitoring.module'
 import { ComplianceController } from './compliance.controller'
 import { BillingModule } from './billing.module'
 import { AdminController } from './admin.controller'
@@ -12,7 +12,7 @@ import { AdminController } from './admin.controller'
 @Controller('/')
 class HealthController {
   @Get('health')
-  health (): { status: string } {
+  health(): { status: string } {
     return { status: 'ok' }
   }
 }
@@ -24,14 +24,14 @@ class HealthController {
     ApiModule,
     OpenAIModule,
     RateLimitModule,
-    BillingModule
+    BillingModule,
+    MonitoringModule
   ],
   controllers: [
-    MonitoringController,
     ComplianceController,
     AdminController,
     HealthController
   ],
   providers: []
 })
-export class AppModule {}
+export class AppModule { }

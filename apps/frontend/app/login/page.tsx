@@ -1,10 +1,9 @@
 
 'use client'
-import React from 'react'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { redirectToAuth } from './redirectToAuth'
 
-export default function Login(): React.ReactElement {
+export default function Login (): React.ReactElement {
   useEffect(() => {
     redirectToAuth(`${(typeof process.env.NEXT_PUBLIC_BACKEND_URL === 'string' && process.env.NEXT_PUBLIC_BACKEND_URL !== '' ? process.env.NEXT_PUBLIC_BACKEND_URL : 'http://localhost:4000')}/auth/google`)
   }, [])
@@ -12,7 +11,7 @@ export default function Login(): React.ReactElement {
   return (
     <main className='min-h-screen flex flex-col items-center justify-center bg-white'>
       <form className='w-full max-w-md p-4 bg-gray-100 rounded shadow'>
-        { }
+        {}
         <input
           type='email'
           className='w-full p-2 border rounded mb-2'

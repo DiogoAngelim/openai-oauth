@@ -31,6 +31,9 @@ export class OpenAIController {
       },
       @Query('stream') stream: string
   ): Promise<void> {
+    if (body == null) {
+      throw new Error('Body is required')
+    }
     const orgId = req.user.orgId
     const userId = req.user.sub
     if (stream === 'true') {
@@ -42,8 +45,14 @@ export class OpenAIController {
         userId,
         body,
         true,
-        (chunk: string) => {
-          res.write(`data: ${chunk}\n\n`)
+        (err: Error | null, chunk?: string) => {
+          if (err != null) {
+            res.write(`event: error\ndata: ${err.message}\n\n`)
+            return
+          }
+          if (typeof chunk === 'string') {
+            res.write(`data: ${chunk}\n\n`)
+          }
         }
       )
       res.end()

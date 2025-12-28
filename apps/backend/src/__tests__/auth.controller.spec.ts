@@ -106,6 +106,12 @@ describe('AuthController', () => {
     })
   })
 
+  describe('googleAuth', () => {
+    it('should be callable (empty method)', async () => {
+      await expect(controller.googleAuth()).resolves.toBeUndefined()
+    })
+  })
+
   describe('refresh', () => {
     it('should refresh using cookie', async () => {
       req.cookies = { refresh_token: 'cookie-token' };

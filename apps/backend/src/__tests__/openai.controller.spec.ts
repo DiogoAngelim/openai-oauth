@@ -63,11 +63,11 @@ describe('OpenAIController', () => {
         userId: string,
         body: any,
         stream: boolean,
-        onData?: (chunk: string) => void
+        onData?: (err: Error | null, chunk?: string) => void
       ) => {
         if (typeof onData === 'function') {
-          onData('chunk1')
-          onData('chunk2')
+          onData(new Error('error'), undefined)
+          onData(new Error('error'), undefined)
         }
         return await Promise.resolve()
       }
@@ -112,8 +112,8 @@ describe('OpenAIController', () => {
       'Content-Type',
       'text/event-stream'
     )
-    expect(res.write).toHaveBeenCalledWith('data: chunk1\n\n')
-    expect(res.write).toHaveBeenCalledWith('data: chunk2\n\n')
+    expect(res.write).toHaveBeenCalledWith('event: error\ndata: error\n\n')
+    expect(res.write).toHaveBeenCalledTimes(2)
     expect(res.end).toHaveBeenCalled()
   })
 

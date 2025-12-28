@@ -83,11 +83,23 @@ jobs:
       - run: pnpm install --no-frozen-lockfile
       - run: npx prisma generate --schema=packages/prisma/schema.prisma
       - run: npx prisma migrate deploy --schema=packages/prisma/schema.prisma
-      - run: pnpm test
-      - uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage/
+      - name: Run backend tests with coverage
+        run: pnpm --filter @openai-oauth/backend test -- --coverage
+
+      - name: Run frontend tests with coverage
+        run: pnpm --filter @openai-oauth/frontend test -- --coverage
+
+      - name: Merge coverage reports
+        run: |
+          pnpm exec lcov-result-merger \
+            apps/backend/coverage/lcov.info \
+            apps/frontend/coverage/lcov.info \
+            > merged-lcov.info
+
+      - name: Upload coverage to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: pnpm exec coveralls < merged-lcov.info
 
   security-audit:
     runs-on:

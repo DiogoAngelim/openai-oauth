@@ -64,20 +64,31 @@ describeOrSkip('CI/CD Docker Backend', () => {
   })
 
   it('should run the backend container and respond on a free port', () => {
+    // Enhanced cleanup: remove all containers binding to port 4000 or the selected freePort
     try {
-      const containers = execSync("docker ps -q --filter 'publish=4000'")
+      // Remove containers binding to 4000
+      const containers4000 = execSync("docker ps -q --filter 'publish=4000'")
         .toString()
         .trim()
         .split('\n')
         .filter((id: string) => typeof id === 'string' && id !== '')
-      containers.forEach((id: string) => {
+      containers4000.forEach((id: string) => {
         execSync(`docker rm -f ${id}`)
       })
+      // Remove containers binding to any port in 4000-4100
+      for (let port = 4000; port <= 4100; port++) {
+        const containers = execSync(`docker ps -q --filter 'publish=${port}'`).toString().trim().split('\n').filter((id: string) => typeof id === 'string' && id !== '')
+        containers.forEach((id: string) => {
+          execSync(`docker rm -f ${id}`)
+        })
+      }
+      // Wait for OS to release ports
+      execSync('sleep 2')
     } catch {
       // ignore errors
     }
 
-    function getFreePort(start = 4000, end = 4100): number {
+    function getFreePort(start = 4001, end = 4100): number {
       for (let port = start; port <= end; port++) {
         let isFree = true
         const server = net.createServer()
@@ -108,18 +119,60 @@ describeOrSkip('CI/CD Docker Backend', () => {
     )
       .toString()
       .trim()
-    execSync('sleep 15')
-    const response = execSync(
-      `curl -s -o /dev/null -w "%{http_code}" http://localhost:${freePort}/health`
-    )
-    expect(response.toString().trim()).toBe('200')
+    // Wait for backend to be ready (poll health endpoint up to 60s)
+    const maxWait = 60 // seconds
+    let waited = 0
+    let response = ''
+    while (waited < maxWait) {
+      // Check if container is still running
+      try {
+        const inspect = execSync(`docker inspect -f '{{.State.Running}}' ${containerId}`).toString().trim()
+        if (inspect !== 'true') {
+          console.error(`Container ${containerId} is not running at ${waited}s, aborting health check loop.`)
+          break
+        }
+      } catch {
+        console.error('Failed to inspect container')
+        break
+      }
+      try {
+        response = execSync(
+          `curl -s -o /dev/null -w "%{http_code}" http://localhost:${freePort}/health`
+        ).toString().trim()
+        if (response === '200') break
+      } catch { /* ignore errors */ }
+      execSync('sleep 1')
+      waited++
+    }
+    if (response !== '200') {
+      // Print container logs for debugging
+      try {
+        const logs = execSync(`docker logs ${containerId}`).toString()
+        console.error('Container logs:', logs)
+      } catch {
+        console.error('Failed to get container logs')
+      }
+      // Print full curl output for debugging
+      try {
+        const curlOut = execSync(`curl -v http://localhost:${freePort}/health || true`).toString()
+        console.error('Curl output:', curlOut)
+      } catch {
+        console.error('Failed to get curl output')
+      }
+    }
+    expect(response).toBe('200')
     execSync(`docker stop ${containerId}`)
     execSync(`docker rm ${containerId}`)
   })
 
   it('should have dist/main.js in the built image', () => {
+    try {
+      execSync('docker rm -f test-backend')
+    } catch {
+      // ignore errors
+    }
     execSync('docker create --name test-backend openai-saas-backend:latest')
-    const output = execSync('docker cp test-backend:/app/dist/main.js -')
+    const output = execSync('docker cp test-backend:/app/dist/src/main.js -')
     expect(output.length).toBeGreaterThan(0)
     execSync('docker rm test-backend')
   })

@@ -1,5 +1,46 @@
+import { OpenAIRateLimitGuard } from '../openai.guard'
+import { ExecutionContext } from '@nestjs/common'
 import { OpenAIController } from '../openai.controller'
 import { OpenAIService } from '../openai.service'
+
+describe('OpenAIRateLimitGuard', () => {
+  let guard: OpenAIRateLimitGuard
+  let rateLimit: { check: jest.Mock }
+  let context: ExecutionContext
+
+  beforeEach(() => {
+    rateLimit = { check: jest.fn().mockResolvedValue(true) }
+    guard = new OpenAIRateLimitGuard(rateLimit as any)
+    context = {
+      switchToHttp: () => ({
+        getRequest: () => ({ user: { sub: 'user1', orgId: 'org1' } })
+      })
+    } as any
+  })
+
+  it('should call rateLimit.check for user and org and return true', async () => {
+    const result = await guard.canActivate(context)
+    expect(rateLimit.check).toHaveBeenCalledWith('user:user1', 60, 60)
+    expect(rateLimit.check).toHaveBeenCalledWith('org:org1', 300, 60)
+    expect(result).toBe(true)
+  })
+
+  it('should handle missing user gracefully', async () => {
+    context = {
+      switchToHttp: () => ({
+        getRequest: () => ({})
+      })
+    } as any
+    await expect(guard.canActivate(context)).resolves.toBe(true)
+    expect(rateLimit.check).toHaveBeenCalledWith('user:undefined', 60, 60)
+    expect(rateLimit.check).toHaveBeenCalledWith('org:undefined', 300, 60)
+  })
+
+  it('should propagate errors from rateLimit.check', async () => {
+    rateLimit.check.mockRejectedValueOnce(new Error('fail'))
+    await expect(guard.canActivate(context)).rejects.toThrow('fail')
+  })
+})
 
 describe('OpenAIController', () => {
   let controller: OpenAIController
@@ -64,8 +105,8 @@ describe('OpenAIController', () => {
     const body = { prompt: 'Hello' }
     openai.createChatCompletion.mockImplementation(
       async (_orgId, _userId, _body, _stream, cb) => {
-        cb('chunk1')
-        cb('chunk2')
+        cb(null, 'chunk1')
+        cb(null, 'chunk2')
       }
     )
     await controller.chat(req, res, body, 'true')

@@ -1,10 +1,10 @@
 // This file should define and export the GoogleStrategy and isGoogleStrategyEnabled, not contain tests.
 
 // Set dummy values for all required environment variables if not set
-import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { Strategy as GoogleOAuthStrategy } from 'passport-google-oauth20';
+import { PassportStrategy } from '@nestjs/passport'
+import { Injectable } from '@nestjs/common'
+import { AuthService } from './auth.service'
+import { Strategy as GoogleOAuthStrategy } from 'passport-google-oauth20'
 
 process.env.GOOGLE_CLIENT_ID =
   process.env.GOOGLE_CLIENT_ID ?? 'dummy_google_client_id'
@@ -36,7 +36,7 @@ export class GoogleStrategy extends PassportStrategy(
   GoogleOAuthStrategy,
   'google'
 ) {
-  constructor(private readonly authService: AuthService) {
+  constructor (private readonly authService: AuthService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -45,7 +45,7 @@ export class GoogleStrategy extends PassportStrategy(
     })
   }
 
-  async validate(
+  async validate (
     accessToken: string,
     refreshToken: string,
     profile: any,

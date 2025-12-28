@@ -1,9 +1,8 @@
 
 'use client'
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-export default function OrgManagement(): React.ReactElement {
+export default function OrgManagement (): React.ReactElement {
   const [members] = useState<Array<{ email: string, role: string }>>([
     { email: 'owner@example.com', role: 'OWNER' },
     { email: 'admin@example.com', role: 'ADMIN' },

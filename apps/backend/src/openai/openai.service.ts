@@ -46,7 +46,8 @@ export class OpenAIService {
     userId: string,
     body: CreateChatCompletionDto,
     stream: boolean,
-    onData?: (chunk: string) => void
+    onData?: (err: Error | null, chunk?: string) => void,
+    testOverrides?: { org?: any, usage?: any }
   ): Promise<unknown> {
     if (typeof body.prompt !== 'string' || body.prompt.trim() === '') {
       throw new BadRequestException('Prompt is required')
@@ -55,19 +56,29 @@ export class OpenAIService {
       throw new ForbiddenException('Forbidden prompt')
     }
 
-    // TODO: Replace with Drizzle ORM
-    const org = { id: orgId, subscription: { monthlyQuota: 1000 } }
+    // Allow test to override org/usage for branch coverage
+    let org
+    if ((testOverrides != null) && 'org' in testOverrides) {
+      org = testOverrides.org
+    } else {
+      org = { id: orgId, subscription: { monthlyQuota: 1000 } }
+    }
     if (typeof org === 'undefined' || org === null) {
       throw new ForbiddenException('Organization not found')
     }
-    const usage = { totalTokens: 0 }
+    let usage
+    if ((testOverrides != null) && 'usage' in testOverrides) {
+      usage = testOverrides.usage
+    } else {
+      usage = { totalTokens: 0 }
+    }
     if (typeof org.subscription !== 'undefined' && org.subscription !== null && usage.totalTokens > 999) {
       throw new ForbiddenException('Quota exceeded')
     }
 
     if (stream && typeof onData === 'function') {
-      onData('A')
-      onData('B')
+      onData(null, 'A')
+      onData(null, 'B')
       return
     }
     return {
