@@ -1,4 +1,3 @@
-
 // Log all unhandled errors for container debugging
 import * as dotenv from 'dotenv'
 import {
@@ -12,26 +11,24 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { getLogger } from './logger'
 process.on('unhandledRejection', (reason, promise) => {
-
   console.error('Unhandled Rejection at:', promise, 'reason:', reason)
   process.exit(1)
 })
 process.on('uncaughtException', (err) => {
-
   console.error('Uncaught Exception thrown:', err)
   process.exit(1)
 })
 dotenv.config()
 
 // Add explicit return type and handle promise
-async function bootstrap(): Promise<void> {
+async function bootstrap (): Promise<void> {
   // Sentry Express error handler is not applicable for Fastify
   // TypeScript workaround: cast FastifyAdapter to AbstractHttpAdapter to resolve type mismatch error.
   // WARNING: This should only be used if @nestjs/core and @nestjs/platform-fastify are truly aligned.
   const adapter = new FastifyAdapter() as unknown as AbstractHttpAdapter<
-    unknown,
-    unknown,
-    unknown
+  unknown,
+  unknown,
+  unknown
   >
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -40,7 +37,7 @@ async function bootstrap(): Promise<void> {
   app.enableCors({
     origin:
       typeof process.env.FRONTEND_URL === 'string' &&
-        process.env.FRONTEND_URL.length > 0
+      process.env.FRONTEND_URL.length > 0
         ? process.env.FRONTEND_URL
         : 'http://localhost:3000',
     credentials: true
@@ -88,6 +85,6 @@ async function bootstrap(): Promise<void> {
   }
   // Keep the event loop alive for debugging (prevents process exit)
 
-  setInterval(() => { }, 1000 * 60 * 60)
+  setInterval(() => {}, 1000 * 60 * 60)
 }
 void bootstrap()

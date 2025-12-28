@@ -5,7 +5,13 @@ describe('OpenAIService', () => {
   it('should call onData with null, "A" and null, "B" when streaming (real impl)', async () => {
     // Use the real implementation and the beforeEach setup
     const onData = jest.fn()
-    const result = await service.createChatCompletion('org1', 'user1', { prompt: 'ok' }, true, onData)
+    const result = await service.createChatCompletion(
+      'org1',
+      'user1',
+      { prompt: 'ok' },
+      true,
+      onData
+    )
     expect(onData).toHaveBeenCalledWith(null, 'A')
     expect(onData).toHaveBeenCalledWith(null, 'B')
     expect(result).toBeUndefined()
@@ -29,19 +35,41 @@ describe('OpenAIService', () => {
 
   it('should throw if prompt is forbidden', async () => {
     await expect(
-      service.createChatCompletion('org1', 'user1', { prompt: 'api_key' }, false)
+      service.createChatCompletion(
+        'org1',
+        'user1',
+        { prompt: 'api_key' },
+        false
+      )
     ).rejects.toThrow(ForbiddenException)
   })
 
   it('should throw if org is not found (real branch)', async () => {
     await expect(
-      service.createChatCompletion('org1', 'user1', { prompt: 'ok' }, false, undefined, { org: undefined })
+      service.createChatCompletion(
+        'org1',
+        'user1',
+        { prompt: 'ok' },
+        false,
+        undefined,
+        { org: undefined }
+      )
     ).rejects.toThrow(ForbiddenException)
   })
 
   it('should throw if quota exceeded (real branch)', async () => {
     await expect(
-      service.createChatCompletion('org1', 'user1', { prompt: 'ok' }, false, undefined, { org: { id: 'org1', subscription: { monthlyQuota: 1000 } }, usage: { totalTokens: 1001 } })
+      service.createChatCompletion(
+        'org1',
+        'user1',
+        { prompt: 'ok' },
+        false,
+        undefined,
+        {
+          org: { id: 'org1', subscription: { monthlyQuota: 1000 } },
+          usage: { totalTokens: 1001 }
+        }
+      )
     ).rejects.toThrow(ForbiddenException)
   })
 

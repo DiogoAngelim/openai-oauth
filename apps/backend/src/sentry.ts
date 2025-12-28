@@ -10,15 +10,18 @@ interface SentryType {
 let Sentry: SentryType
 if (process.env.NODE_ENV === 'test') {
   Sentry = {
-    init: () => { },
-    captureException: () => { },
-    captureMessage: () => { },
+    init: () => {},
+    captureException: () => {},
+    captureMessage: () => {},
     withScope: (fn?: () => void) => {
       if (fn != null) fn()
     }
   }
 } else {
-  const SentryNode = (typeof (SentryNodeImport as any).default !== 'undefined') ? (SentryNodeImport as any).default : SentryNodeImport
+  const SentryNode =
+    typeof (SentryNodeImport as any).default !== 'undefined'
+      ? (SentryNodeImport as any).default
+      : SentryNodeImport
   SentryNode.init({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.NODE_ENV,

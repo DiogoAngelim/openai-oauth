@@ -1,11 +1,8 @@
+
 name: Deploy Backend to Google Cloud Run
 
 on:
-  push:
-    paths:
-      - "apps/backend/**"
-      - ".github/workflows/backend-gcp-deploy.yml"
-    branches: [main]
+  workflow_dispatch:
 
 env:
   GCP_PROJECT: ${{ secrets.GCP_PROJECT }}

@@ -58,7 +58,7 @@ export class OpenAIService {
 
     // Allow test to override org/usage for branch coverage
     let org
-    if ((testOverrides != null) && 'org' in testOverrides) {
+    if (testOverrides != null && 'org' in testOverrides) {
       org = testOverrides.org
     } else {
       org = { id: orgId, subscription: { monthlyQuota: 1000 } }
@@ -67,12 +67,16 @@ export class OpenAIService {
       throw new ForbiddenException('Organization not found')
     }
     let usage
-    if ((testOverrides != null) && 'usage' in testOverrides) {
+    if (testOverrides != null && 'usage' in testOverrides) {
       usage = testOverrides.usage
     } else {
       usage = { totalTokens: 0 }
     }
-    if (typeof org.subscription !== 'undefined' && org.subscription !== null && usage.totalTokens > 999) {
+    if (
+      typeof org.subscription !== 'undefined' &&
+      org.subscription !== null &&
+      usage.totalTokens > 999
+    ) {
       throw new ForbiddenException('Quota exceeded')
     }
 

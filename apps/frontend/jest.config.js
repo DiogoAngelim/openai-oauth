@@ -8,9 +8,7 @@ module.exports = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
   },
-  transformIgnorePatterns: [
-    '/node_modules/(?!(react|react-dom|next)/)'
-  ],
+  transformIgnorePatterns: ['/node_modules/(?!(react|react-dom|next)/)'],
   collectCoverage: true,
   collectCoverageFrom: [
     'app/**/*.{ts,tsx}',
@@ -18,5 +16,13 @@ module.exports = {
     '!app/**/globals.css',
     '!app/login/redirectToAuth.ts'
   ],
-  coverageReporters: ['text', 'lcov']
+  coverageReporters: ['text', 'lcov'],
+  coverageThreshold: {
+    global: {
+      branches: 90,
+      functions: 100,
+      lines: 100,
+      statements: 100
+    }
+  }
 }

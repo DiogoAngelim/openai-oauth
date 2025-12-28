@@ -29,7 +29,10 @@ process.env.LINKEDIN_CLIENT_SECRET =
   process.env.LINKEDIN_CLIENT_SECRET ?? 'dummy_linkedin_secret'
 
 export const isGoogleStrategyEnabled =
-  typeof process.env.GOOGLE_CLIENT_ID === 'string' && process.env.GOOGLE_CLIENT_ID !== '' && typeof process.env.GOOGLE_CLIENT_SECRET === 'string' && process.env.GOOGLE_CLIENT_SECRET !== ''
+  typeof process.env.GOOGLE_CLIENT_ID === 'string' &&
+  process.env.GOOGLE_CLIENT_ID !== '' &&
+  typeof process.env.GOOGLE_CLIENT_SECRET === 'string' &&
+  process.env.GOOGLE_CLIENT_SECRET !== ''
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(

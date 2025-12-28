@@ -1,0 +1,70 @@
+name: Unified Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    env:
+      GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+      REGION: ${{ secrets.REGION }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      NODE_ENV: ${{ secrets.NODE_ENV }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+      GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      BACKEND_URL: ${{ secrets.BACKEND_URL }}
+      LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+      LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install pnpm
+        run: npm install -g pnpm@8.15.5
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/backend/Dockerfile
+          push: false
+          tags: openai-saas-backend:latest
+          build-args: |
+            DATABASE_URL=${{ env.DATABASE_URL }}
+            REDIS_URL=${{ env.REDIS_URL }}
+            NODE_ENV=${{ env.NODE_ENV }}
+            SENTRY_DSN=${{ env.SENTRY_DSN }}
+            FRONTEND_URL=${{ env.FRONTEND_URL }}
+            JWT_SECRET=${{ env.JWT_SECRET }}
+            GITHUB_CLIENT_ID=${{ env.GITHUB_CLIENT_ID }}
+            GITHUB_CLIENT_SECRET=${{ env.GITHUB_CLIENT_SECRET }}
+            BACKEND_URL=${{ env.BACKEND_URL }}
+            LINKEDIN_CLIENT_ID=${{ env.LINKEDIN_CLIENT_ID }}
+            LINKEDIN_CLIENT_SECRET=${{ env.LINKEDIN_CLIENT_SECRET }}
+      # Add your backend deployment steps here (e.g., gcloud CLI)
+      - name: Deploy Backend (placeholder)
+        run: echo "Deploy backend here"
+
+  deploy-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: apps/frontend
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}

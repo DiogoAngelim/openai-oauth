@@ -19,6 +19,9 @@ describe('ApiController', () => {
   it('should return admin message for /admin', async () => {
     const req = { user: { orgId: 'org1', role: 'ADMIN', foo: 'bar' } }
     const result = await controller.adminOnly(req)
-    expect(result).toEqual({ message: 'Admin/Owner access granted', user: req.user })
+    expect(result).toEqual({
+      message: 'Admin/Owner access granted',
+      user: req.user
+    })
   })
 })

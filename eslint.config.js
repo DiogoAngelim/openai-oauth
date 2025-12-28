@@ -8,7 +8,12 @@ export default [
   {
     ...js.configs.recommended,
     files: ['**/*.{js,cjs,mjs,ts,tsx}'],
-    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/apps/frontend/next-env.d.ts'],
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/coverage/**',
+      '**/apps/frontend/next-env.d.ts'
+    ],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

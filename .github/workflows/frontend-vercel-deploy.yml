@@ -1,11 +1,8 @@
+
 name: Deploy Frontend to Vercel
 
 on:
-  push:
-    paths:
-      - "apps/frontend/**"
-      - ".github/workflows/frontend-vercel-deploy.yml"
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -13,13 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: apps/frontend
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+// File removed: replaced by unified-deploy.yml

@@ -16,10 +16,14 @@ describe('OpenAIModule', () => {
       check = jest.fn()
     }
     @Module({})
-    class MockAuthModule { }
+    class MockAuthModule {}
     const module: TestingModule = await Test.createTestingModule({
       imports: [MockAuthModule],
-      providers: [OpenAIService, { provide: RateLimitService, useClass: MockRateLimitService }, OpenAIRateLimitGuard],
+      providers: [
+        OpenAIService,
+        { provide: RateLimitService, useClass: MockRateLimitService },
+        OpenAIRateLimitGuard
+      ],
       controllers: [OpenAIController]
     }).compile()
     const service = module.get(OpenAIService)

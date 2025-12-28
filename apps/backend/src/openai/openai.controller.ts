@@ -16,7 +16,7 @@ import { Request, Response } from 'express'
 @Controller('openai')
 @UseGuards(JwtAuthGuard, OpenAIRateLimitGuard)
 export class OpenAIController {
-  constructor (private readonly openai: OpenAIService) { }
+  constructor (private readonly openai: OpenAIService) {}
 
   @Post('chat')
   async chat (

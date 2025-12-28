@@ -185,6 +185,11 @@ jobs:
       LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
       LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
     steps:
+      - name: Check if manual trigger
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          echo "This job only runs on manual trigger. Skipping."
+          exit 0
       - uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4

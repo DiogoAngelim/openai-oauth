@@ -1,4 +1,3 @@
-
 describe('Sentry (non-test env)', () => {
   const OLD_ENV = process.env
   beforeEach(() => {
@@ -19,6 +18,8 @@ describe('Sentry (non-test env)', () => {
       tracesSampleRate: 0.2
     })
     // Jest's doMock with require returns a module with .default
-    expect(typeof sentry.default !== 'undefined' ? sentry.default : sentry).toBe(sentryNode)
+    expect(
+      typeof sentry.default !== 'undefined' ? sentry.default : sentry
+    ).toBe(sentryNode)
   })
 })

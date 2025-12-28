@@ -14,12 +14,18 @@ describe('GoogleStrategy', () => {
 
   it('should call done with user fields', async () => {
     const authService = {
-      validateOAuthLogin: jest.fn().mockResolvedValue({ user: { id: 'id', email: 'e', name: 'n' } })
+      validateOAuthLogin: jest
+        .fn()
+        .mockResolvedValue({ user: { id: 'id', email: 'e', name: 'n' } })
     }
     const strategy = new GoogleStrategy(authService as any)
     const done = jest.fn()
     await strategy.validate('a', 'r', { emails: [], displayName: 'd' }, done)
-    expect(done).toHaveBeenCalledWith(null, { id: 'id', email: 'e', name: 'n' })
+    expect(done).toHaveBeenCalledWith(null, {
+      id: 'id',
+      email: 'e',
+      name: 'n'
+    })
   })
 
   it('should handle missing user fields', async () => {
@@ -29,7 +35,11 @@ describe('GoogleStrategy', () => {
     const strategy = new GoogleStrategy(authService as any)
     const done = jest.fn()
     await strategy.validate('a', 'r', { emails: [], displayName: 'd' }, done)
-    expect(done).toHaveBeenCalledWith(null, { id: undefined, email: undefined, name: undefined })
+    expect(done).toHaveBeenCalledWith(null, {
+      id: undefined,
+      email: undefined,
+      name: undefined
+    })
   })
 
   it('should throw if env vars missing', () => {
@@ -37,15 +47,23 @@ describe('GoogleStrategy', () => {
     delete process.env.GOOGLE_CLIENT_SECRET
     delete process.env.GOOGLE_CALLBACK_URL
     const authService = { validateOAuthLogin: jest.fn() }
-    expect(() => new GoogleStrategy(authService as any)).toThrow('OAuth2Strategy requires a clientID option')
+    expect(() => new GoogleStrategy(authService as any)).toThrow(
+      'OAuth2Strategy requires a clientID option'
+    )
   })
 
   it('should call done with undefined fields if profile is missing', async () => {
-    const authService = { validateOAuthLogin: jest.fn().mockResolvedValue({ user: {} }) }
+    const authService = {
+      validateOAuthLogin: jest.fn().mockResolvedValue({ user: {} })
+    }
     const strategy = new GoogleStrategy(authService as any)
     const done = jest.fn()
     await strategy.validate('a', 'r', undefined as any, done)
-    expect(done).toHaveBeenCalledWith(null, { id: undefined, email: undefined, name: undefined })
+    expect(done).toHaveBeenCalledWith(null, {
+      id: undefined,
+      email: undefined,
+      name: undefined
+    })
   })
   it('should throw if env vars missing', () => {
     const oldId = process.env.GOOGLE_CLIENT_ID
@@ -53,7 +71,9 @@ describe('GoogleStrategy', () => {
     delete process.env.GOOGLE_CLIENT_ID
     delete process.env.GOOGLE_CLIENT_SECRET
     const authService = { validateOAuthLogin: jest.fn() }
-    expect(() => new GoogleStrategy(authService as any)).toThrow('OAuth2Strategy requires a clientID option')
+    expect(() => new GoogleStrategy(authService as any)).toThrow(
+      'OAuth2Strategy requires a clientID option'
+    )
     process.env.GOOGLE_CLIENT_ID = oldId
     process.env.GOOGLE_CLIENT_SECRET = oldSecret
   })
@@ -65,7 +85,9 @@ it('should throw if env vars missing', () => {
   delete process.env.GOOGLE_CLIENT_ID
   delete process.env.GOOGLE_CLIENT_SECRET
   const authService = { validateOAuthLogin: jest.fn() }
-  expect(() => new GoogleStrategy(authService as any)).toThrow('OAuth2Strategy requires a clientID option')
+  expect(() => new GoogleStrategy(authService as any)).toThrow(
+    'OAuth2Strategy requires a clientID option'
+  )
   process.env.GOOGLE_CLIENT_ID = oldId
   process.env.GOOGLE_CLIENT_SECRET = oldSecret
 })

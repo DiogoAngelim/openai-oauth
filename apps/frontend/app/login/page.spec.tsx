@@ -28,7 +28,9 @@ describe('Login', () => {
 
   it('redirects on mount (useEffect)', () => {
     render(<Login />)
-    expect(mockRedirectToAuth).toHaveBeenCalledWith(expect.stringMatching(/\/auth\/google/))
+    expect(mockRedirectToAuth).toHaveBeenCalledWith(
+      expect.stringMatching(/\/auth\/google/)
+    )
   })
 
   it('updates email input', () => {

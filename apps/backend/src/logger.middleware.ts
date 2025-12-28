@@ -4,7 +4,7 @@ import { getLogger } from './logger'
 
 @Injectable()
 export class LoggerMiddleware {
-  constructor (private readonly logger = getLogger()) { }
+  constructor (private readonly logger = getLogger()) {}
 
   use (req: Request, res: Response, next: NextFunction): void {
     const start = Date.now()

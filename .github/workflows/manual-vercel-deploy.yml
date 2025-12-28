@@ -35,11 +35,4 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: pnpm exec coveralls < merged-lcov.info
 
-      - name: Deploy to Vercel (manual, dummy token)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.DUMMY_VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.DUMMY_VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.DUMMY_VERCEL_PROJECT_ID }}
-        env:
-          VERCEL_TOKEN: ${{ secrets.DUMMY_VERCEL_TOKEN }}
+// File removed: replaced by unified-deploy.yml

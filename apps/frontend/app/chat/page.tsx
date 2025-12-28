@@ -37,7 +37,7 @@ export default function Chat (): React.ReactElement {
       })
     } catch (err) {
       setLoading(false)
-      if (es != null) es.close()
+      if (es != null && typeof es.close === 'function') es.close()
     }
   }
 
@@ -47,7 +47,9 @@ export default function Chat (): React.ReactElement {
   return (
     <main className='min-h-screen flex flex-col items-center justify-center bg-white'>
       <form
-        onSubmit={(e) => { void handleSubmit(e) }}
+        onSubmit={(e) => {
+          void handleSubmit(e)
+        }}
         className='w-full max-w-md p-4 bg-gray-100 rounded shadow'
       >
         <textarea

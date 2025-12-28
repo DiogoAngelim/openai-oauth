@@ -3,7 +3,7 @@ import { RateLimitService } from '../rate-limit/rate-limit.service'
 
 @Injectable()
 export class OpenAIRateLimitGuard implements CanActivate {
-  constructor (private readonly rateLimit: RateLimitService) { }
+  constructor (private readonly rateLimit: RateLimitService) {}
 
   async canActivate (context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest()

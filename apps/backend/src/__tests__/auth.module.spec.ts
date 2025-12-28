@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { AuthModule } from '../auth/auth.module'
-import { AuthService } from '../auth/auth.service'
+import { AuthModule, AuthModule as ImportedAuthModule } from '../auth/auth.module'
+import { AuthService, AuthService as ImportedAuthService } from '../auth/auth.service'
 import { JwtService } from '@nestjs/jwt'
 
 describe('AuthModule', () => {
@@ -30,5 +30,19 @@ describe('AuthModule', () => {
     const jwtService = module.get<JwtService>(JwtService)
     const token = jwtService.sign({ foo: 'bar' })
     expect(token).toBeDefined()
+  })
+
+  it('should not provide GoogleStrategy if isGoogleStrategyEnabled is false', async () => {
+    jest.resetModules()
+    jest.doMock('../auth/google.strategy', () => ({
+      isGoogleStrategyEnabled: false,
+      GoogleStrategy: () => ({}) // not used, now a function returning an object
+    }))
+    const module = await Test.createTestingModule({ imports: [ImportedAuthModule] }).compile()
+    // Should not throw and should still provide AuthService
+    const authService = module.get(ImportedAuthService)
+    expect(authService).toBeDefined()
+    jest.dontMock('../auth/google.strategy')
+    jest.resetModules()
   })
 })

@@ -3,7 +3,10 @@
 import 'dotenv/config'
 
 // Skip check in CI environments (e.g., GitHub Actions)
-if (typeof process.env.GITHUB_ACTIONS !== 'string' || process.env.GITHUB_ACTIONS === '') {
+if (
+  typeof process.env.GITHUB_ACTIONS !== 'string' ||
+  process.env.GITHUB_ACTIONS === ''
+) {
   const requiredVars = [
     'DATABASE_URL',
     'REDIS_URL',

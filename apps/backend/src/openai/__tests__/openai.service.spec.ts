@@ -61,7 +61,12 @@ describe('OpenAIService', () => {
       return null
     }
     await expect(
-      realService.createChatCompletion('org1', 'user1', { prompt: 'Hello' }, false)
+      realService.createChatCompletion(
+        'org1',
+        'user1',
+        { prompt: 'Hello' },
+        false
+      )
     ).rejects.toThrow('Organization not found')
   })
 
@@ -82,7 +87,12 @@ describe('OpenAIService', () => {
       return null
     }
     await expect(
-      realService.createChatCompletion('org1', 'user1', { prompt: 'Hello' }, false)
+      realService.createChatCompletion(
+        'org1',
+        'user1',
+        { prompt: 'Hello' },
+        false
+      )
     ).rejects.toThrow('Quota exceeded')
   })
 

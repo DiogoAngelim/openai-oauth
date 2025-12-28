@@ -43,7 +43,9 @@ describe('JwtStrategy', () => {
 
   it('should call validateUserFromJwt in validate()', async () => {
     process.env.JWT_SECRET = 'testsecret'
-    const validateUserFromJwt = jest.fn().mockResolvedValue({ id: '123', email: 'a@b.com' })
+    const validateUserFromJwt = jest
+      .fn()
+      .mockResolvedValue({ id: '123', email: 'a@b.com' })
     const authService = Object.assign(
       new AuthService(
         { sign: jest.fn() } as unknown as import('@nestjs/jwt').JwtService,

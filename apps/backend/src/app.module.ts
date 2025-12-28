@@ -12,7 +12,7 @@ import { AdminController } from './admin.controller'
 @Controller('/')
 class HealthController {
   @Get('health')
-  health(): { status: string } {
+  health (): { status: string } {
     return { status: 'ok' }
   }
 }
@@ -27,11 +27,7 @@ class HealthController {
     BillingModule,
     MonitoringModule
   ],
-  controllers: [
-    ComplianceController,
-    AdminController,
-    HealthController
-  ],
+  controllers: [ComplianceController, AdminController, HealthController],
   providers: []
 })
-export class AppModule { }
+export class AppModule {}

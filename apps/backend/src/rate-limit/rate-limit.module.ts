@@ -10,7 +10,12 @@ import Redis from 'ioredis'
   providers: [
     {
       provide: 'REDIS',
-      useFactory: () => new Redis(typeof process.env.REDIS_URL === 'string' ? process.env.REDIS_URL : '')
+      useFactory: () =>
+        new Redis(
+          typeof process.env.REDIS_URL === 'string'
+            ? process.env.REDIS_URL
+            : ''
+        )
     },
     {
       provide: RateLimitService,
@@ -20,4 +25,4 @@ import Redis from 'ioredis'
   ],
   exports: [RateLimitService]
 })
-export class RateLimitModule { }
+export class RateLimitModule {}

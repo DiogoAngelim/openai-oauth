@@ -7,9 +7,18 @@ import { AuthService } from './auth.service'
 export class LinkedinStrategy extends PassportStrategy(Strategy, 'linkedin') {
   constructor (private readonly authService: AuthService) {
     super({
-      clientID: typeof process.env.LINKEDIN_CLIENT_ID === 'string' ? process.env.LINKEDIN_CLIENT_ID : '',
-      clientSecret: typeof process.env.LINKEDIN_CLIENT_SECRET === 'string' ? process.env.LINKEDIN_CLIENT_SECRET : '',
-      callbackURL: (typeof process.env.BACKEND_URL === 'string' ? process.env.BACKEND_URL : '') + '/auth/linkedin/callback',
+      clientID:
+        typeof process.env.LINKEDIN_CLIENT_ID === 'string'
+          ? process.env.LINKEDIN_CLIENT_ID
+          : '',
+      clientSecret:
+        typeof process.env.LINKEDIN_CLIENT_SECRET === 'string'
+          ? process.env.LINKEDIN_CLIENT_SECRET
+          : '',
+      callbackURL:
+        (typeof process.env.BACKEND_URL === 'string'
+          ? process.env.BACKEND_URL
+          : '') + '/auth/linkedin/callback',
       scope: ['r_emailaddress', 'r_liteprofile']
     })
   }

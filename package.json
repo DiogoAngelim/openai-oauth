@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "lint": "ts-standard --fix",
-    "build": "next build",
+    "build": "pnpm --filter ./apps/frontend run build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "jest",
