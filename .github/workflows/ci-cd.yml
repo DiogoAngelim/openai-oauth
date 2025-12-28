@@ -179,22 +179,26 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm@8.15.5
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
       - name: Build Docker image
-        run: |
-          docker build \
-            --build-arg DATABASE_URL=${{ env.DATABASE_URL }} \
-            --build-arg REDIS_URL=${{ env.REDIS_URL }} \
-            --build-arg NODE_ENV=${{ env.NODE_ENV }} \
-            --build-arg SENTRY_DSN=${{ env.SENTRY_DSN }} \
-            --build-arg FRONTEND_URL=${{ env.FRONTEND_URL }} \
-            --build-arg JWT_SECRET=${{ env.JWT_SECRET }} \
-            --build-arg GITHUB_CLIENT_ID=${{ env.GITHUB_CLIENT_ID }} \
-            --build-arg GITHUB_CLIENT_SECRET=${{ env.GITHUB_CLIENT_SECRET }} \
-            --build-arg BACKEND_URL=${{ env.BACKEND_URL }} \
-            --build-arg LINKEDIN_CLIENT_ID=${{ env.LINKEDIN_CLIENT_ID }} \
-            --build-arg LINKEDIN_CLIENT_SECRET=${{ env.LINKEDIN_CLIENT_SECRET }} \
-            -f apps/backend/Dockerfile -t openai-saas-backend:latest .
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/backend/Dockerfile
+          push: false
+          tags: openai-saas-backend:latest
+          build-args: |
+            DATABASE_URL=${{ env.DATABASE_URL }}
+            REDIS_URL=${{ env.REDIS_URL }}
+            NODE_ENV=${{ env.NODE_ENV }}
+            SENTRY_DSN=${{ env.SENTRY_DSN }}
+            FRONTEND_URL=${{ env.FRONTEND_URL }}
+            JWT_SECRET=${{ env.JWT_SECRET }}
+            GITHUB_CLIENT_ID=${{ env.GITHUB_CLIENT_ID }}
+            GITHUB_CLIENT_SECRET=${{ env.GITHUB_CLIENT_SECRET }}
+            BACKEND_URL=${{ env.BACKEND_URL }}
+            LINKEDIN_CLIENT_ID=${{ env.LINKEDIN_CLIENT_ID }}
+            LINKEDIN_CLIENT_SECRET=${{ env.LINKEDIN_CLIENT_SECRET }}
 
   notify:
     needs: [build, test, security-audit, deploy-backend]
