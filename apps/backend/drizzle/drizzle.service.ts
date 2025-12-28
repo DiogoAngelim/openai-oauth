@@ -26,5 +26,4 @@ export class DrizzleService implements OnModuleInit, OnModuleDestroy {
       await this.client.end();
     }
   }
-
 }

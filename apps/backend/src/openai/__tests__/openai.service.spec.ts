@@ -94,17 +94,15 @@ describe("OpenAIService", () => {
 
   it("should get user chat history", async () => {
     // Directly mock the service method to ensure the test passes
-    jest
-      .spyOn(service, "getUserChatHistory")
-      .mockResolvedValue([
-        {
-          id: "1",
-          prompt: "Hello",
-          response: "Hi",
-          model: "gpt",
-          createdAt: new Date(),
-        },
-      ]);
+    jest.spyOn(service, "getUserChatHistory").mockResolvedValue([
+      {
+        id: "1",
+        prompt: "Hello",
+        response: "Hi",
+        model: "gpt",
+        createdAt: new Date(),
+      },
+    ]);
     const history = await service.getUserChatHistory("org1", "user1");
     expect(Array.isArray(history)).toBe(true);
     expect(history.length).toBeGreaterThanOrEqual(1);

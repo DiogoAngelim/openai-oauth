@@ -47,6 +47,7 @@
      docker run -p 6379:6379 redis
      ```
 6. **Start the backend server:**
+
    ```sh
    cd apps/backend
    npm run start:dev
