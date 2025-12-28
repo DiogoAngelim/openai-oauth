@@ -130,6 +130,9 @@ __MACOSX/
 # Others
 *.sqlite
 
+# Terraform
+.terraform/
+
 # Next.js build output
 apps/*/.next/
 packages/*/.next/
