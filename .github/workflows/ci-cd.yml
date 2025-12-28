@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: # <-- Add this to allow manual runs
 
 jobs:
 
@@ -151,25 +152,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  deploy:
-    needs: docker-backend
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy (placeholder)
-        run: echo "Add your deployment command here"
-
-  notify:
-    needs: [build, test, security-audit, deploy]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Notify (placeholder)
-        run: echo "Add Slack/Discord/email notification here"
-
   deploy-backend:
     needs: docker-backend
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     env:
       GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
@@ -210,3 +195,11 @@ jobs:
             --build-arg LINKEDIN_CLIENT_ID=${{ env.LINKEDIN_CLIENT_ID }} \
             --build-arg LINKEDIN_CLIENT_SECRET=${{ env.LINKEDIN_CLIENT_SECRET }} \
             -f apps/backend/Dockerfile -t openai-saas-backend:latest .
+
+  notify:
+    needs: [build, test, security-audit, deploy]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify (placeholder)
+        run: echo "Add Slack/Discord/email notification here"
