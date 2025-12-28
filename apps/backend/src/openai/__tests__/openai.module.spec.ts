@@ -1,7 +1,7 @@
-import { OpenAIModule } from "../openai.module";
+import { OpenAIModule } from '../openai.module'
 
-describe("OpenAIModule", () => {
-  it("should be defined", () => {
-    expect(OpenAIModule).toBeDefined();
-  });
-});
+describe('OpenAIModule', () => {
+  it('should be defined', () => {
+    expect(OpenAIModule).toBeDefined()
+  })
+})

@@ -1,7 +1,7 @@
-import * as OpenaiIndex from "../index";
+import * as OpenaiIndex from '../index'
 
-describe("Openai Index", () => {
-  it("should export expected members", () => {
-    expect(OpenaiIndex).toBeDefined();
-  });
-});
+describe('Openai Index', () => {
+  it('should export expected members', () => {
+    expect(OpenaiIndex).toBeDefined()
+  })
+})

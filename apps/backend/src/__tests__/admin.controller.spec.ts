@@ -1,31 +1,31 @@
 // Mock NestJS decorators and guards to bypass them in tests
-import { AdminController } from "../admin.controller";
+import { AdminController } from '../admin.controller'
 
-jest.mock("@nestjs/common", () => ({
+jest.mock('@nestjs/common', () => ({
   Controller: () => () => {},
   Get: () => () => {},
-  UseGuards: () => () => {},
-}));
-jest.mock("../auth/jwt-auth.guard", () => ({
-  JwtAuthGuard: jest.fn(),
-}));
-jest.mock("../auth/roles.guard", () => ({
+  UseGuards: () => () => {}
+}))
+jest.mock('../auth/jwt-auth.guard', () => ({
+  JwtAuthGuard: jest.fn()
+}))
+jest.mock('../auth/roles.guard', () => ({
   RolesGuard: jest.fn(),
-  Roles: () => () => {},
-}));
+  Roles: () => () => {}
+}))
 
-describe("AdminController", () => {
-  let controller: AdminController;
+describe('AdminController', () => {
+  let controller: AdminController
 
   beforeEach(() => {
-    controller = new AdminController();
-  });
+    controller = new AdminController()
+  })
 
-  it("should be defined", () => {
-    expect(controller).toBeDefined();
-  });
-  it("should return admin dashboard status", () => {
-    const result = controller.dashboard();
-    expect(result).toEqual({ status: "Admin dashboard (stub)" });
-  });
-});
+  it('should be defined', () => {
+    expect(controller).toBeDefined()
+  })
+  it('should return admin dashboard status', () => {
+    const result = controller.dashboard()
+    expect(result).toEqual({ status: 'Admin dashboard (stub)' })
+  })
+})

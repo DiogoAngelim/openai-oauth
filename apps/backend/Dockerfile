@@ -30,10 +30,10 @@ RUN pnpm install --prod --force
 
 
 
-# Copy backend source and config from root context
 COPY apps/backend/src ./src
 COPY apps/backend/tsconfig.json ./tsconfig.json
 COPY apps/backend/env-check.ts ./env-check.ts
+COPY apps/backend/.env ./.env
 ARG DATABASE_URL
 ARG REDIS_URL
 ARG NODE_ENV

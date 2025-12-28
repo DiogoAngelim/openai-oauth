@@ -1,29 +1,29 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 
 @Injectable()
 export class DrizzleService implements OnModuleInit, OnModuleDestroy {
-  private client: ReturnType<typeof postgres>;
-  private db: ReturnType<typeof drizzle>;
+  private client: ReturnType<typeof postgres>
+  private db: ReturnType<typeof drizzle>
 
-  onModuleInit() {
+  onModuleInit (): void {
     // Use environment variables for connection
-    const connectionString = process.env.DATABASE_URL;
-    if (!connectionString) {
-      throw new Error("DATABASE_URL environment variable is not set");
+    const connectionString = process.env.DATABASE_URL
+    if (typeof connectionString !== 'string' || connectionString === '') {
+      throw new Error('DATABASE_URL environment variable is not set')
     }
-    this.client = postgres(connectionString, { max: 1 });
-    this.db = drizzle(this.client);
+    this.client = postgres(connectionString, { max: 1 })
+    this.db = drizzle(this.client)
   }
 
-  getDb() {
-    return this.db;
+  getDb (): ReturnType<typeof drizzle> {
+    return this.db
   }
 
-  async onModuleDestroy() {
-    if (this.client) {
-      await this.client.end();
+  async onModuleDestroy (): Promise<void> {
+    if (typeof this.client !== 'undefined' && this.client !== null) {
+      await this.client.end()
     }
   }
 }
