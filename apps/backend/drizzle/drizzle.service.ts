@@ -27,19 +27,4 @@ export class DrizzleService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  // Add explicit return types and handle nullable values
-
-  getConnection(): ConnectionType | null {
-    if (this.connection !== null && this.connection !== undefined) {
-      return this.connection;
-    }
-    return null;
-  }
-
-  someMethod(): void {
-    const value: string | null = this.getValue();
-    if (value !== null && value !== "") {
-      // handle value
-    }
-  }
 }
