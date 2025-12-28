@@ -40,6 +40,14 @@ describeOrSkip("CI/CD Docker Backend", () => {
       process.env.LINKEDIN_CLIENT_ID ?? "dummy_linkedin_id";
     process.env.LINKEDIN_CLIENT_SECRET =
       process.env.LINKEDIN_CLIENT_SECRET ?? "dummy_linkedin_secret";
+    // Add missing DB and Google callback variables
+    process.env.DB_HOST = process.env.DB_HOST ?? "localhost";
+    process.env.DB_PORT = process.env.DB_PORT ?? "5432";
+    process.env.DB_USER = process.env.DB_USER ?? "testuser";
+    process.env.DB_PASSWORD = process.env.DB_PASSWORD ?? "testpass";
+    process.env.DB_NAME = process.env.DB_NAME ?? "testdb";
+    process.env.DB_SSL = process.env.DB_SSL ?? "false";
+    process.env.GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL ?? "http://localhost:3000/auth/google/callback";
   });
   it("should build backend Docker image successfully", () => {
     const workspaceRoot = path.resolve(__dirname, "../../../");
@@ -117,8 +125,8 @@ describeOrSkip("CI/CD Docker Backend", () => {
     const { DATABASE_URL } = process.env;
     expect(
       DATABASE_URL !== undefined &&
-        DATABASE_URL !== null &&
-        DATABASE_URL !== "",
+      DATABASE_URL !== null &&
+      DATABASE_URL !== "",
     ).toBe(true);
     expect(typeof DATABASE_URL).toBe("string");
   });
@@ -128,8 +136,8 @@ describeOrSkip("CI/CD Docker Backend", () => {
     expect(typeof DATABASE_URL).toBe("string");
     expect(
       DATABASE_URL !== undefined &&
-        DATABASE_URL !== null &&
-        DATABASE_URL !== "",
+      DATABASE_URL !== null &&
+      DATABASE_URL !== "",
     ).toBe(true);
     await testDatabaseConnection(DATABASE_URL as string);
   });
