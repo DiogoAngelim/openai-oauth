@@ -12,6 +12,7 @@ export default [
       '**/node_modules/**',
       '**/dist/**',
       '**/coverage/**',
+      '**/coverage/lcov-report/**',
       '**/apps/frontend/next-env.d.ts'
     ],
     languageOptions: {

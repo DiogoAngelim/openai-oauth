@@ -1,3 +1,6 @@
+# Ignore coverage output
+coverage/
+coverage/lcov-report/
 # Node
 node_modules/
 dist/

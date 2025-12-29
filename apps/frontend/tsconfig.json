@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "es2021",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "esnext.disposable"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -22,6 +27,15 @@
       }
     ]
   },
-  "include": ["app", "components", "types", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "app",
+    "components",
+    "types",
+    "types/jest.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
