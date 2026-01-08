@@ -1,14 +1,15 @@
 {
   "name": "backend",
+  "type": "commonjs",
   "version": "1.0.0",
   "main": "dist/main.js",
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
     "build": "ts-node --project ./tsconfig.json ./env-check.ts && nest build",
-    "test": "npx jest --passWithNoTests --coverage --config=jest.config.js",
-    "test:watch": "npx jest --watchAll --config=jest.config.js",
-    "test:ci": "npx jest --coverage --runInBand --config=jest.config.js",
+    "test": "npx jest --passWithNoTests --coverage --config=jest.config.cjs",
+    "test:watch": "npx jest --watchAll --config=jest.config.cjs",
+    "test:ci": "npx jest --coverage --runInBand --config=jest.config.cjs",
     "rollback": "../../rollback.sh"
   },
   "dependencies": {

@@ -16,20 +16,20 @@ import { Request, Response } from 'express'
 @Controller('openai')
 @UseGuards(JwtAuthGuard) // OpenAIRateLimitGuard disabled for local/dev
 export class OpenAIController {
-  constructor (private readonly openai: OpenAIService) {}
+  constructor(private readonly openai: OpenAIService) { }
 
   @Post('chat')
-  async chat (
+  async chat(
     @Req() req: Request & { user: { orgId: string, sub: string } },
-      @Res() res: Response,
-      @Body()
-      body: {
-        prompt: string
-        model?: string
-        max_tokens?: number
-        stream?: boolean
-      },
-      @Query('stream') stream: string
+    @Res() res: Response,
+    @Body()
+    body: {
+      prompt: string
+      model?: string
+      max_tokens?: number
+      stream?: boolean
+    },
+    @Query('stream') stream: string
   ): Promise<void> {
     if (body == null) {
       throw new Error('Body is required')
@@ -68,9 +68,9 @@ export class OpenAIController {
   }
 
   @Get('history')
-  async getHistory (
+  async getHistory(
     @Req() req: Request & { user: { orgId: string, sub: string } },
-      @Res() res: Response
+    @Res() res: Response
   ): Promise<void> {
     const orgId = req.user.orgId
     const userId = req.user.sub

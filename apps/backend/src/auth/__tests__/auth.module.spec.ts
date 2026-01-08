@@ -16,7 +16,9 @@ describe('GoogleStrategy', () => {
 
     authService = new AuthService(mockJwtService, mockDrizzle)
     jest.spyOn(authService, 'validateOAuthLogin').mockResolvedValue({
-      user: { id: 'id', email: 'email', name: 'name' }
+      user: { id: 'id', email: 'email', name: 'name' },
+      org: { id: 'org1', name: 'Test Org' },
+      membership: { id: 'mem1', role: 'member' }
     })
 
     if (isGoogleStrategyEnabled) {
@@ -42,9 +44,9 @@ describe('GoogleStrategy', () => {
         await strategy.validate('token', 'refresh', profile, done)
         expect(authService.validateOAuthLogin).toHaveBeenCalledWith(profile)
         expect(done).toHaveBeenCalledWith(null, {
-          id: 'id',
-          email: 'email',
-          name: 'name'
+          user: { id: 'id', email: 'email', name: 'name' },
+          org: { id: 'org1', name: 'Test Org' },
+          membership: { id: 'mem1', role: 'member' }
         })
       } else {
         throw new Error('Strategy does not implement validate')

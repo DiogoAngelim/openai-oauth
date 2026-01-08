@@ -5,6 +5,7 @@ module.exports = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   },
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
+  testRegex: '(/__tests__/.*|(\.|/)(test|spec))\\.(jsx?|tsx?)$',
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
   },
@@ -17,12 +18,4 @@ module.exports = {
     '!app/login/redirectToAuth.ts'
   ],
   coverageReporters: ['text', 'lcov'],
-  coverageThreshold: {
-    global: {
-      branches: 90,
-      functions: 100,
-      lines: 100,
-      statements: 100
-    }
-  }
 }

@@ -22,9 +22,11 @@ describe('GoogleStrategy', () => {
     const done = jest.fn()
     await strategy.validate('a', 'r', { emails: [], displayName: 'd' }, done)
     expect(done).toHaveBeenCalledWith(null, {
-      id: 'id',
-      email: 'e',
-      name: 'n'
+      user: {
+        id: 'id',
+        email: 'e',
+        name: 'n'
+      }
     })
   })
 
@@ -36,9 +38,11 @@ describe('GoogleStrategy', () => {
     const done = jest.fn()
     await strategy.validate('a', 'r', { emails: [], displayName: 'd' }, done)
     expect(done).toHaveBeenCalledWith(null, {
-      id: undefined,
-      email: undefined,
-      name: undefined
+      user: {
+        id: undefined,
+        email: undefined,
+        name: undefined
+      }
     })
   })
 
@@ -60,9 +64,11 @@ describe('GoogleStrategy', () => {
     const done = jest.fn()
     await strategy.validate('a', 'r', undefined as any, done)
     expect(done).toHaveBeenCalledWith(null, {
-      id: undefined,
-      email: undefined,
-      name: undefined
+      user: {
+        id: undefined,
+        email: undefined,
+        name: undefined
+      }
     })
   })
   it('should throw if env vars missing', () => {

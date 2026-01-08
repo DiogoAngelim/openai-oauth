@@ -4,7 +4,12 @@ import RootLayout from '../layout'
 
 describe('RootLayout', () => {
   it('renders children', () => {
-    render(<RootLayout>hello</RootLayout>)
-    expect(screen.getByText('hello')).toBeInTheDocument()
+    // Suppress React <html> nesting warning for this test
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+    const { container } = render(<RootLayout>hello</RootLayout>)
+    const body = container.querySelector('body')
+    expect(body).toBeTruthy()
+    expect(body?.textContent).toContain('hello')
+    errorSpy.mockRestore()
   })
 })

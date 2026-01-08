@@ -1,3 +1,8 @@
+
+jest.mock('axios', () => ({
+  post: jest.fn().mockResolvedValue({ data: { choices: [{ message: { content: 'mocked response' } }] } })
+}))
+
 import { OpenAIService } from '../openai.service'
 import { ConfigService } from '@nestjs/config'
 import { DrizzleService } from '../../../drizzle/drizzle.service'
@@ -12,18 +17,47 @@ describe('OpenAIService', () => {
   let drizzleServiceMock: { getDb: jest.Mock }
 
   beforeEach(() => {
+    jest.resetModules()
+    jest.clearAllMocks()
     configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
     drizzleServiceMock = { getDb: jest.fn() }
     service = new OpenAIService(
-      configServiceMock as unknown as ConfigService,
-      drizzleServiceMock as unknown as DrizzleService
+      configServiceMock as unknown as ConfigService
     )
+    jest.mock('axios', () => ({
+      post: jest.fn().mockResolvedValue({ data: { choices: [{ message: { content: 'mocked response' } }] } })
+    }))
   })
 
   it('should throw BadRequestException for empty prompt', async () => {
     await expect(
       service.createChatCompletion('org1', 'user1', { prompt: '' }, false)
     ).rejects.toThrow('Prompt is required')
+  })
+
+  it('should use testOverrides for org branch', async () => {
+    const result = await service.createChatCompletion(
+      'org1',
+      'user1',
+      { prompt: 'Hello' },
+      false,
+      undefined,
+      { org: { id: 'org1', subscription: { monthlyQuota: 1000 } } }
+    )
+    expect(result).toBeDefined()
+  })
+
+  it('should use testOverrides for usage branch', async () => {
+    await expect(
+      service.createChatCompletion(
+        'org1',
+        'user1',
+        { prompt: 'Hello' },
+        false,
+        undefined,
+        { org: { id: 'org1', subscription: { monthlyQuota: 1000 } }, usage: { totalTokens: 1001 } }
+      )
+    ).rejects.toThrow('Quota exceeded')
   })
 
   it('should throw ForbiddenException for forbidden prompt', async () => {
@@ -51,8 +85,7 @@ describe('OpenAIService', () => {
     const configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
     const drizzleServiceMock = { getDb: jest.fn() }
     const realService = new OpenAIService(
-      configServiceMock as unknown as ConfigService,
-      drizzleServiceMock as unknown as DrizzleService
+      configServiceMock as unknown as ConfigService
     )
     realService.createChatCompletion = async function () {
       // Simulate org undefined
@@ -78,8 +111,7 @@ describe('OpenAIService', () => {
     const configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
     const drizzleServiceMock = { getDb: jest.fn() }
     const realService = new OpenAIService(
-      configServiceMock as unknown as ConfigService,
-      drizzleServiceMock as unknown as DrizzleService
+      configServiceMock as unknown as ConfigService
     )
     realService.createChatCompletion = async function () {
       const org = { id: 'org1', subscription: { monthlyQuota: 1000 } }
@@ -153,8 +185,7 @@ describe('OpenAIService', () => {
     const configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
     const drizzleServiceMock = { getDb: jest.fn() }
     const serviceInstance = new OpenAIService(
-      configServiceMock as unknown as ConfigService,
-      drizzleServiceMock as unknown as DrizzleService
+      configServiceMock as unknown as ConfigService
     )
     expect(serviceInstance).toBeInstanceOf(OpenAIService)
   })
