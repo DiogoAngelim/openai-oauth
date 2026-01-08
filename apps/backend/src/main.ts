@@ -1,13 +1,8 @@
-declare var setInterval: (handler: (...args: any[]) => void, timeout?: number, ...args: any[]) => any
 // Log all unhandled errors for container debugging
 import * as dotenv from 'dotenv'
 import { NestExpressApplication } from '@nestjs/platform-express'
-
-// removed duplicate declaration
-import { AbstractHttpAdapter } from '@nestjs/core/adapters/http-adapter'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { getLogger } from './logger'
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason)
   process.exit(1)
@@ -25,7 +20,6 @@ console.log('GOOGLE_CLIENT_ID at startup:', process.env.GOOGLE_CLIENT_ID)
 async function bootstrap(): Promise<void> {
   // Sentry error handler not available for Fastify in this context
   const port = 4000;
-  const host = '127.0.0.1';
   try {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.enableCors({

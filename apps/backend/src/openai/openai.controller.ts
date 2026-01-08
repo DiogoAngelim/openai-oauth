@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { OpenAIService } from './openai.service'
-import { OpenAIRateLimitGuard } from './openai.guard'
+// ...existing code...
 import { Request, Response } from 'express'
 
 @Controller('openai')

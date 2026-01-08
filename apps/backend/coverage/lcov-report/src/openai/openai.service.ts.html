@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.85% </span>
+                <span class="strong">36.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/35</span>
+                <span class='fraction'>15/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">27.02% </span>
+                <span class="strong">19.6% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/37</span>
+                <span class='fraction'>10/51</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.39% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/33</span>
+                <span class='fraction'>13/39</span>
             </div>
         
             
@@ -191,7 +191,23 @@
 <a name='L126'></a><a href='#L126'>126</a>
 <a name='L127'></a><a href='#L127'>127</a>
 <a name='L128'></a><a href='#L128'>128</a>
-<a name='L129'></a><a href='#L129'>129</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">8x</span>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -243,6 +259,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -311,6 +334,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -370,8 +402,15 @@ export class OpenAIService {
 <span class="cstat-no" title="statement not covered" >    this.logger.debug(</span>
       `Fetching chat history for org: ${orgId}, user: ${userId}`
     )
-    // DB logic disabled for build isolation
-<span class="cstat-no" title="statement not covered" >    return []</span>
+    // Use DrizzleService to fetch chats for the user and org
+    // Replace with actual DrizzleService instance in production
+<span class="cstat-no" title="statement not covered" >    if (!globalThis.drizzleService || typeof globalThis.drizzleService.chats === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >      return []</span>
+    }
+    const chats = <span class="cstat-no" title="statement not covered" >await globalThis.drizzleService.chats.findMany({</span>
+      where: { userId, organizationId: orgId }
+    })
+<span class="cstat-no" title="statement not covered" >    return Array.isArray(chats) ? chats : []</span>
   }
 &nbsp;
   /**
@@ -438,8 +477,17 @@ export class OpenAIService {
           }
         }
       )
-      // Save chat to DB
-      // DB logic disabled for build isolation
+      // Save chat to DrizzleService (in-memory for local dev)
+<span class="cstat-no" title="statement not covered" >      if (typeof globalThis.drizzleService !== 'undefined' &amp;&amp; globalThis.drizzleService.chats) {</span>
+        const chatData = <span class="cstat-no" title="statement not covered" >{</span>
+          userId,
+          organizationId: orgId,
+          prompt: body.prompt,
+          response: response.data.choices?.[0]?.message?.content || '',
+          model: body.model || 'gpt-3.5-turbo'
+        }
+<span class="cstat-no" title="statement not covered" >        await globalThis.drizzleService.chats.create({ data: chatData })</span>
+      }
 <span class="cstat-no" title="statement not covered" >      return response.data</span>
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      this.logger.error('OpenAI API error', error)</span>
@@ -454,7 +502,7 @@ export class OpenAIService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-07T23:46:37.843Z
+                at 2026-01-08T02:11:53.585Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

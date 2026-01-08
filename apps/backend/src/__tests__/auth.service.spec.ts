@@ -1,10 +1,7 @@
-// This file is a stub to prevent test runner confusion. The real tests are in ../auth/__tests__/auth.service.spec.ts.
-
 describe('AuthService', () => {
   let service: AuthService
   let jwtService: JwtService
   let drizzle: any
-
   beforeEach(() => {
     jwtService = {
       sign: jest.fn(() => 'signed-jwt')
@@ -25,7 +22,6 @@ describe('AuthService', () => {
     }
     service = new AuthService(jwtService, drizzle)
   })
-
   describe('Stub', () => {
     it('should be ignored', () => {
       expect(true).toBe(true)
@@ -121,3 +117,4 @@ describe('AuthService', () => {
     expect(drizzle.user.findUnique).toHaveBeenCalledWith({ where: { id: 'u1' } })
   })
 })
+
