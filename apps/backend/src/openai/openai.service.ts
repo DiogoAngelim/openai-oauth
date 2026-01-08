@@ -4,6 +4,9 @@ import {
   ForbiddenException,
   Logger
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import axios from 'axios'
+
 
 export interface ChatMessage {
   id: string
@@ -20,28 +23,40 @@ export interface CreateChatCompletionDto {
   stream?: boolean
 }
 
+
 @Injectable()
 export class OpenAIService {
   private readonly logger = new Logger(OpenAIService.name)
+  private readonly openAIApiKey: string
+
+  constructor(
+    private readonly configService: ConfigService,
+    // drizzleService: DrizzleService (disabled for build isolation)
+  ) {
+    this.openAIApiKey = this.configService.get<string>('OPENAI_API_KEY', '')
+    if (!this.openAIApiKey) {
+      this.logger.warn('OPENAI_API_KEY is not set in environment variables!')
+    }
+  }
 
   /**
    * Returns the chat history for a user in an organization.
    */
-  async getUserChatHistory (
+  async getUserChatHistory(
     orgId: string,
     userId: string
   ): Promise<ChatMessage[]> {
-    // TODO: Implement with Drizzle ORM
     this.logger.debug(
       `Fetching chat history for org: ${orgId}, user: ${userId}`
     )
+    // DB logic disabled for build isolation
     return []
   }
 
   /**
    * Creates a chat completion.
    */
-  async createChatCompletion (
+  async createChatCompletion(
     orgId: string,
     userId: string,
     body: CreateChatCompletionDto,
@@ -81,16 +96,33 @@ export class OpenAIService {
     }
 
     if (stream && typeof onData === 'function') {
-      onData(null, 'A')
-      onData(null, 'B')
+      // Streaming not implemented in this example
+      onData(null, 'Streaming not implemented')
       return
     }
-    return {
-      message: 'createChatCompletion called',
-      orgId,
-      userId,
-      body,
-      stream
+
+    // Make a real call to OpenAI API
+    try {
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: body.model || 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: body.prompt }],
+          max_tokens: body.max_tokens || 128
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.openAIApiKey}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      // Save chat to DB
+      // DB logic disabled for build isolation
+      return response.data
+    } catch (error) {
+      this.logger.error('OpenAI API error', error)
+      throw new BadRequestException('Failed to call OpenAI API')
     }
   }
 }

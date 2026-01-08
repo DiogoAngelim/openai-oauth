@@ -32,7 +32,7 @@ describe('DrizzleService', () => {
   it('should call client.end on destroy', async () => {
     const service = new DrizzleService()
     const end = jest.fn()
-    // @ts-expect-error
+    // @ts-expect-error: Mocking private client property for test
     service.client = { end }
     await service.onModuleDestroy()
     expect(end).toHaveBeenCalled()
@@ -40,7 +40,7 @@ describe('DrizzleService', () => {
 
   it('should not throw if client is undefined on destroy', async () => {
     const service = new DrizzleService()
-    // @ts-expect-error
+    // @ts-expect-error: Intentionally setting client to undefined for test
     service.client = undefined
     await expect(service.onModuleDestroy()).resolves.toBeUndefined()
   })

@@ -14,7 +14,7 @@ import { OpenAIRateLimitGuard } from './openai.guard'
 import { Request, Response } from 'express'
 
 @Controller('openai')
-@UseGuards(JwtAuthGuard, OpenAIRateLimitGuard)
+@UseGuards(JwtAuthGuard) // OpenAIRateLimitGuard disabled for local/dev
 export class OpenAIController {
   constructor (private readonly openai: OpenAIService) {}
 

@@ -16,12 +16,13 @@ describe('Sentry (non-test env)', () => {
       withScope: jest.fn()
     }
     jest.mock('@sentry/node', () => sentryNode)
-    const sentry = require('../sentry')
-    expect(sentryNode.init).toHaveBeenCalledWith({
-      dsn: 'https://publicKey@o0.ingest.sentry.io/0',
-      environment: 'production',
-      tracesSampleRate: 0.2
+    return import('../sentry').then((sentry) => {
+      expect(sentryNode.init).toHaveBeenCalledWith({
+        dsn: 'https://publicKey@o0.ingest.sentry.io/0',
+        environment: 'production',
+        tracesSampleRate: 0.2
+      })
+      expect(sentry.default || sentry).toBe(sentryNode)
     })
-    expect(sentry.default || sentry).toBe(sentryNode)
   })
 })

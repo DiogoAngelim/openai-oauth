@@ -1,30 +1,37 @@
 import { UnauthorizedException } from '@nestjs/common'
 
 export class AuthService {
-  constructor (
+  constructor(
     private readonly jwtService: any,
     private readonly drizzle: any
-  ) {}
+  ) { }
 
-  async validateOAuthLogin (profile: any): Promise<{ user: any }> {
+  async validateOAuthLogin(profile: any): Promise<{ user: any, org: any, membership: any }> {
     const email = profile.emails?.[0]?.value
-    let user = await this.drizzle.user.findUnique({ where: { email } })
-    if (typeof user === 'undefined' || user === null) {
+    const googleId = profile.id
+    let user = await this.drizzle.user.findFirst({
+      where: { OR: [{ email }, { googleId }] }
+    })
+    if (!user) {
       user = await this.drizzle.user.create({
-        data: { email, name: profile.displayName }
+        data: { email, name: profile.displayName, googleId }
       })
-      if (typeof user === 'undefined' || user === null) { throw new UnauthorizedException('User creation failed') }
+      if (!user) throw new UnauthorizedException('User creation failed')
+    } else if (!user.googleId) {
+      user = await this.drizzle.user.update({
+        where: { id: user.id },
+        data: { googleId }
+      })
     }
     const membership = await this.drizzle.membership.findFirst({
-      where: { userId: user.id }
+      where: { userId: user.id },
+      include: { organization: true }
     })
-    if (typeof membership === 'undefined' || membership === null) {
-      throw new UnauthorizedException('No organization membership found')
-    }
-    return { user }
+    // Organization membership is now optional
+    return { user, org: membership?.organization ?? null, membership }
   }
 
-  async generateTokens (
+  async generateTokens(
     user: any,
     organizationId: string,
     role: string
@@ -50,11 +57,11 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 
-  async validateUserFromJwt (payload: any): Promise<any> {
+  async validateUserFromJwt(payload: any): Promise<any> {
     return this.drizzle.user.findUnique({ where: { id: payload.sub } })
   }
 
-  async refreshAccessToken (
+  async refreshAccessToken(
     token: string
   ): Promise<{ accessToken: string, refreshToken: string }> {
     const refreshToken = await this.drizzle.refreshToken.findUnique({

@@ -1,64 +1,68 @@
+
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <title>Code coverage report for src/auth/google.strategy.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
     <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type="text/css">
-      .coverage-summary .sorter {
-        background-image: url(../../sort-arrow-sprite.png);
-      }
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
     </style>
-  </head>
-
-  <body>
-    <div class="wrapper">
-      <div class="pad1">
-        <h1>
-          <a href="../../index.html">All files</a> /
-          <a href="index.html">src/auth</a> google.strategy.ts
-        </h1>
-        <div class="clearfix">
-          <div class="fl pad1y space-right2">
-            <span class="strong">100% </span>
-            <span class="quiet">Statements</span>
-            <span class="fraction">26/26</span>
-          </div>
-
-          <div class="fl pad1y space-right2">
-            <span class="strong">97.05% </span>
-            <span class="quiet">Branches</span>
-            <span class="fraction">33/34</span>
-          </div>
-
-          <div class="fl pad1y space-right2">
-            <span class="strong">100% </span>
-            <span class="quiet">Functions</span>
-            <span class="fraction">2/2</span>
-          </div>
-
-          <div class="fl pad1y space-right2">
-            <span class="strong">100% </span>
-            <span class="quiet">Lines</span>
-            <span class="fraction">25/25</span>
-          </div>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/auth</a> google.strategy.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">96.66% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>29/30</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">56.75% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>21/37</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">96.42% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>27/28</span>
+            </div>
+        
+            
         </div>
         <p class="quiet">
-          Press <em>n</em> or <em>j</em> to go to the next uncovered block,
-          <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
         <template id="filterTemplate">
-          <div class="quiet">
-            Filter:
-            <input type="search" id="fileSearch" />
-          </div>
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
         </template>
-      </div>
-      <div class="status-line high"></div>
-      <pre><table class="coverage">
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -120,7 +124,43 @@
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
@@ -129,15 +169,6 @@
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
@@ -154,12 +185,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,43 +217,58 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// This file should define and export the GoogleStrategy and isGoogleStrategyEnabled, not contain tests.
 &nbsp;
+// Ensure dotenv is loaded before anything else
+import * as dotenv from 'dotenv'
+dotenv.config({ path: __dirname + '/../../.env' })
 // Set dummy values for all required environment variables if not set
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { Strategy as GoogleOAuthStrategy } from 'passport-google-oauth20'
 &nbsp;
-process.env.GOOGLE_CLIENT_ID =
-  process.env.GOOGLE_CLIENT_ID ?? 'dummy_google_client_id'
-process.env.GOOGLE_CLIENT_SECRET =
-  process.env.GOOGLE_CLIENT_SECRET ?? 'dummy_google_client_secret'
-process.env.GOOGLE_CALLBACK_URL =
-  process.env.GOOGLE_CALLBACK_URL ??
-  'http://localhost:3000/auth/google/callback'
-process.env.DATABASE_URL = process.env.DATABASE_URL ?? 'dummy_database_url'
-process.env.REDIS_URL = process.env.REDIS_URL ?? 'dummy_redis_url'
-process.env.SENTRY_DSN = process.env.SENTRY_DSN ?? 'dummy_sentry_dsn'
-process.env.FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
-process.env.JWT_SECRET = process.env.JWT_SECRET ?? 'dummy_jwt_secret'
+// Do NOT allow dummy credentials in production
+<span class="missing-if-branch" title="if path not taken" >I</span>if (
+  process.env.NODE_ENV !== 'test' &amp;&amp;
+  (
+<span class="branch-1 cbranch-no" title="branch not covered" >    process.env.GOOGLE_CLIENT_ID === 'dummy_google_client_id' </span>||
+<span class="branch-2 cbranch-no" title="branch not covered" >    process.env.GOOGLE_CLIENT_SECRET === 'dummy_google_client_secret'</span>
+  )
+) {
+<span class="cstat-no" title="statement not covered" >  throw new Error(</span>
+    'Google OAuth is misconfigured: dummy_google_client_id or dummy_google_client_secret is being used. Please set real credentials in your .env file.'
+  )
+}
+&nbsp;
+process.env.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID ?? <span class="branch-1 cbranch-no" title="branch not covered" >''</span>
+process.env.GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET ?? <span class="branch-1 cbranch-no" title="branch not covered" >''</span>
+process.env.GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL ?? <span class="branch-1 cbranch-no" title="branch not covered" >'http://localhost:3000/auth/google/callback'</span>
+process.env.DATABASE_URL = process.env.DATABASE_URL ?? <span class="branch-1 cbranch-no" title="branch not covered" >'dummy_database_url'</span>
+// Do not set a dummy REDIS_URL fallback; require a real REDIS_URL in the environment
+process.env.SENTRY_DSN = process.env.SENTRY_DSN ?? <span class="branch-1 cbranch-no" title="branch not covered" >'dummy_sentry_dsn'</span>
+process.env.FRONTEND_URL = process.env.FRONTEND_URL ?? <span class="branch-1 cbranch-no" title="branch not covered" >'http://localhost:3000'</span>
+process.env.JWT_SECRET = process.env.JWT_SECRET ?? <span class="branch-1 cbranch-no" title="branch not covered" >'dummy_jwt_secret'</span>
 process.env.GITHUB_CLIENT_ID =
-  process.env.GITHUB_CLIENT_ID ?? 'dummy_github_id'
+  process.env.GITHUB_CLIENT_ID ?? <span class="branch-1 cbranch-no" title="branch not covered" >'dummy_github_id'</span>
 process.env.GITHUB_CLIENT_SECRET =
-  process.env.GITHUB_CLIENT_SECRET ?? 'dummy_github_secret'
-process.env.BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:4000'
+  process.env.GITHUB_CLIENT_SECRET ?? <span class="branch-1 cbranch-no" title="branch not covered" >'dummy_github_secret'</span>
+process.env.BACKEND_URL = process.env.BACKEND_URL ?? <span class="branch-1 cbranch-no" title="branch not covered" >'http://localhost:4000'</span>
 process.env.LINKEDIN_CLIENT_ID =
-  process.env.LINKEDIN_CLIENT_ID ?? 'dummy_linkedin_id'
+  process.env.LINKEDIN_CLIENT_ID ?? <span class="branch-1 cbranch-no" title="branch not covered" >'dummy_linkedin_id'</span>
 process.env.LINKEDIN_CLIENT_SECRET =
-  process.env.LINKEDIN_CLIENT_SECRET ?? 'dummy_linkedin_secret'
+  process.env.LINKEDIN_CLIENT_SECRET ?? <span class="branch-1 cbranch-no" title="branch not covered" >'dummy_linkedin_secret'</span>
 &nbsp;
 export const isGoogleStrategyEnabled =
-  typeof process.env.GOOGLE_CLIENT_ID === 'string' &amp;&amp; process.env.GOOGLE_CLIENT_ID !== '' &amp;&amp; typeof process.env.GOOGLE_CLIENT_SECRET === 'string' &amp;&amp; process.env.GOOGLE_CLIENT_SECRET !== ''
+  typeof process.env.GOOGLE_CLIENT_ID === 'string' &amp;&amp;
+  process.env.GOOGLE_CLIENT_ID !== '' &amp;&amp;
+  typeof process.env.GOOGLE_CLIENT_SECRET === 'string' &amp;&amp;
+  process.env.GOOGLE_CLIENT_SECRET !== ''
 &nbsp;
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
   GoogleOAuthStrategy,
   'google'
 ) {
-  constructor (private readonly authService: AuthService<span class="branch-1 cbranch-no" title="branch not covered" >) {</span>
+  constructor(private readonly authService: AuthService<span class="branch-1 cbranch-no" title="branch not covered" >) {</span>
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -228,7 +277,7 @@ export class GoogleStrategy extends PassportStrategy(
     })
   }
 &nbsp;
-  async validate (
+  async validate(
     accessToken: string,
     refreshToken: string,
     profile: any,
@@ -244,27 +293,21 @@ export class GoogleStrategy extends PassportStrategy(
 }
 &nbsp;</pre></td></tr></table></pre>
 
-      <div class="push"></div>
-      <!-- for sticky footer -->
-    </div>
-    <!-- /wrapper -->
-    <div class="footer quiet pad2 space-top1 center small">
-      Code coverage generated by
-      <a
-        href="https://istanbul.js.org/"
-        target="_blank"
-        rel="noopener noreferrer"
-        >istanbul</a
-      >
-      at 2025-12-28T19:32:52.960Z
-    </div>
-    <script src="../../prettify.js"></script>
-    <script>
-      window.onload = function () {
-        prettyPrint();
-      };
-    </script>
-    <script src="../../sorter.js"></script>
-    <script src="../../block-navigation.js"></script>
-  </body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-01-07T23:46:37.843Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
 </html>
+    

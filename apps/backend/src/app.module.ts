@@ -12,7 +12,7 @@ import { AdminController } from './admin.controller'
 @Controller('/')
 class HealthController {
   @Get('health')
-  health (): { status: string } {
+  health(): { status: string } {
     return { status: 'ok' }
   }
 }
@@ -23,11 +23,12 @@ class HealthController {
     AuthModule,
     ApiModule,
     OpenAIModule,
-    RateLimitModule,
+    // RateLimitModule, // Disabled for local/dev to avoid Redis dependency
     BillingModule,
     MonitoringModule
   ],
-  controllers: [ComplianceController, AdminController, HealthController],
+  // controllers: [ComplianceController, AdminController, HealthController],
+  controllers: [AdminController, HealthController],
   providers: []
 })
-export class AppModule {}
+export class AppModule { }

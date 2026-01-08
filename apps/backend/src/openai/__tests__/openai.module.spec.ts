@@ -5,6 +5,8 @@ import { OpenAIController } from '../openai.controller'
 import { OpenAIRateLimitGuard } from '../openai.guard'
 import { RateLimitService } from '../../rate-limit/rate-limit.service'
 import { Module } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { DrizzleService } from '../../../drizzle/drizzle.service'
 
 describe('OpenAIModule', () => {
   it('should be defined', () => {
@@ -16,13 +18,15 @@ describe('OpenAIModule', () => {
       check = jest.fn()
     }
     @Module({})
-    class MockAuthModule {}
+    class MockAuthModule { }
     const module: TestingModule = await Test.createTestingModule({
       imports: [MockAuthModule],
       providers: [
         OpenAIService,
         { provide: RateLimitService, useClass: MockRateLimitService },
-        OpenAIRateLimitGuard
+        OpenAIRateLimitGuard,
+        { provide: ConfigService, useValue: { get: jest.fn().mockReturnValue('test-key') } },
+        { provide: DrizzleService, useValue: { getDb: jest.fn() } }
       ],
       controllers: [OpenAIController]
     }).compile()

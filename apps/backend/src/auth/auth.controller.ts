@@ -26,39 +26,38 @@ interface User {
 interface AuthenticatedRequest extends ExpressRequest {
   user?: {
     user?: Partial<User>
-    org?: { id?: string }
-    membership?: { role?: string }
+    org?: { id?: string } | null
+    membership?: { role?: string; organizationId?: string }
   }
 }
 
 @Controller('auth')
 export class AuthController {
-  constructor (private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth (): Promise<void> {}
+  async googleAuth(): Promise<void> { }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthCallback (
+  async googleAuthCallback(
     @Req() req: AuthenticatedRequest,
-      @Res() res: Response
+    @Res() res: Response
   ): Promise<void> {
-    // User is attached to req.user by GoogleStrategy
+    // Debug: print req.user and its properties
+    console.log('googleAuthCallback req.user:', JSON.stringify(req.user, null, 2))
     if (
       req.user === undefined ||
       req.user === null ||
       req.user.user === undefined ||
       req.user.user === null ||
       typeof req.user.user !== 'object' ||
-      req.user.org === undefined ||
-      req.user.org === null ||
-      typeof req.user.org !== 'object' ||
       req.user.membership === undefined ||
       req.user.membership === null ||
       typeof req.user.membership !== 'object'
     ) {
+      console.error('Invalid user payload:', JSON.stringify(req.user, null, 2))
       throw new UnauthorizedException('Invalid user payload')
     }
     const { user, org, membership } = req.user
@@ -74,7 +73,7 @@ export class AuthController {
     }
     const tokens = await this.authService.generateTokens(
       userForToken,
-      org.id ?? '',
+      membership.organizationId ?? '',
       membership.role ?? ''
     )
     res.cookie('refresh_token', tokens.refreshToken, {
@@ -92,9 +91,9 @@ export class AuthController {
   }
 
   @Post('refresh')
-  async refresh (
+  async refresh(
     @Req() req: AuthenticatedRequest,
-      @Res() res: Response
+    @Res() res: Response
   ): Promise<void> {
     let refreshToken: string | undefined
     if (

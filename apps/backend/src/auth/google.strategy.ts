@@ -1,20 +1,35 @@
 // This file should define and export the GoogleStrategy and isGoogleStrategyEnabled, not contain tests.
 
+// Ensure dotenv is loaded before anything else
+import * as dotenv from 'dotenv'
+dotenv.config({ path: '.env' })
+console.log('process.cwd() (strategy):', process.cwd())
+console.log('GOOGLE_CLIENT_ID (strategy):', process.env.GOOGLE_CLIENT_ID)
+console.log('GOOGLE_CLIENT_SECRET (strategy):', process.env.GOOGLE_CLIENT_SECRET)
 // Set dummy values for all required environment variables if not set
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { Strategy as GoogleOAuthStrategy } from 'passport-google-oauth20'
 
-process.env.GOOGLE_CLIENT_ID =
-  process.env.GOOGLE_CLIENT_ID ?? 'dummy_google_client_id'
-process.env.GOOGLE_CLIENT_SECRET =
-  process.env.GOOGLE_CLIENT_SECRET ?? 'dummy_google_client_secret'
-process.env.GOOGLE_CALLBACK_URL =
-  process.env.GOOGLE_CALLBACK_URL ??
-  'http://localhost:3000/auth/google/callback'
+// Do NOT allow dummy credentials in production
+if (
+  process.env.NODE_ENV !== 'test' &&
+  (
+    process.env.GOOGLE_CLIENT_ID === 'dummy_google_client_id' ||
+    process.env.GOOGLE_CLIENT_SECRET === 'dummy_google_client_secret'
+  )
+) {
+  throw new Error(
+    'Google OAuth is misconfigured: dummy_google_client_id or dummy_google_client_secret is being used. Please set real credentials in your .env file.'
+  )
+}
+
+process.env.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID ?? ''
+process.env.GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET ?? ''
+process.env.GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL ?? 'http://localhost:3000/auth/google/callback'
 process.env.DATABASE_URL = process.env.DATABASE_URL ?? 'dummy_database_url'
-process.env.REDIS_URL = process.env.REDIS_URL ?? 'dummy_redis_url'
+// Do not set a dummy REDIS_URL fallback; require a real REDIS_URL in the environment
 process.env.SENTRY_DSN = process.env.SENTRY_DSN ?? 'dummy_sentry_dsn'
 process.env.FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
 process.env.JWT_SECRET = process.env.JWT_SECRET ?? 'dummy_jwt_secret'
@@ -39,7 +54,7 @@ export class GoogleStrategy extends PassportStrategy(
   GoogleOAuthStrategy,
   'google'
 ) {
-  constructor (private readonly authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -48,7 +63,7 @@ export class GoogleStrategy extends PassportStrategy(
     })
   }
 
-  async validate (
+  async validate(
     accessToken: string,
     refreshToken: string,
     profile: any,
@@ -56,7 +71,7 @@ export class GoogleStrategy extends PassportStrategy(
   ): Promise<void> {
     try {
       const result = await this.authService.validateOAuthLogin(profile)
-      done(null, result.user)
+      done(null, result)
     } catch (err) {
       done(err)
     }

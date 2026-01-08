@@ -4,7 +4,7 @@
 import type { Config } from 'drizzle-kit'
 
 export default {
-  schema: './src/db/schema.ts',
+  schema: 'src/db/schema.ts',
   out: './drizzle/migrations',
   dialect: 'postgresql',
   dbCredentials: {
@@ -22,7 +22,7 @@ export default {
         : '',
     password:
       typeof process.env.DB_PASSWORD === 'string' &&
-      process.env.DB_PASSWORD !== ''
+        process.env.DB_PASSWORD !== ''
         ? process.env.DB_PASSWORD
         : '',
     database:

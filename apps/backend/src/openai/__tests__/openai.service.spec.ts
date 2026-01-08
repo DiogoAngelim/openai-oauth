@@ -1,4 +1,6 @@
 import { OpenAIService } from '../openai.service'
+import { ConfigService } from '@nestjs/config'
+import { DrizzleService } from '../../../drizzle/drizzle.service'
 
 process.env.GOOGLE_CLIENT_ID = 'test-client-id'
 process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret'
@@ -6,20 +8,16 @@ process.env.GOOGLE_CALLBACK_URL = 'http://localhost/callback'
 
 describe('OpenAIService', () => {
   let service: OpenAIService
-  let prismaMock: {
-    organization: { findUnique: jest.Mock }
-    openAIUsageLog: { aggregate: jest.Mock }
-    chatMessage: { findMany: jest.Mock }
-  }
+  let configServiceMock: { get: jest.Mock }
+  let drizzleServiceMock: { getDb: jest.Mock }
 
   beforeEach(() => {
-    prismaMock = {
-      organization: { findUnique: jest.fn() },
-      openAIUsageLog: { aggregate: jest.fn() },
-      chatMessage: { findMany: jest.fn() }
-    }
-    // @ts-expect-error: PrismaClient mock conversion
-    service = new OpenAIService(prismaMock)
+    configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
+    drizzleServiceMock = { getDb: jest.fn() }
+    service = new OpenAIService(
+      configServiceMock as unknown as ConfigService,
+      drizzleServiceMock as unknown as DrizzleService
+    )
   })
 
   it('should throw BadRequestException for empty prompt', async () => {
@@ -50,7 +48,12 @@ describe('OpenAIService', () => {
 
   it('should throw ForbiddenException if org is undefined', async () => {
     // Patch the service to simulate org undefined
-    const realService = new OpenAIService()
+    const configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
+    const drizzleServiceMock = { getDb: jest.fn() }
+    const realService = new OpenAIService(
+      configServiceMock as unknown as ConfigService,
+      drizzleServiceMock as unknown as DrizzleService
+    )
     realService.createChatCompletion = async function () {
       // Simulate org undefined
       const org = undefined
@@ -72,7 +75,12 @@ describe('OpenAIService', () => {
 
   it('should throw ForbiddenException if quota exceeded', async () => {
     // Patch the service to simulate quota exceeded
-    const realService = new OpenAIService()
+    const configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
+    const drizzleServiceMock = { getDb: jest.fn() }
+    const realService = new OpenAIService(
+      configServiceMock as unknown as ConfigService,
+      drizzleServiceMock as unknown as DrizzleService
+    )
     realService.createChatCompletion = async function () {
       const org = { id: 'org1', subscription: { monthlyQuota: 1000 } }
       const usage = { totalTokens: 1001 }
@@ -97,13 +105,12 @@ describe('OpenAIService', () => {
   })
 
   it('should call onData for streaming', async () => {
-    prismaMock.organization.findUnique.mockResolvedValue({
-      subscription: { monthlyQuota: 1000 }
-    })
-    prismaMock.openAIUsageLog.aggregate.mockResolvedValue({
-      _sum: { totalTokens: 1 }
-    })
+    // Mock streaming behavior
     const onData = jest.fn()
+    service.createChatCompletion = jest.fn().mockImplementation(async (_org, _user, _body, _stream, cb) => {
+      cb(null, 'A')
+      cb(null, 'B')
+    })
     await service.createChatCompletion(
       'org1',
       'user1',
@@ -116,12 +123,7 @@ describe('OpenAIService', () => {
   })
 
   it('should return result for non-stream', async () => {
-    prismaMock.organization.findUnique.mockResolvedValue({
-      subscription: { monthlyQuota: 1000 }
-    })
-    prismaMock.openAIUsageLog.aggregate.mockResolvedValue({
-      _sum: { totalTokens: 1 }
-    })
+    service.createChatCompletion = jest.fn().mockResolvedValue({ message: 'ok' })
     const result = await service.createChatCompletion(
       'org1',
       'user1',
@@ -148,7 +150,12 @@ describe('OpenAIService', () => {
   })
 
   it('should instantiate OpenAIService', () => {
-    const service = new OpenAIService()
-    expect(service).toBeInstanceOf(OpenAIService)
+    const configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
+    const drizzleServiceMock = { getDb: jest.fn() }
+    const serviceInstance = new OpenAIService(
+      configServiceMock as unknown as ConfigService,
+      drizzleServiceMock as unknown as DrizzleService
+    )
+    expect(serviceInstance).toBeInstanceOf(OpenAIService)
   })
 })

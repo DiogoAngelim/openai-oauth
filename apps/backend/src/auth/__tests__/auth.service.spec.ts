@@ -10,7 +10,7 @@ describe('AuthService', () => {
     update: jest.Mock
     delete: jest.Mock
     // Add any other methods your AuthService expects from Drizzle
-    user: { findUnique: jest.Mock, create: jest.Mock }
+    user: { findUnique: jest.Mock, create: jest.Mock, findFirst: jest.Mock, update: jest.Mock }
     organization: { create: jest.Mock }
     membership: { findFirst: jest.Mock }
     refreshToken: { create: jest.Mock, findUnique: jest.Mock }
@@ -25,7 +25,7 @@ describe('AuthService', () => {
       insert: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
-      user: { findUnique: jest.fn(), create: jest.fn() },
+      user: { findUnique: jest.fn(), create: jest.fn(), findFirst: jest.fn(), update: jest.fn() },
       organization: { create: jest.fn() },
       membership: { findFirst: jest.fn() },
       refreshToken: { create: jest.fn(), findUnique: jest.fn() }
@@ -35,25 +35,36 @@ describe('AuthService', () => {
 
   it('should throw UnauthorizedException if user creation fails', async () => {
     drizzleMock.user.findUnique.mockResolvedValue(null)
+    drizzleMock.user.findFirst.mockResolvedValue(null)
     drizzleMock.user.create.mockResolvedValue(null)
     await expect(
       service.validateOAuthLogin({
         emails: [{ value: 'test@example.com' }],
-        displayName: 'Test'
+        displayName: 'Test',
+        id: undefined // ensure id is undefined
       })
     ).rejects.toThrow('User creation failed')
   })
 
   it('should throw UnauthorizedException if no membership found', async () => {
-    drizzleMock.user.findUnique.mockResolvedValue({
+    const userObj = {
       id: '1',
-      email: 'test@example.com'
-    })
+      email: 'test@example.com',
+      name: 'Test',
+      image: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      googleId: 'google-1'
+    }
+    drizzleMock.user.findUnique.mockResolvedValue(userObj)
+    drizzleMock.user.findFirst.mockResolvedValue(userObj)
+    drizzleMock.user.update.mockResolvedValue(userObj)
     drizzleMock.membership.findFirst.mockResolvedValue(null)
     await expect(
       service.validateOAuthLogin({
         emails: [{ value: 'test@example.com' }],
-        displayName: 'Test'
+        displayName: 'Test',
+        id: '1'
       })
     ).rejects.toThrow('No organization membership found')
   })
@@ -76,6 +87,7 @@ describe('AuthService', () => {
 
   it('should validate user from jwt', async () => {
     drizzleMock.user.findUnique.mockResolvedValue({ id: '1' })
+    drizzleMock.user.findFirst.mockResolvedValue({ id: '1' })
     const user = await service.validateUserFromJwt({ sub: '1' })
     expect(user).toEqual({ id: '1' })
   })
