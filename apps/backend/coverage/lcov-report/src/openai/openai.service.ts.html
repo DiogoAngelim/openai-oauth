@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.29% </span>
+                <span class="strong">80.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>28/41</span>
+                <span class='fraction'>33/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.95% </span>
+                <span class="strong">76.59% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>31/47</span>
+                <span class='fraction'>36/47</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">79.48% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>26/39</span>
+                <span class='fraction'>31/39</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -235,15 +235,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -255,18 +255,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -395,22 +395,22 @@ export class OpenAIService {
   /**
    * Returns the chat history for a user in an organization.
    */
-<span class="fstat-no" title="function not covered" >  async </span>getUserChatHistory(
+  async getUserChatHistory(
     orgId: string,
     userId: string
   ): Promise&lt;ChatMessage[]&gt; {
-<span class="cstat-no" title="statement not covered" >    this.logger.debug(</span>
+    this.logger.debug(
       `Fetching chat history for org: ${orgId}, user: ${userId}`
     )
     // Use DrizzleService to fetch chats for the user and org
     // Replace with actual DrizzleService instance in production
-<span class="cstat-no" title="statement not covered" >    if (!globalThis.drizzleService || typeof globalThis.drizzleService.chats === 'undefined') {</span>
-<span class="cstat-no" title="statement not covered" >      return []</span>
+    if (!globalThis.drizzleService || typeof globalThis.drizzleService.chats === 'undefined') {
+      return []
     }
-    const chats = <span class="cstat-no" title="statement not covered" >await globalThis.drizzleService.chats.findMany({</span>
+    const chats = await globalThis.drizzleService.chats.findMany({
       where: { userId, organizationId: orgId }
     })
-<span class="cstat-no" title="statement not covered" >    return Array.isArray(chats) ? chats : []</span>
+    return Array.isArray(chats) ? <span class="branch-0 cbranch-no" title="branch not covered" >chats </span>: []
   }
 &nbsp;
   /**
@@ -502,7 +502,7 @@ export class OpenAIService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-08T05:05:18.359Z
+                at 2026-01-08T05:39:28.740Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

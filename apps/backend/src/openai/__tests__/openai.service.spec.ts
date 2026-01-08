@@ -181,6 +181,31 @@ describe('OpenAIService', () => {
     expect(history.length).toBeGreaterThanOrEqual(1)
   })
 
+  it('should return empty array if drizzleService is missing', async () => {
+    // Remove drizzleService from globalThis
+    const originalDrizzle = globalThis.drizzleService
+    // @ts-ignore
+    delete globalThis.drizzleService
+    const result = await service.getUserChatHistory('org1', 'user1')
+    expect(result).toEqual([])
+    // Restore drizzleService
+    globalThis.drizzleService = originalDrizzle
+  })
+
+  it('should return empty array if chats is not an array', async () => {
+    // Mock drizzleService with chats not an array
+    const originalDrizzle = globalThis.drizzleService
+    globalThis.drizzleService = {
+      chats: {
+        findMany: jest.fn().mockResolvedValue('not-an-array')
+      }
+    }
+    const result = await service.getUserChatHistory('org1', 'user1')
+    expect(result).toEqual([])
+    // Restore drizzleService
+    globalThis.drizzleService = originalDrizzle
+  })
+
   it('should instantiate OpenAIService', () => {
     const configServiceMock = { get: jest.fn().mockReturnValue('test-key') }
     const drizzleServiceMock = { getDb: jest.fn() }
