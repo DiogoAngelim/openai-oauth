@@ -81,7 +81,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --no-frozen-lockfile
-      - run: npx drizzle-kit generate:sqlite --config=apps/backend/drizzle.config.ts
+      - run: npx drizzle-kit generate:sqlite
       - run: npx drizzle-kit migrate:deploy --config=apps/backend/drizzle.config.ts
       - name: Run backend tests with coverage
         run: pnpm --filter @openai-oauth/backend test -- --coverage
