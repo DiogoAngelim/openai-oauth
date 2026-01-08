@@ -9,7 +9,7 @@ import {
 import Chat from './page'
 
 // Type for our EventSource mock instances
-type MockEventSource = {
+interface MockEventSource {
   onmessage: ((event: MessageEvent) => void) | null
   onerror: ((event?: Event) => void) | null
   close: jest.Mock
@@ -24,10 +24,8 @@ const eventSourceMock = jest.fn().mockImplementation(() => {
   eventSourceInstances.push(instance)
   return instance
 })
-// @ts-expect-error override global
-global.EventSource = eventSourceMock
-// @ts-expect-error override global
-global.fetch = jest.fn(async () => await Promise.resolve({ ok: true }))
+global.EventSource = eventSourceMock as unknown as typeof global.EventSource
+global.fetch = jest.fn(async () => await Promise.resolve({ ok: true })) as unknown as typeof global.fetch
 beforeEach(() => {
   eventSourceInstances = []
 })
@@ -88,7 +86,7 @@ describe('Chat', () => {
     }
     // Call the assigned onmessage handler inside act
     await act(async () => {
-      esInstance.onmessage && esInstance.onmessage({ data: 'hello world' } as MessageEvent)
+      (esInstance.onmessage != null) && esInstance.onmessage({ data: 'hello world' } as MessageEvent)
     })
     await waitFor(() =>
       expect(screen.getByText('hello world')).toBeInTheDocument()
@@ -107,7 +105,7 @@ describe('Chat', () => {
       esInstance.onerror = jest.fn()
     }
     await act(async () => {
-      esInstance.onerror && esInstance.onerror()
+      (esInstance.onerror != null) && esInstance.onerror()
     })
     await waitFor(() => expect(esInstance.close).toHaveBeenCalled())
   })
@@ -121,7 +119,7 @@ describe('Chat', () => {
     const esInstance1 = eventSourceInstances[0]
     // End loading by simulating error on first EventSource
     await act(async () => {
-      esInstance1.onerror && esInstance1.onerror()
+      (esInstance1.onerror != null) && esInstance1.onerror()
     })
     fireEvent.change(screen.getByPlaceholderText('Ask something...'), {
       target: { value: 'bar' }
@@ -143,7 +141,7 @@ describe('Chat', () => {
     const esInstance = eventSourceInstances[0]
     // Simulate onmessage with undefined data
     await act(async () => {
-      esInstance.onmessage && esInstance.onmessage({} as MessageEvent)
+      (esInstance.onmessage != null) && esInstance.onmessage({} as MessageEvent)
     })
     // Should not throw and response should remain empty
     // No assertion for '1 words' since UI does not render it
@@ -168,10 +166,9 @@ describe('Chat', () => {
       async () => { throw new Error('fail') }
     )
     // Patch EventSource to return an object with close method, but do not assign to eventSourceRef
-    const mockEs = { close: jest.fn() }
+    const mockEs: EventSource = { close: jest.fn() } as unknown as EventSource
     const originalEventSource = global.EventSource
-    // @ts-expect-error: test mock override
-    global.EventSource = jest.fn(() => mockEs as unknown as EventSource)
+    global.EventSource = jest.fn(() => mockEs)
     render(<Chat />)
     fireEvent.change(screen.getByPlaceholderText('Ask something...'), {
       target: { value: 'foo' }
@@ -190,10 +187,9 @@ describe('Chat', () => {
       async () => { throw new Error('fail') }
     )
     // Patch EventSource to return an object without close method
-    const mockEs = { foo: 'bar' }
+    const mockEs: EventSource = { foo: 'bar' } as unknown as EventSource
     const originalEventSource = global.EventSource
-    // @ts-expect-error: test mock override
-    global.EventSource = jest.fn(() => mockEs as unknown as EventSource)
+    global.EventSource = jest.fn(() => mockEs)
     render(<Chat />)
     fireEvent.change(screen.getByPlaceholderText('Ask something...'), {
       target: { value: 'foo' }

@@ -8,7 +8,7 @@ describe('Sentry (non-test env)', () => {
     process.env = OLD_ENV
   })
 
-  it('should require @sentry/node and call init', () => {
+  it('should require @sentry/node and call init', async () => {
     const sentryNode = {
       init: jest.fn(),
       captureException: jest.fn(),
@@ -16,13 +16,15 @@ describe('Sentry (non-test env)', () => {
       withScope: jest.fn()
     }
     jest.mock('@sentry/node', () => sentryNode)
-    return import('../sentry').then((sentry) => {
+    return await import('../sentry').then((sentry) => {
       expect(sentryNode.init).toHaveBeenCalledWith({
         dsn: 'https://publicKey@o0.ingest.sentry.io/0',
         environment: 'production',
         tracesSampleRate: 0.2
       })
-      expect(sentry.default || sentry).toBe(sentryNode)
+      // Explicitly check if sentry.default is defined before using it in the conditional
+      const sentryInstance = typeof sentry.default !== 'undefined' ? sentry.default : sentry
+      expect(sentryInstance).toBe(sentryNode)
     })
   })
 })

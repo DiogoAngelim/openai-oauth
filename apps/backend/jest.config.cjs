@@ -17,6 +17,6 @@ module.exports = {
     '^.+\\.(js|jsx)$': 'babel-jest'
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  collectCoverage: true,
+  collectCoverage: true
   // ...rest of config...
 }

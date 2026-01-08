@@ -17,5 +17,5 @@ module.exports = {
     '!app/**/globals.css',
     '!app/login/redirectToAuth.ts'
   ],
-  coverageReporters: ['text', 'lcov'],
+  coverageReporters: ['text', 'lcov']
 }

@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom'
 
 // Extend Jest's expect with jest-dom matchers for TypeScript
-import type { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers';
+import type { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers'
 
 declare global {
   namespace jest {

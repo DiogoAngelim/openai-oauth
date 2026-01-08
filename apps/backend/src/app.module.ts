@@ -10,7 +10,7 @@ import { AdminController } from './admin.controller'
 @Controller('/')
 class HealthController {
   @Get('health')
-  health(): { status: string } {
+  health (): { status: string } {
     return { status: 'ok' }
   }
 }

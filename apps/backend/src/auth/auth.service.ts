@@ -1,23 +1,28 @@
 import { UnauthorizedException } from '@nestjs/common'
 
 export class AuthService {
-  constructor(
+  constructor (
     private readonly jwtService: any,
     private readonly drizzle: any
   ) { }
 
-  async validateOAuthLogin(profile: any): Promise<{ user: any, org: any, membership: any }> {
+  async validateOAuthLogin (profile: any): Promise<{ user: any, org: any, membership: any }> {
     const email = profile.emails?.[0]?.value
     const googleId = profile.id
     let user = await this.drizzle.user.findFirst({
-      where: { OR: [{ email }, { googleId }] }
+      where: {
+        OR: [
+          typeof email === 'string' ? { email } : {},
+          typeof googleId === 'string' ? { googleId } : {}
+        ]
+      }
     })
     if (!user) {
       user = await this.drizzle.user.create({
         data: { email, name: profile.displayName, googleId }
       })
-      if (!user) throw new UnauthorizedException('User creation failed')
-    } else if (!user.googleId) {
+      if (typeof user !== 'undefined' && user !== null) throw new UnauthorizedException('User creation failed')
+    } else if (typeof user.googleId !== 'string' || user.googleId === '') {
       user = await this.drizzle.user.update({
         where: { id: user.id },
         data: { googleId }
@@ -31,7 +36,7 @@ export class AuthService {
     return { user, org: membership?.organization ?? null, membership }
   }
 
-  async generateTokens(
+  async generateTokens (
     user: any,
     organizationId: string,
     role: string
@@ -57,11 +62,11 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 
-  async validateUserFromJwt(payload: any): Promise<any> {
+  async validateUserFromJwt (payload: any): Promise<any> {
     return this.drizzle.user.findUnique({ where: { id: payload.sub } })
   }
 
-  async refreshAccessToken(
+  async refreshAccessToken (
     token: string
   ): Promise<{ accessToken: string, refreshToken: string }> {
     const refreshToken = await this.drizzle.refreshToken.findUnique({

@@ -7,7 +7,6 @@ import {
 import { ConfigService } from '@nestjs/config'
 import axios from 'axios'
 
-
 export interface ChatMessage {
   id: string
   prompt: string
@@ -23,18 +22,17 @@ export interface CreateChatCompletionDto {
   stream?: boolean
 }
 
-
 @Injectable()
 export class OpenAIService {
   private readonly logger = new Logger(OpenAIService.name)
   private readonly openAIApiKey: string
 
-  constructor(
-    private readonly configService: ConfigService,
+  constructor (
+    private readonly configService: ConfigService
     // drizzleService: DrizzleService (disabled for build isolation)
   ) {
     this.openAIApiKey = this.configService.get<string>('OPENAI_API_KEY', '')
-    if (!this.openAIApiKey) {
+    if (typeof this.openAIApiKey !== 'string' || this.openAIApiKey.trim() === '') {
       this.logger.warn('OPENAI_API_KEY is not set in environment variables!')
     }
   }
@@ -42,7 +40,7 @@ export class OpenAIService {
   /**
    * Returns the chat history for a user in an organization.
    */
-  async getUserChatHistory(
+  async getUserChatHistory (
     orgId: string,
     userId: string
   ): Promise<ChatMessage[]> {
@@ -51,7 +49,7 @@ export class OpenAIService {
     )
     // Use DrizzleService to fetch chats for the user and org
     // Replace with actual DrizzleService instance in production
-    if (!globalThis.drizzleService || typeof globalThis.drizzleService.chats === 'undefined') {
+    if (typeof globalThis.drizzleService === 'undefined' || globalThis.drizzleService === null || typeof globalThis.drizzleService.chats === 'undefined') {
       return []
     }
     const chats = await globalThis.drizzleService.chats.findMany({
@@ -63,49 +61,44 @@ export class OpenAIService {
   /**
    * Creates a chat completion.
    */
-  async createChatCompletion(
+  async createChatCompletion (
     orgId: string,
     userId: string,
     body: CreateChatCompletionDto,
     stream: boolean,
     onData?: (err: Error | null, chunk?: string) => void,
-    testOverrides?: { org?: any, usage?: any }
+    testOverrides?: { org?: { subscription?: { monthlyQuota?: number } }, usage?: { totalTokens?: number } }
   ): Promise<unknown> {
     if (typeof body.prompt !== 'string' || body.prompt.trim() === '') {
-      throw new BadRequestException('Prompt is required')
+      throw new BadRequestException('Prompt must be a non-empty string')
     }
     if (body.prompt === 'api_key') {
       throw new ForbiddenException('Forbidden prompt')
     }
 
     // Allow test to override org/usage for branch coverage
-    let org
-    if (testOverrides != null && 'org' in testOverrides) {
+    let org: { subscription?: { monthlyQuota?: number } } | undefined
+    if ((testOverrides?.org) != null) {
       org = testOverrides.org
     } else {
-      org = { id: orgId, subscription: { monthlyQuota: 1000 } }
+      org = { subscription: { monthlyQuota: 1000 } }
     }
     if (typeof org === 'undefined' || org === null) {
       throw new ForbiddenException('Organization not found')
     }
-    let usage
-    if (testOverrides != null && 'usage' in testOverrides) {
+    let usage: { totalTokens?: number } | undefined
+    if ((testOverrides?.usage) != null) {
       usage = testOverrides.usage
     } else {
       usage = { totalTokens: 0 }
     }
     if (
-      typeof org.subscription !== 'undefined' &&
+      org?.subscription !== undefined &&
       org.subscription !== null &&
+      typeof usage?.totalTokens === 'number' &&
       usage.totalTokens > 999
     ) {
       throw new ForbiddenException('Quota exceeded')
-    }
-
-    if (stream && typeof onData === 'function') {
-      // Streaming not implemented in this example
-      onData(null, 'Streaming not implemented')
-      return
     }
 
     // Make a real call to OpenAI API
@@ -113,27 +106,29 @@ export class OpenAIService {
       const response = await axios.post(
         'https://api.openai.com/v1/chat/completions',
         {
-          model: body.model || 'gpt-3.5-turbo',
+          model: body.model ?? 'gpt-3.5-turbo',
           messages: [{ role: 'user', content: body.prompt }],
-          max_tokens: body.max_tokens || 128
+          max_tokens: body.max_tokens ?? 128
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.openAIApiKey}`,
+            Authorization: `Bearer ${this.openAIApiKey}`,
             'Content-Type': 'application/json'
           }
         }
       )
       // Save chat to DrizzleService (in-memory for local dev)
-      if (typeof globalThis.drizzleService !== 'undefined' && globalThis.drizzleService.chats) {
+      if (typeof globalThis.drizzleService !== 'undefined' && globalThis.drizzleService !== null && typeof globalThis.drizzleService.chats !== 'undefined') {
         const chatData = {
           userId,
           organizationId: orgId,
           prompt: body.prompt,
-          response: response.data.choices?.[0]?.message?.content || '',
-          model: body.model || 'gpt-3.5-turbo'
+          response: response.data.choices?.[0]?.message?.content ?? '',
+          model: body.model ?? 'gpt-3.5-turbo'
         }
-        await globalThis.drizzleService.chats.create({ data: chatData })
+        if (typeof globalThis.drizzleService.chats.create === 'function') {
+          await globalThis.drizzleService.chats.create({ data: chatData })
+        }
       }
       return response.data
     } catch (error) {

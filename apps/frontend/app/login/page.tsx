@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { redirectToAuth } from './redirectToAuth'
 
-export default function Login(): React.ReactElement {
+export default function Login (): React.ReactElement {
   useEffect(() => {
     redirectToAuth(
       `${typeof process.env.NEXT_PUBLIC_BACKEND_URL === 'string' && process.env.NEXT_PUBLIC_BACKEND_URL !== '' ? process.env.NEXT_PUBLIC_BACKEND_URL : 'http://localhost:4000'}/auth/google`

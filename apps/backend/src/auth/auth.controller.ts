@@ -28,23 +28,23 @@ interface AuthenticatedRequest extends ExpressRequest {
   user?: {
     user?: Partial<User>
     org?: { id?: string } | null
-    membership?: { role?: string; organizationId?: string }
+    membership?: { role?: string, organizationId?: string }
   }
 }
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor (private readonly authService: AuthService) { }
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(): Promise<void> { }
+  async googleAuth (): Promise<void> { }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthCallback(
+  async googleAuthCallback (
     @Req() req: AuthenticatedRequest,
-    @Res() res: Response
+      @Res() res: Response
   ): Promise<void> {
     // Debug: print req.user and its properties
     console.log('googleAuthCallback req.user:', JSON.stringify(req.user, null, 2))
@@ -84,20 +84,20 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 30
     })
     // Redirect to frontend with access token in query string
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001'
+    const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3001'
     const params = new URLSearchParams({
       accessToken: tokens.accessToken,
       user: JSON.stringify(user),
-      org: org ? JSON.stringify(org) : '',
+      org: (org != null) ? JSON.stringify(org) : '',
       role: membership.role ?? ''
     })
     res.redirect(`${frontendUrl}/auth/callback?${params.toString()}`)
   }
 
   @Post('refresh')
-  async refresh(
+  async refresh (
     @Req() req: AuthenticatedRequest,
-    @Res() res: Response
+      @Res() res: Response
   ): Promise<void> {
     let refreshToken: string | undefined
     if (

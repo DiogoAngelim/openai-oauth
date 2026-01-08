@@ -2,15 +2,15 @@
 
 // Ensure dotenv is loaded before anything else
 import * as dotenv from 'dotenv'
-dotenv.config({ path: '.env' })
-console.log('process.cwd() (strategy):', process.cwd())
-console.log('GOOGLE_CLIENT_ID (strategy):', process.env.GOOGLE_CLIENT_ID)
-console.log('GOOGLE_CLIENT_SECRET (strategy):', process.env.GOOGLE_CLIENT_SECRET)
 // Set dummy values for all required environment variables if not set
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { Strategy as GoogleOAuthStrategy } from 'passport-google-oauth20'
+dotenv.config({ path: '.env' })
+console.log('process.cwd() (strategy):', process.cwd())
+console.log('GOOGLE_CLIENT_ID (strategy):', process.env.GOOGLE_CLIENT_ID)
+console.log('GOOGLE_CLIENT_SECRET (strategy):', process.env.GOOGLE_CLIENT_SECRET)
 
 // Do NOT allow dummy credentials in production
 if (
@@ -54,7 +54,7 @@ export class GoogleStrategy extends PassportStrategy(
   GoogleOAuthStrategy,
   'google'
 ) {
-  constructor(private readonly authService: AuthService) {
+  constructor (private readonly authService: AuthService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -63,7 +63,7 @@ export class GoogleStrategy extends PassportStrategy(
     })
   }
 
-  async validate(
+  async validate (
     accessToken: string,
     refreshToken: string,
     profile: any,

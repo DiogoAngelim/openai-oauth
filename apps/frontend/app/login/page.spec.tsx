@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import Login from './page'
 // Mock redirectToAuth before importing the component
 let mockRedirectToAuth: jest.Mock
@@ -20,13 +20,10 @@ describe('Login', () => {
     mockRedirectToAuth = jest.fn()
   })
 
-
   it('redirects on mount (useEffect)', () => {
     render(<Login />)
     expect(mockRedirectToAuth).toHaveBeenCalledWith(
       expect.stringMatching(/\/auth\/google/)
     )
   })
-
-
 })

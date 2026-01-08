@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react'
 
-export default function Chat(): React.ReactElement {
+export default function Chat (): React.ReactElement {
   const [prompt, setPrompt] = useState<string>('')
   const [response, setResponse] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
@@ -9,15 +9,15 @@ export default function Chat(): React.ReactElement {
   const eventSourceRef = useRef<EventSource | null>(null)
   // Fetch chat history on mount
   useEffect(() => {
-    const fetchHistory = async () => {
-      const accessToken = localStorage.getItem('accessToken') || ''
+    const fetchHistory = async (): Promise<void> => {
+      const accessToken = localStorage.getItem('accessToken') ?? ''
       const url = `${process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:4000'}/openai/history`
       try {
         const res = await fetch(url, {
           method: 'GET',
           credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${accessToken}`
+            Authorization: `Bearer ${accessToken}`
           }
         })
         if (res.ok) {
@@ -47,8 +47,8 @@ export default function Chat(): React.ReactElement {
         // Only display chat response, not token
         try {
           const data = JSON.parse(event.data)
-          if (data.choices && data.choices[0] && data.choices[0].message) {
-            setResponse((prev) => prev + data.choices[0].message.content)
+          if (typeof data.choices?.[0]?.message?.content === 'string') {
+            setResponse((prev) => String(prev) + String(data.choices[0].message.content))
           }
         } catch {
           // Fallback: display as plain text if not JSON
@@ -60,13 +60,13 @@ export default function Chat(): React.ReactElement {
         es?.close()
       }
       // Get access token from localStorage (or other storage)
-      const accessToken = localStorage.getItem('accessToken') || ''
+      const accessToken = localStorage.getItem('accessToken') ?? ''
       await fetch(url, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`
+          Authorization: `Bearer ${accessToken}`
         },
         body: JSON.stringify({ prompt })
       })
@@ -108,19 +108,21 @@ export default function Chat(): React.ReactElement {
       </div>
       <div className='w-full max-w-md mt-4 p-4 bg-gray-100 rounded shadow'>
         <h2 className='font-bold mb-2'>Chat History</h2>
-        {history.length === 0 ? (
-          <div className='text-gray-500'>No history found.</div>
-        ) : (
-          <ul className='space-y-2'>
-            {history.map((msg, idx) => (
-              <li key={msg.id || idx} className='border-b pb-2'>
-                <div><span className='font-semibold'>Prompt:</span> {msg.prompt}</div>
-                <div><span className='font-semibold'>Response:</span> {msg.response}</div>
-                <div className='text-xs text-gray-400'>Model: {msg.model} | {msg.createdAt}</div>
-              </li>
-            ))}
-          </ul>
-        )}
+        {history.length === 0
+          ? (
+            <div className='text-gray-500'>No history found.</div>
+            )
+          : (
+            <ul className='space-y-2'>
+              {history.map((msg, idx) => (
+                <li key={msg.id ?? idx} className='border-b pb-2'>
+                  <div><span className='font-semibold'>Prompt:</span> {msg.prompt}</div>
+                  <div><span className='font-semibold'>Response:</span> {msg.response}</div>
+                  <div className='text-xs text-gray-400'>Model: {msg.model} | {msg.createdAt}</div>
+                </li>
+              ))}
+            </ul>
+            )}
       </div>
     </main>
   )
