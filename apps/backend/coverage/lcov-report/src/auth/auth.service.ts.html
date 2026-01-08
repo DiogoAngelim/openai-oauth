@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.29% </span>
+                <span class="strong">92.59% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/27</span>
+                <span class='fraction'>25/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.23% </span>
+                <span class="strong">88% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/17</span>
+                <span class='fraction'>22/25</span>
             </div>
         
             
@@ -154,7 +154,12 @@
 <a name='L89'></a><a href='#L89'>89</a>
 <a name='L90'></a><a href='#L90'>90</a>
 <a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">17x</span>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -168,6 +173,11 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,7 +189,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -248,23 +258,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { UnauthorizedException } from '@nestjs/common'
 &nbsp;
 export class AuthService {
-  constructor(
+  constructor (
     private readonly jwtService: any,
     private readonly drizzle: any
   ) { }
 &nbsp;
-  async validateOAuthLogin(profile: any): Promise&lt;{ user: any, org: any, membership: any }&gt; {
+  async validateOAuthLogin (profile: any): Promise&lt;{ user: any, org: any, membership: any }&gt; {
     const email = profile.emails?.[0]?.value
     const googleId = profile.id
     let user = await this.drizzle.user.findFirst({
-      where: { OR: [{ email }, { googleId }] }
+      where: {
+        OR: [
+          typeof email === 'string' ? { email } : <span class="branch-1 cbranch-no" title="branch not covered" >{},</span>
+          typeof googleId === 'string' ? { googleId } : {}
+        ]
+      }
     })
     if (!user) {
       user = await this.drizzle.user.create({
         data: { email, name: profile.displayName, googleId }
       })
-      <span class="missing-if-branch" title="else path not taken" >E</span>if (!user) throw new UnauthorizedException('User creation failed')
-    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (!user.googleId) {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof user !== 'undefined' &amp;&amp; user !== null) <span class="cstat-no" title="statement not covered" >throw new UnauthorizedException('User creation failed')</span>
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof user.googleId !== 'string' || user.googleId === '') {
 <span class="cstat-no" title="statement not covered" >      user = await this.drizzle.user.update({</span>
         where: { id: user.id },
         data: { googleId }
@@ -278,7 +293,7 @@ export class AuthService {
     return { user, org: membership?.organization ?? null, membership }
   }
 &nbsp;
-  async generateTokens(
+  async generateTokens (
     user: any,
     organizationId: string,
     role: string
@@ -304,11 +319,11 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 &nbsp;
-  async validateUserFromJwt(payload: any): Promise&lt;any&gt; {
+  async validateUserFromJwt (payload: any): Promise&lt;any&gt; {
     return this.drizzle.user.findUnique({ where: { id: payload.sub } })
   }
 &nbsp;
-  async refreshAccessToken(
+  async refreshAccessToken (
     token: string
   ): Promise&lt;{ accessToken: string, refreshToken: string }&gt; {
     const refreshToken = await this.drizzle.refreshToken.findUnique({
@@ -343,7 +358,7 @@ export class AuthService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-08T05:39:28.740Z
+                at 2026-01-08T06:17:40.822Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

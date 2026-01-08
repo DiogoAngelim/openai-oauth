@@ -15,16 +15,18 @@ interface MockEventSource {
   close: jest.Mock
 }
 let eventSourceInstances: MockEventSource[] = []
-const eventSourceMock = jest.fn().mockImplementation(() => {
-  const instance: MockEventSource = {
-    onmessage: null,
-    onerror: null,
-    close: jest.fn()
+class EventSourceMock {
+  static CONNECTING = 0;
+  static OPEN = 1;
+  static CLOSED = 2;
+  onmessage: ((event: MessageEvent) => void) | null = null;
+  onerror: ((event?: Event) => void) | null = null;
+  close = jest.fn();
+  constructor(_url: string | URL, _eventSourceInitDict?: EventSourceInit) {
+    eventSourceInstances.push(this);
   }
-  eventSourceInstances.push(instance)
-  return instance
-})
-global.EventSource = eventSourceMock as unknown as typeof global.EventSource
+}
+global.EventSource = EventSourceMock as unknown as typeof EventSource;
 global.fetch = jest.fn(async () => await Promise.resolve({ ok: true })) as unknown as typeof global.fetch
 beforeEach(() => {
   eventSourceInstances = []

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.48% </span>
+                <span class="strong">82.05% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/41</span>
+                <span class='fraction'>32/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.59% </span>
+                <span class="strong">73.91% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>36/47</span>
+                <span class='fraction'>34/46</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.48% </span>
+                <span class="strong">81.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/39</span>
+                <span class='fraction'>30/37</span>
             </div>
         
             
@@ -202,12 +202,7 @@
 <a name='L137'></a><a href='#L137'>137</a>
 <a name='L138'></a><a href='#L138'>138</a>
 <a name='L139'></a><a href='#L139'>139</a>
-<a name='L140'></a><a href='#L140'>140</a>
-<a name='L141'></a><a href='#L141'>141</a>
-<a name='L142'></a><a href='#L142'>142</a>
-<a name='L143'></a><a href='#L143'>143</a>
-<a name='L144'></a><a href='#L144'>144</a>
-<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
+<a name='L140'></a><a href='#L140'>140</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -215,8 +210,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -308,13 +301,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -343,6 +331,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -360,7 +350,6 @@
 import { ConfigService } from '@nestjs/config'
 import axios from 'axios'
 &nbsp;
-&nbsp;
 export interface ChatMessage {
   id: string
   prompt: string
@@ -376,18 +365,17 @@ export interface CreateChatCompletionDto {
   stream?: boolean
 }
 &nbsp;
-&nbsp;
 @Injectable()
 export class OpenAIService {
   private readonly logger = new Logger(OpenAIService.name)
   private readonly openAIApiKey: string
 &nbsp;
-  constructor(
-    private readonly configService: ConfigService,
+  constructor (
+    private readonly configService: ConfigService
     // drizzleService: DrizzleService (disabled for build isolation)
   ) {
     this.openAIApiKey = this.configService.get&lt;string&gt;('OPENAI_API_KEY', '')
-    if (!this.openAIApiKey) {
+    if (typeof this.openAIApiKey !== 'string' || this.openAIApiKey.trim() === '') {
       this.logger.warn('OPENAI_API_KEY is not set in environment variables!')
     }
   }
@@ -395,7 +383,7 @@ export class OpenAIService {
   /**
    * Returns the chat history for a user in an organization.
    */
-  async getUserChatHistory(
+  async getUserChatHistory (
     orgId: string,
     userId: string
   ): Promise&lt;ChatMessage[]&gt; {
@@ -404,7 +392,7 @@ export class OpenAIService {
     )
     // Use DrizzleService to fetch chats for the user and org
     // Replace with actual DrizzleService instance in production
-    if (!globalThis.drizzleService || typeof globalThis.drizzleService.chats === 'undefined') {
+    if (typeof globalThis.drizzleService === 'undefined' || globalThis.drizzleService === null || typeof globalThis.drizzleService.chats === 'undefined') {
       return []
     }
     const chats = await globalThis.drizzleService.chats.findMany({
@@ -416,49 +404,44 @@ export class OpenAIService {
   /**
    * Creates a chat completion.
    */
-  async createChatCompletion(
+  async createChatCompletion (
     orgId: string,
     userId: string,
     body: CreateChatCompletionDto,
     stream: boolean,
     onData?: (err: Error | null, chunk?: string) =&gt; void,
-    testOverrides?: { org?: any, usage?: any }
+    testOverrides?: { org?: { subscription?: { monthlyQuota?: number } }, usage?: { totalTokens?: number } }
   ): Promise&lt;unknown&gt; {
     if (typeof body.prompt !== 'string' || body.prompt.trim() === '') {
-      throw new BadRequestException('Prompt is required')
+      throw new BadRequestException('Prompt must be a non-empty string')
     }
     if (body.prompt === 'api_key') {
       throw new ForbiddenException('Forbidden prompt')
     }
 &nbsp;
     // Allow test to override org/usage for branch coverage
-    let org
-    if (testOverrides != null &amp;&amp; 'org' in testOverrides) {
+    let org: { subscription?: { monthlyQuota?: number } } | undefined
+    if ((testOverrides?.org) != null) {
       org = testOverrides.org
     } else <span class="missing-if-branch" title="else path not taken" >E</span>{
-<span class="cstat-no" title="statement not covered" >      org = { id: orgId, subscription: { monthlyQuota: 1000 } }</span>
+<span class="cstat-no" title="statement not covered" >      org = { subscription: { monthlyQuota: 1000 } }</span>
     }
     <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof org === 'undefined' || org === null) {
 <span class="cstat-no" title="statement not covered" >      throw new ForbiddenException('Organization not found')</span>
     }
-    let usage
-    if (testOverrides != null &amp;&amp; 'usage' in testOverrides) {
+    let usage: { totalTokens?: number } | undefined
+    if ((testOverrides?.usage) != null) {
       usage = testOverrides.usage
     } else {
       usage = { totalTokens: 0 }
     }
     if (
-      typeof org.subscription !== 'undefined' &amp;&amp;
+      org?.subscription !== undefined &amp;&amp;
       org.subscription !== null &amp;&amp;
+      typeof usage?.totalTokens === 'number' &amp;&amp;
       usage.totalTokens &gt; 999
     ) {
       throw new ForbiddenException('Quota exceeded')
-    }
-&nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (stream &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >typeof onData === 'function')</span> {
-      // Streaming not implemented in this example
-<span class="cstat-no" title="statement not covered" >      onData(null, 'Streaming not implemented')</span>
-<span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
     // Make a real call to OpenAI API
@@ -466,27 +449,29 @@ export class OpenAIService {
       const response = await axios.post(
         'https://api.openai.com/v1/chat/completions',
         {
-          model: body.model || 'gpt-3.5-turbo',
+          model: body.model ?? 'gpt-3.5-turbo',
           messages: [{ role: 'user', content: body.prompt }],
-          max_tokens: body.max_tokens || 128
+          max_tokens: body.max_tokens ?? 128
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.openAIApiKey}`,
+            Authorization: `Bearer ${this.openAIApiKey}`,
             'Content-Type': 'application/json'
           }
         }
       )
       // Save chat to DrizzleService (in-memory for local dev)
-      <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof globalThis.drizzleService !== 'undefined' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >globalThis.drizzleService.chats)</span> {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof globalThis.drizzleService !== 'undefined' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >globalThis.drizzleService !== null </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >typeof globalThis.drizzleService.chats !== 'undefined')</span> {
         const chatData = <span class="cstat-no" title="statement not covered" >{</span>
           userId,
           organizationId: orgId,
           prompt: body.prompt,
-          response: response.data.choices?.[0]?.message?.content || '',
-          model: body.model || 'gpt-3.5-turbo'
+          response: response.data.choices?.[0]?.message?.content ?? '',
+          model: body.model ?? 'gpt-3.5-turbo'
         }
-<span class="cstat-no" title="statement not covered" >        await globalThis.drizzleService.chats.create({ data: chatData })</span>
+<span class="cstat-no" title="statement not covered" >        if (typeof globalThis.drizzleService.chats.create === 'function') {</span>
+<span class="cstat-no" title="statement not covered" >          await globalThis.drizzleService.chats.create({ data: chatData })</span>
+        }
       }
       return response.data
     } catch (error) {
@@ -502,7 +487,7 @@ export class OpenAIService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-08T05:39:28.740Z
+                at 2026-01-08T06:17:40.822Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
