@@ -82,12 +82,15 @@ export class AuthController {
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 30
     })
-    res.json({
+    // Redirect to frontend with access token in query string
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001'
+    const params = new URLSearchParams({
       accessToken: tokens.accessToken,
-      user,
-      org,
-      role: membership.role
+      user: JSON.stringify(user),
+      org: org ? JSON.stringify(org) : '',
+      role: membership.role ?? ''
     })
+    res.redirect(`${frontendUrl}/auth/callback?${params.toString()}`)
   }
 
   @Post('refresh')

@@ -1,7 +1,13 @@
 import 'dotenv/config'
 import express from 'express'
+import cors from 'cors'
 
 const app = express()
+// Allow CORS for frontend
+app.use(cors({
+  origin: 'http://localhost:3001',
+  credentials: true
+}))
 const port = process.env.PORT ?? 3000
 
 // Example: Read GCP and DB settings from environment variables

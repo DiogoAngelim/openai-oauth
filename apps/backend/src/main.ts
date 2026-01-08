@@ -28,6 +28,10 @@ async function bootstrap(): Promise<void> {
   const host = '127.0.0.1';
   try {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    app.enableCors({
+      origin: 'http://localhost:3001',
+      credentials: true
+    });
     await app.listen(port);
     console.log(`Backend listening on port ${port}`);
   } catch (err) {

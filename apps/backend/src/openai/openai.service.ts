@@ -49,8 +49,15 @@ export class OpenAIService {
     this.logger.debug(
       `Fetching chat history for org: ${orgId}, user: ${userId}`
     )
-    // DB logic disabled for build isolation
-    return []
+    // Use DrizzleService to fetch chats for the user and org
+    // Replace with actual DrizzleService instance in production
+    if (!globalThis.drizzleService || typeof globalThis.drizzleService.chats === 'undefined') {
+      return []
+    }
+    const chats = await globalThis.drizzleService.chats.findMany({
+      where: { userId, organizationId: orgId }
+    })
+    return Array.isArray(chats) ? chats : []
   }
 
   /**
@@ -117,8 +124,17 @@ export class OpenAIService {
           }
         }
       )
-      // Save chat to DB
-      // DB logic disabled for build isolation
+      // Save chat to DrizzleService (in-memory for local dev)
+      if (typeof globalThis.drizzleService !== 'undefined' && globalThis.drizzleService.chats) {
+        const chatData = {
+          userId,
+          organizationId: orgId,
+          prompt: body.prompt,
+          response: response.data.choices?.[0]?.message?.content || '',
+          model: body.model || 'gpt-3.5-turbo'
+        }
+        await globalThis.drizzleService.chats.create({ data: chatData })
+      }
       return response.data
     } catch (error) {
       this.logger.error('OpenAI API error', error)

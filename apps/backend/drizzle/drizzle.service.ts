@@ -23,13 +23,41 @@ interface RefreshToken {
   user?: User;
 }
 
+
 const users: User[] = [];
 const memberships: Membership[] = [
   // By default, every new user will get a membership for testing
 ];
 const refreshTokens: RefreshToken[] = [];
+// In-memory chat history for local development
+interface Chat {
+  id: string;
+  userId: string;
+  organizationId: string;
+  prompt: string;
+  response: string;
+  model: string;
+  createdAt: Date;
+}
+const chats: Chat[] = [];
 
 export class DrizzleService {
+  chats = {
+    async findMany({ where }: { where: { userId: string; organizationId: string } }) {
+      return chats.filter(
+        c => c.userId === where.userId && c.organizationId === where.organizationId
+      );
+    },
+    async create({ data }: { data: Omit<Chat, 'id' | 'createdAt'> & { id?: string; createdAt?: Date } }) {
+      const chat: Chat = {
+        id: (chats.length + 1).toString(),
+        createdAt: new Date(),
+        ...data
+      };
+      chats.push(chat);
+      return chat;
+    }
+  };
   user = {
     async findFirst({ where }) {
       return users.find(
