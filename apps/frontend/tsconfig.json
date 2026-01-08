@@ -32,7 +32,10 @@
     "components",
     "types",
     "types/jest.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "app/**/*.spec.tsx",
+    "app/**/*.test.tsx",
+    "app/__tests__/**/*.tsx"
   ],
   "exclude": [
     "node_modules",

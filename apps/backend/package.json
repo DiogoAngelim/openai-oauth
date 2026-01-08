@@ -10,7 +10,8 @@
     "test": "npx jest --passWithNoTests --coverage --config=jest.config.cjs",
     "test:watch": "npx jest --watchAll --config=jest.config.cjs",
     "test:ci": "npx jest --coverage --runInBand --config=jest.config.cjs",
-    "rollback": "../../rollback.sh"
+    "rollback": "../../rollback.sh",
+    "lint": "eslint . --ext .js,.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.20",
@@ -58,10 +59,8 @@
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.4.20",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/cookie": "^0.6.0",
-    "@types/jest": "^30.0.0",
     "@types/node": "25.0.3",
     "@types/passport": "^1.0.17",
     "@types/passport-github2": "^1.2.9",
@@ -69,6 +68,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-linkedin-oauth2": "^1.5.6",
     "babel-jest": "^30.2.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-n": "^17.23.1",
     "get-port": "^7.1.0",
     "identity-obj-proxy": "^3.0.0",

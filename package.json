@@ -2,6 +2,9 @@
   "name": "openai-oauth",
   "version": "1.0.0",
   "private": true,
+  "resolutions": {
+    "@types/react": "18.3.1"
+  },
   "scripts": {
     "dev": "npm-run-all --parallel dev:backend dev:frontend",
     "dev:backend": "pnpm --filter ./apps/backend run start:dev",
@@ -30,24 +33,26 @@
     "pg": "^8.16.3",
     "postgres": "^3.4.7",
     "prom-client": "^15.1.3",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "ts-standard": "^12.0.2",
-    "typescript": "^5.3.3",
+    "typescript": "5.2.2",
     "winston": "^3.19.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@nestjs/testing": "^11.1.10",
+    "@testing-library/jest-dom": "^5.16.5",
     "@types/express": "^5.0.6",
-    "@types/jest": "^30.0.0",
+    "@types/jest": "29.5.11",
     "@types/node": "^25.0.3",
     "@types/passport-google-oauth20": "^2.0.17",
-    "@types/react": "18.2.67",
-    "@types/react-dom": "18.2.7",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.1",
     "@typescript-eslint/eslint-plugin": "^8.50.1",
     "@typescript-eslint/parser": "^8.50.1",
     "concurrently": "^8.2.2",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.2",
     "fastify": "^4.29.1",
     "jest": "^30.2.0",
@@ -57,7 +62,7 @@
     "standard": "^17.1.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.1.6",
+    "typescript": "5.2.2",
     "typescript-eslint": "^8.50.1"
   }
 }
