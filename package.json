@@ -12,7 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.10",
+    "@nestjs/common": "^11.1.11",
     "@nestjs/config": "^4.0.2",
     "@nestjs/jwt": "^11.0.2",
     "@types/node": "^20.11.30",
