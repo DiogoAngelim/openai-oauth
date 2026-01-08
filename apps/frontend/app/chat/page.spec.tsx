@@ -168,9 +168,18 @@ describe('Chat', () => {
       async () => { throw new Error('fail') }
     )
     // Patch EventSource to return an object with close method, but do not assign to eventSourceRef
-    const mockEs: EventSource = { close: jest.fn() } as unknown as EventSource
-    const originalEventSource = global.EventSource
-    global.EventSource = jest.fn(() => mockEs)
+    class EventSourceMock {
+      static CONNECTING = 0;
+      static OPEN = 1;
+      static CLOSED = 2;
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      onerror: ((event?: Event) => void) | null = null;
+      close = jest.fn();
+      constructor(_url: string | URL, _eventSourceInitDict?: EventSourceInit) { }
+    }
+    const mockEs = new EventSourceMock('');
+    const originalEventSource = global.EventSource;
+    global.EventSource = EventSourceMock as unknown as typeof EventSource;
     render(<Chat />)
     fireEvent.change(screen.getByPlaceholderText('Ask something...'), {
       target: { value: 'foo' }
@@ -189,9 +198,18 @@ describe('Chat', () => {
       async () => { throw new Error('fail') }
     )
     // Patch EventSource to return an object without close method
-    const mockEs: EventSource = { foo: 'bar' } as unknown as EventSource
-    const originalEventSource = global.EventSource
-    global.EventSource = jest.fn(() => mockEs)
+    class EventSourceMock {
+      static CONNECTING = 0;
+      static OPEN = 1;
+      static CLOSED = 2;
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      onerror: ((event?: Event) => void) | null = null;
+      // No close method for this mock
+      constructor(_url: string | URL, _eventSourceInitDict?: EventSourceInit) { }
+    }
+    const mockEs = new EventSourceMock('');
+    const originalEventSource = global.EventSource;
+    global.EventSource = EventSourceMock as unknown as typeof EventSource;
     render(<Chat />)
     fireEvent.change(screen.getByPlaceholderText('Ask something...'), {
       target: { value: 'foo' }
